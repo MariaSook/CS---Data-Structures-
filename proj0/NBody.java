@@ -36,7 +36,6 @@ public class NBody{
   }
 
   public static void main(String[] args){
-
     double T = Double.parseDouble(args[0]);
     double dt = Double.parseDouble(args[1]);
     String filename = args[2];
@@ -48,15 +47,18 @@ public class NBody{
     for (Planet planet: planetarray) {
       planet.draw();
       }
+
     StdDraw.enableDoubleBuffering();
   	double time = 0;
     double[] xForces = new double[planetarray.length];
     double[] yForces = new double[planetarray.length];
+
     while (time < T) {
   		for (int i = 0; i < planetarray.length; i++) {
   			xForces[i] = planetarray[i].calcNetForceExertedByX(planetarray);
   			yForces[i] = planetarray[i].calcNetForceExertedByX(planetarray);
   			}
+
       for (int i = 0; i < planetarray.length; i++) {
   			planetarray[i].update(dt, xForces[i], yForces[i]);
   			}
@@ -69,9 +71,17 @@ public class NBody{
       time += dt;
   		}
 
-  }
+      StdOut.printf("%d\n", planets.length);
+      StdOut.printf("%.2e\n", radius);
+      for (int i = 0; i < planets.length; i++) {
+        StdOut.printf("%11.4e %11.4e %11.4e %11.4e %11.4e %12s\n",
+                   planets[i].xxPos, planets[i].yyPos, planets[i].xxVel,
+                   planets[i].yyVel, planets[i].mass, planets[i].imgFileName);
+ }
 
-  
+     }
+
+
 
 
 }

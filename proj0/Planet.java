@@ -52,7 +52,8 @@ public class Planet {
 			if (this.equals(planets[i])) {
 				i = i + 1;
 			}
-		netforce = netforce + calcForceExertedByX(planets[i]);
+			else {netforce = netforce + calcForceExertedByX(planets[i]);
+			}
 		}
 		return netforce;
 	}
@@ -63,7 +64,9 @@ public class Planet {
 			if (this.equals(planets[i])) {
 				i = i + 1;
 			}
-		netforce = netforce + calcForceExertedByY(planets[i]);
+			else {
+			netforce = netforce + calcForceExertedByY(planets[i]);
+		}
 		}
 		return netforce;
 	}
