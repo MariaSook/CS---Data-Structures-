@@ -1,7 +1,7 @@
 public class NBody{
 
   public static double readRadius(String args){
-    In dataplanets = new In("./data/planets.txt");
+    In dataplanets = new In(args);
 
     int count = 0;
     double radius = 0;
@@ -14,7 +14,7 @@ public class NBody{
 
   public static Planet[] readPlanets(String args){
 
-    In dataplanets = new In("./data/planets.txt");
+    In dataplanets = new In(args);
 
     int planetnum = dataplanets.readInt();
     double radius = dataplanets.readDouble();
