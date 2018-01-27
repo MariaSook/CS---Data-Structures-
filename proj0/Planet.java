@@ -31,7 +31,7 @@ public class Planet {
 	}
 
 	public double calcForceExertedBy(Planet p) {
-		double num = (6.67 * Math.pow(10, -11)) * this.mass * p.mass;
+		double num = (6.67e-11) * this.mass * p.mass;
 		double denom = calcDistance(p);
 		return (num/(denom*denom));
 	}
@@ -67,7 +67,7 @@ public class Planet {
 				continue;
 			}
 			else {
-			netforce += calcForceExertedByY(planets[i]);
+			 netforce += calcForceExertedByY(planets[i]);
 		}
 		}
 		return netforce;
@@ -80,8 +80,8 @@ public class Planet {
     this.xxVel = this.xxVel + (dt*accelx);
     this.yyVel = this.yyVel + (dt*accely);
 
-    this.xxPos = this.xxPos + dt*this.xxVel;
-    this.yyPos = this.yyPos + dt*this.yyVel;
+    this.xxPos = this.xxPos + (dt*this.xxVel);
+    this.yyPos = this.yyPos + (dt*this.yyVel);
   }
 
 	public void draw(){

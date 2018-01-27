@@ -56,7 +56,7 @@ public class NBody{
     while (time < T) {
   		for (int i = 0; i < planetarray.length; i++) {
   			xForces[i] = planetarray[i].calcNetForceExertedByX(planetarray);
-  			yForces[i] = planetarray[i].calcNetForceExertedByX(planetarray);
+  			yForces[i] = planetarray[i].calcNetForceExertedByY(planetarray);
   			}
 
       for (int i = 0; i < planetarray.length; i++) {
