@@ -3,7 +3,9 @@
  * Code adapted from https://stackoverflow.com/questions/4895173/bitwise-multiply-and-add-in-java and https://stackoverflow.com/questions/1533131/what-useful-bitwise-operator-code-tricks-should-a-developer-know-about
  */
 public class DebugExercise2 {
-    /** Returns the max of a and b. Do not step into this function. */
+    /** Returns the max of a and b. Do not step into this function. 
+      * This function may have a bug, but if it does, you should find it
+      * by stepping over, not into. */
     public static int max(int a, int b) {
         if (a > b) {
             return a;
@@ -12,7 +14,9 @@ public class DebugExercise2 {
     }
 
 
-    /** Returns the sum of a and b. Do not step into this function. */
+    /** Returns the sum of a and b. Do not step into this function. 
+      * This function may have a bug, but if it does, you should find it
+      * by stepping over, not into. */    
     public static int add(int a, int b) {
        return a + b;
     }
