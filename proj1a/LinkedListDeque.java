@@ -11,13 +11,14 @@ public class LinkedListDeque<T> {
         }
     }
 
-    public static void main(String[] args) {
+    private static void main(String[] args) {
         LinkedListDeque Links = new LinkedListDeque();
         Links.addFirst(1);
         Links.addFirst(2);
         Links.addFirst(3);
 
         Links.addLast(4);
+        Links.removeFirst();
     }
 
     private HelperNode sentinel;
@@ -96,7 +97,7 @@ public class LinkedListDeque<T> {
         } else {
             T removed = sentinel.next.item;
             sentinel.next = sentinel.next.next;
-
+            sentinel.next.previous = sentinel;
             size -= 1;
 
             return removed;
