@@ -131,34 +131,24 @@ public class LinkedListDeque<T> {
     /*Gets the item at the given index, where 0 is the
      front, 1 is the next item, and so forth. If no such item
      exists, returns null. Must not alter the deque!*/
-        if (size ==0) {
-            return null;
-        } else {
-            HelperNode dummynode = new HelperNode(sentinel.next, null, sentinel.next);
-            for (int i = 0; i <= index; i++) {
-                sentinel.next = sentinel.next.next;
-            }
-            T returned = sentinel.next.item;
-            sentinel.next = dummynode.previous;
+        int i = index;
 
-            return returned;
-
-        }
-
-        /*
         if (size == 0){
             return null;
-        }
-        else {
+
+        } else{
             HelperNode dummynode = new HelperNode(sentinel.next, null, sentinel.next);
-            for (int i = 0; i <= index; i++) {
+
+            while (i >= 1) {
                 sentinel.next = sentinel.next.next;
+                i -= 1;
             }
+
             T returned = sentinel.next.item;
             sentinel.next = dummynode.previous;
-
             return returned;
-        }*/
+        }
+
     }
 
     private T helperget(int i, HelperNode node) {
