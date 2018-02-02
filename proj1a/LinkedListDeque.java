@@ -17,8 +17,6 @@ public class LinkedListDeque<T> {
         Links.addFirst(2);
         Links.addFirst(3);
 
-        Links.printDeque();
-
     }
 
     private HelperNode sentinel;
@@ -61,7 +59,7 @@ public class LinkedListDeque<T> {
         } else {
             HelperNode dummynode = new HelperNode(sentinel.next, null, sentinel.next);
             for (int i = 0; i <= size; i++){
-                System.out.print(get(i) + " ");
+                System.out.print(sentinel.next.item + " ");
                 sentinel.next = sentinel.next.next;
             }
             sentinel.next = dummynode.previous;
@@ -101,23 +99,29 @@ public class LinkedListDeque<T> {
     /*Gets the item at the given index, where 0 is the
      front, 1 is the next item, and so forth. If no such item
      exists, returns null. Must not alter the deque!*/
-        HelperNode dummynode = new HelperNode(sentinel.next, null, sentinel.next);
-        for (int i = 0; i <= index; i++){
-            sentinel.next = sentinel.next.next;
+        if (size == 0){
+            return null;
         }
-        T returned = sentinel.next.item;
-        sentinel.next = dummynode.previous;
+        else {
+            HelperNode dummynode = new HelperNode(sentinel.next, null, sentinel.next);
+            for (int i = 0; i <= index; i++) {
+                sentinel.next = sentinel.next.next;
+            }
+            T returned = sentinel.next.item;
+            sentinel.next = dummynode.previous;
 
-        return returned;
+            return returned;
+        }
     }
 
     public T getRecursive(int index){
-        int i = 0;
-        if (index == i){
+        if (index == 0){
             return sentinel.next.item;
         }
-        sentinel.next = sentinel.next.next;
-        return getRecursive(index-1);
+        else {
+            sentinel.next = sentinel.next.next;
+            return getRecursive(index - 1);
+        }
     }
 }
 
