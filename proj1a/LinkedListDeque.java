@@ -54,35 +54,37 @@ public class LinkedListDeque<T> {
                 System.out.print(sentinel.next.item + " ");
                 sentinel.next = sentinel.next.next;
             }
-            sentinel.next = dummynode.next;
+            sentinel.next = dummynode.previous;
         }
     }
 
     public T removeFirst(){
     /*Removes and returns the item at the front of the deque. If no such item exists, returns null.*/
-        if (sentinel == null){
+        if (size == 0){
             return null;
         } else {
-            if (size != 0) {
-                size -= 1;
-            }
-            HelperNode removed = sentinel.next;
-            sentinel = sentinel.next;
+            T removed = sentinel.next.item;
+            sentinel.next = sentinel.next.next;
 
-            return removed.item;
-            }
+            size -= 1;
+
+            return removed;
+        }
     }
 
     public T removeLast(){
     /*Removes and returns the item at the back of the deque. If no such item exists, returns null.*/
-        if (sentinel != null){
-            return removeLast();
+        if (size == 0){
+            return null;
         }
-
-        if (size != 0){
+        else {
+            T removed = sentinel.previous.item;
+            sentinel.previous = sentinel.previous.previous;
             size -= 1;
+
+            return removed;
+
         }
-        return null;
     }
 
     public T get(int index){
@@ -102,7 +104,7 @@ public class LinkedListDeque<T> {
         if (index == 0){
             return sentinel.next.item;
         }
-        sentinel = sentinel.next;
+        sentinel.next = sentinel.next.next;
         return getRecursive(index-1);
     }
 }
