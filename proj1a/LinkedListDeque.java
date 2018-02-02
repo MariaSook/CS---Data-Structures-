@@ -18,8 +18,11 @@ public class LinkedListDeque<T> {
         Links.addFirst(3);
 
         Links.addLast(4);
+        Links.addLast(5);
+        Links.addFirst(6);
         Links.removeFirst();
         Links.removeLast();
+        Links.get(2);
     }
 
     private HelperNode sentinel;
@@ -124,6 +127,21 @@ public class LinkedListDeque<T> {
     /*Gets the item at the given index, where 0 is the
      front, 1 is the next item, and so forth. If no such item
      exists, returns null. Must not alter the deque!*/
+        if (this.isEmpty()){
+            return null;
+        } else {
+            HelperNode dummynode = new HelperNode(sentinel.next, null, sentinel.next);
+            while (sentinel.next != sentinel){
+                sentinel.next = sentinel.next.next;
+            }
+            T returned = sentinel.next.item;
+            sentinel.next = dummynode.previous;
+
+            return returned;
+
+        }
+
+        /*
         if (size == 0){
             return null;
         }
@@ -136,7 +154,7 @@ public class LinkedListDeque<T> {
             sentinel.next = dummynode.previous;
 
             return returned;
-        }
+        }*/
     }
 
     public T getRecursive(int index){
