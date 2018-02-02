@@ -1,14 +1,11 @@
 public class LinkedListDeque<T> {
-    private class HelperNode {
-        private HelperNode next;
-        private T item;
-        private HelperNode previous;
+    private HelperNode sentinel;
+    private int size;
 
-        public HelperNode(HelperNode p, T i, HelperNode n) {
-            previous = p;
-            item = i;
-            next = n;
-        }
+
+    public LinkedListDeque() {
+        sentinel = new HelperNode(sentinel, null, sentinel);
+        size = 0;
     }
 
     private static void main(String[] args) {
@@ -23,15 +20,6 @@ public class LinkedListDeque<T> {
         L.removeFirst();
         L.removeLast();
         L.get(2);
-    }
-
-
-    private HelperNode sentinel;
-    private int size;
-
-    public LinkedListDeque() {
-        sentinel = new HelperNode(sentinel, null, sentinel);
-        size = 0;
     }
 
     public void addFirst(T item) {
@@ -170,6 +158,18 @@ public class LinkedListDeque<T> {
 
     public T getRecursive(int index) {
         return helper(index, sentinel);
+    }
+
+    private class HelperNode {
+        private HelperNode next;
+        private T item;
+        private HelperNode previous;
+
+        public HelperNode(HelperNode p, T i, HelperNode n) {
+            previous = p;
+            item = i;
+            next = n;
+        }
     }
 
 
