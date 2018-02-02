@@ -159,14 +159,13 @@ public class LinkedListDeque<T> {
         }*/
     }
 
-    public T helper(int i, HelperNode curr) {
+    public T helper(int i, HelperNode node) {
         if (i == 0) {
-            return sentinel.next.item;
+            return node.next.item;
         } else {
-            return helper(i - 1, curr.next);
+            return helper(i - 1, node.next);
         }
     }
-
 
     public T getRecursive(int index){
         return helper(index, sentinel);
