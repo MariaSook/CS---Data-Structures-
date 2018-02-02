@@ -38,13 +38,11 @@ public class LinkedListDeque<T> {
         /*Adds an item of type T to the front of the deque.*/
         if (this.isEmpty()) {
             size += 1;
-
             HelperNode newnode = new HelperNode(sentinel, item, sentinel);
             sentinel.next = newnode;
             sentinel.previous = newnode;
         } else {
             size += 1;
-
             HelperNode newnode = new HelperNode(sentinel, item, sentinel.next);
             sentinel.next = newnode;
             newnode.next.previous = newnode;
@@ -55,13 +53,11 @@ public class LinkedListDeque<T> {
         /*Adds an item of type T to the back of the deque. */
         if (this.isEmpty()) {
             size += 1;
-
             HelperNode newnode = new HelperNode(sentinel, item, sentinel);
             sentinel.next = newnode;
             sentinel.previous = newnode;
         } else {
             size += 1;
-
             HelperNode newnode = new HelperNode(sentinel.previous, item, sentinel);
             sentinel.previous.next = newnode;
             sentinel.previous = newnode;
@@ -106,7 +102,6 @@ public class LinkedListDeque<T> {
             sentinel.next = sentinel.next.next;
             sentinel.next.previous = sentinel;
             size -= 1;
-
             return removed;
         }
     }
@@ -122,7 +117,6 @@ public class LinkedListDeque<T> {
             sentinel.previous = sentinel.previous.previous;
             sentinel.previous.next = sentinel;
             size -= 1;
-
             return removed;
         }
     }
@@ -138,12 +132,10 @@ public class LinkedListDeque<T> {
 
         } else{
             HelperNode dummynode = new HelperNode(sentinel.next, null, sentinel.next);
-
             while (i >= 1) {
                 sentinel.next = sentinel.next.next;
                 i -= 1;
             }
-
             T returned = sentinel.next.item;
             sentinel.next = dummynode.previous;
             return returned;
