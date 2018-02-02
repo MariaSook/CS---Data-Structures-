@@ -16,7 +16,6 @@ public class LinkedListDeque<T> {
         Links.addFirst(1);
         Links.addFirst(2);
         Links.addFirst(3);
-
     }
 
     private HelperNode sentinel;
@@ -29,13 +28,36 @@ public class LinkedListDeque<T> {
 
     public void addFirst(T item){
     /*Adds an item of type T to the front of the deque.*/
-        sentinel.previous = new HelperNode(sentinel.next, item, sentinel.previous);
+        if (this.isEmpty()){
+            size += 1;
 
-        size += 1;
+            HelperNode newnode = new HelperNode(sentinel, item, sentinel);
+            sentinel.next = newnode;
+            sentinel.previous = newnode;
+        }
+        else {
+            size += 1;
+
+            HelperNode newnode = new HelperNode(sentinel, item, sentinel.next);
+            sentinel.next = newnode;
+            newnode.next.previous = newnode;
+
+        }
+
     }
 
     public void addLast(T item){
     /*Adds an item of type T to the back of the deque. */
+        if (this.isEmpty()){
+            size += 1;
+
+            HelperNode newnode = new HelperNode(sentinel, item, sentinel);
+            sentinel.next = newnode;
+            sentinel.previous = newnode;
+            sentinel.previous.previous = newnode;
+
+        }
+
         sentinel.next = new HelperNode(sentinel.next, item, sentinel.next);
         size += 1;
     }
