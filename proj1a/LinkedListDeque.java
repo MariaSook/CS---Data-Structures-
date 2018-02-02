@@ -127,7 +127,7 @@ public class LinkedListDeque<T> {
     /*Gets the item at the given index, where 0 is the
      front, 1 is the next item, and so forth. If no such item
      exists, returns null. Must not alter the deque!*/
-        if (this.isEmpty()){
+        if (index > (size-1)){
             return null;
         } else {
             HelperNode dummynode = new HelperNode(sentinel.next, null, sentinel.next);
