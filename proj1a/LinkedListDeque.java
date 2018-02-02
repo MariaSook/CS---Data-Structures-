@@ -20,7 +20,7 @@ public class LinkedListDeque<T> {
         size = 0;
     }
 
-    public static void main(String[] args) {
+    private static void main(String[] args) {
         LinkedListDeque links = new LinkedListDeque();
         links.addFirst(1);
         links.addFirst(2);
@@ -148,7 +148,6 @@ public class LinkedListDeque<T> {
             sentinel.next = dummynode.previous;
             return returned;
         }
-
     }
 
     private T helperget(int i, HelperNode node) {
@@ -162,8 +161,6 @@ public class LinkedListDeque<T> {
     public T getRecursive(int index) {
         return helperget(index, sentinel);
     }
-
-
 
 
 }
