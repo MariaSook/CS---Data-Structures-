@@ -129,16 +129,18 @@ public class LinkedListDeque<T> {
      exists, returns null. Must not alter the deque!*/
         if (index > (size-1)){
             return null;
+        } else if (size == 0){
+            return null;
         } else {
             HelperNode dummynode = new HelperNode(sentinel.next, null, sentinel.next);
             while (sentinel.next != sentinel){
+                index += 1;
                 sentinel.next = sentinel.next.next;
             }
             T returned = sentinel.next.item;
             sentinel.next = dummynode.previous;
 
             return returned;
-
         }
 
         /*
@@ -158,6 +160,17 @@ public class LinkedListDeque<T> {
     }
 
     public T getRecursive(int index){
+        /*
+        public T helper(int i, HelperNode curr){
+            if (index == 0){
+                return sentinel.next.item;
+            } else {
+                return helper(i-1, curr.next);
+            }
+
+            helper(index, sentinel); */
+        }
+
         if (index == 0){
             return sentinel.next.item;
         }
