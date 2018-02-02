@@ -11,9 +11,12 @@ public class ArrayDeque<T> {
         nextLast = 1;
     }
 
-    public static void main(String[] args) {
+    private static void main(String[] args) {
         ArrayDeque A = new ArrayDeque();
         A.addFirst('a');
+        A.addFirst('b');
+        A.addLast('c');
+        A.addLast('d');
     }
     /*
     private void resize(int arraysize){
@@ -34,13 +37,18 @@ public class ArrayDeque<T> {
         size +=1;
         }
 
-        /*
     public void addLast(T item){
+        items[nextLast] = item;
+        if (nextLast == items.length-1){
+            nextLast = 0;
+        } else {
+            nextLast = nextLast+1;
+        }
         size += 1;
     }
 
     public boolean isEmpty(){
-
+       return true;
     }
 
     public int size(){
@@ -48,21 +56,24 @@ public class ArrayDeque<T> {
     }
 
     public void printDeque(){
-
+        return;
     }
 
     public T removeFirst(){
         size -= 1;
+        return items[nextFirst];
 
     }
 
     public T removeLast(){
         size -= 1;
+        return items[nextFirst];
 
     }
 
     public T get(int index){
-
+        return items[nextFirst];
     }
-*/
+
+
 }
