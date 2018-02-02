@@ -1,8 +1,8 @@
 public class LinkedListDeque<T> {
     private class HelperNode {
-        public HelperNode next;
-        public T item;
-        public HelperNode previous;
+        private HelperNode next;
+        private T item;
+        private HelperNode previous;
 
         public HelperNode(HelperNode p, T i, HelperNode n) {
             previous = p;
@@ -11,18 +11,18 @@ public class LinkedListDeque<T> {
         }
     }
 
-    public static void main(String[] args) {
-        LinkedListDeque Links = new LinkedListDeque();
-        Links.addFirst(1);
-        Links.addFirst(2);
-        Links.addFirst(3);
+    private static void main(String[] args) {
+        LinkedListDeque L = new LinkedListDeque();
+        L.addFirst(1);
+        L.addFirst(2);
+        L.addFirst(3);
 
-        Links.addLast(4);
-        Links.addLast(5);
-        Links.addFirst(6);
-        Links.removeFirst();
-        Links.removeLast();
-        Links.get(2);
+        L.addLast(4);
+        L.addLast(5);
+        L.addFirst(6);
+        L.removeFirst();
+        L.removeLast();
+        L.get(2);
     }
 
 
@@ -82,7 +82,8 @@ public class LinkedListDeque<T> {
     }
 
     public void printDeque() {
-        /*Prints the items in the deque from first to last, separated by a space.*/
+        /*Prints the items in the deque from first to last,
+        separated by a space.*/
         if (size == 0) {
             return;
         } else {
@@ -96,7 +97,8 @@ public class LinkedListDeque<T> {
     }
 
     public T removeFirst() {
-        /*Removes and returns the item at the front of the deque. If no such item exists, returns null.*/
+        /*Removes and returns the item at the front of the deque.
+        If no such item exists, returns null.*/
         if (size == 0) {
             return null;
         } else {
@@ -110,7 +112,9 @@ public class LinkedListDeque<T> {
     }
 
     public T removeLast() {
-        /*Removes and returns the item at the back of the deque. If no such item exists, returns null.*/
+        /*Removes and returns the item at the back of the deque.
+        If no such
+        item exists, returns null.*/
         if (size == 0) {
             return null;
         } else {
@@ -170,4 +174,3 @@ public class LinkedListDeque<T> {
 
 
 }
-
