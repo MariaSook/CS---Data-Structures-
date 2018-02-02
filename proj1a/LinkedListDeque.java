@@ -11,7 +11,7 @@ public class LinkedListDeque<T> {
         }
     }
 
-    private static void main(String[] args) {
+    public static void main(String[] args) {
         LinkedListDeque Links = new LinkedListDeque();
         Links.addFirst(1);
         Links.addFirst(2);
@@ -159,25 +159,20 @@ public class LinkedListDeque<T> {
         }*/
     }
 
-    public T getRecursive(int index){
-        /*
-        public T helper(int i, HelperNode curr){
-            if (index == 0){
-                return sentinel.next.item;
-            } else {
-                return helper(i-1, curr.next);
-            }
-
-            helper(index, sentinel); */
-        }
-
-        if (index == 0){
+    public T helper(int i, HelperNode curr) {
+        if (i == 0) {
             return sentinel.next.item;
-        }
-        else {
-            sentinel.next = sentinel.next.next;
-            return getRecursive(index - 1);
+        } else {
+            return helper(i - 1, curr.next);
         }
     }
+
+
+    public T getRecursive(int index){
+        return helper(index, sentinel);
+        }
+
+
+
 }
 
