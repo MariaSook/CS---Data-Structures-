@@ -1,4 +1,16 @@
 public class LinkedListDeque<T> {
+    private class HelperNode {
+        private HelperNode next;
+        private T item;
+        private HelperNode previous;
+
+        public HelperNode(HelperNode p, T i, HelperNode n) {
+            previous = p;
+            item = i;
+            next = n;
+        }
+    }
+
     private HelperNode sentinel;
     private int size;
 
@@ -8,18 +20,18 @@ public class LinkedListDeque<T> {
         size = 0;
     }
 
-    private static void main(String[] args) {
-        LinkedListDeque L = new LinkedListDeque();
-        L.addFirst(1);
-        L.addFirst(2);
-        L.addFirst(3);
+    public static void main(String[] args) {
+        LinkedListDeque links = new LinkedListDeque();
+        links.addFirst(1);
+        links.addFirst(2);
+        links.addFirst(3);
 
-        L.addLast(4);
-        L.addLast(5);
-        L.addFirst(6);
-        L.removeFirst();
-        L.removeLast();
-        L.get(2);
+        links.addLast(4);
+        links.addLast(5);
+        links.addFirst(6);
+        links.removeFirst();
+        links.removeLast();
+        links.get(2);
     }
 
     public void addFirst(T item) {
@@ -119,7 +131,7 @@ public class LinkedListDeque<T> {
     /*Gets the item at the given index, where 0 is the
      front, 1 is the next item, and so forth. If no such item
      exists, returns null. Must not alter the deque!*/
-        if (size < index) {
+        if (size ==0) {
             return null;
         } else {
             HelperNode dummynode = new HelperNode(sentinel.next, null, sentinel.next);
@@ -130,6 +142,7 @@ public class LinkedListDeque<T> {
             sentinel.next = dummynode.previous;
 
             return returned;
+
         }
 
         /*
@@ -148,29 +161,19 @@ public class LinkedListDeque<T> {
         }*/
     }
 
-    private T helper(int i, HelperNode node) {
+    private T helperget(int i, HelperNode node) {
         if (i == 0) {
             return node.next.item;
         } else {
-            return helper(i - 1, node.next);
+            return helperget(i - 1, node.next);
         }
     }
 
     public T getRecursive(int index) {
-        return helper(index, sentinel);
+        return helperget(index, sentinel);
     }
 
-    private class HelperNode {
-        private HelperNode next;
-        private T item;
-        private HelperNode previous;
 
-        public HelperNode(HelperNode p, T i, HelperNode n) {
-            previous = p;
-            item = i;
-            next = n;
-        }
-    }
 
 
 }
