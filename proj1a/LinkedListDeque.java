@@ -16,6 +16,8 @@ public class LinkedListDeque<T> {
         Links.addFirst(1);
         Links.addFirst(2);
         Links.addFirst(3);
+
+        Links.addLast(4);
     }
 
     private HelperNode sentinel;
@@ -41,9 +43,7 @@ public class LinkedListDeque<T> {
             HelperNode newnode = new HelperNode(sentinel, item, sentinel.next);
             sentinel.next = newnode;
             newnode.next.previous = newnode;
-
         }
-
     }
 
     public void addLast(T item){
@@ -54,13 +54,14 @@ public class LinkedListDeque<T> {
             HelperNode newnode = new HelperNode(sentinel, item, sentinel);
             sentinel.next = newnode;
             sentinel.previous = newnode;
-            sentinel.previous.previous = newnode;
+        } else {
+            size += 1;
 
+            HelperNode newnode = new HelperNode(sentinel.previous, item, sentinel);
+            sentinel.next = sentinel.next;
+            sentinel.previous = newnode;
+            }
         }
-
-        sentinel.next = new HelperNode(sentinel.next, item, sentinel.next);
-        size += 1;
-    }
 
     public boolean isEmpty(){
     /*Returns true if deque is empty, false otherwise.*/
