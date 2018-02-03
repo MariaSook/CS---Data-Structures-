@@ -11,21 +11,23 @@ public class ArrayDeque<T> {
         nextLast = 1;
     }
 
-    private static void main(String[] args) {
+    public static void main(String[] args) {
         ArrayDeque A = new ArrayDeque();
         A.addFirst(1);
         A.addFirst(2);
         A.addFirst(3);
-        A.printDeque();
         A.addFirst(4);
         A.addLast(99999);
         A.addFirst(5);
         A.addFirst(6);
         A.addFirst(7);
-        A.addFirst(8);
-        A.addFirst(9);
-        A.addLast(10);
+        A.removeFirst();
 
+
+//        A.addFirst(8);
+//        A.addFirst(9);
+//        A.addLast(10);
+//        A.printDeque();
     }
 
     private void resize(int arraysize, int index){
@@ -56,7 +58,6 @@ public class ArrayDeque<T> {
             size += 1;
         }
         items[nextlasthold] = item;
-
     }
 
     public boolean isEmpty(){
@@ -81,16 +82,29 @@ public class ArrayDeque<T> {
                System.out.print(items[i] + " ");
             }
         } else {
-            for (int i =0; i <size; i++){
+            for (int i = 0; i < size; i++){
                 System.out.print(items[i] + " ");
             }
         }
     }
 
-    public T removeFirst(){
-        size -= 1;
-        return items[nextFirst];
+//    private void resizedown(int arraysize, int index){
+//        T[] newarray = (T []) new Object[arraysize];
+//        System.arraycopy(items, 0, newarray, 0, index);
+//        System.arraycopy(items, index, newarray, index, items.length-index+1);
+//        items = newarray;
+//    }
 
+    public T removeFirst(){
+        T nextLasthold = items[nextLast];
+        if (size == 1){
+            size -= 1;
+            return null;
+        } else {
+            resize(--size, nextLast+1);
+            nextLast = (nextLast + 1) % items.length;
+        }
+        return nextLasthold;
     }
 
     public T removeLast(){
@@ -103,5 +117,8 @@ public class ArrayDeque<T> {
         return items[nextFirst];
     }
 
+    public T getrecursive(int index){
+        return items[nextFirst];
+    }
 
 }
