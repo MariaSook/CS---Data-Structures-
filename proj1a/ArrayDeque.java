@@ -11,31 +11,35 @@ public class ArrayDeque<T> {
         nextLast = 1;
     }
 
-    private static void main(String[] args) {
+    public static void main(String[] args) {
         ArrayDeque A = new ArrayDeque();
-        A.addFirst('a');
-        A.addFirst('b');
-        A.addLast('c');
-        A.addLast('d');
+        A.addFirst(1);
+        A.addFirst(2);
+        A.addFirst(3);
+        A.addFirst(4);
+        A.addFirst(5);
+        A.addFirst(6);
+        A.addFirst(7);
+        A.addFirst(8);
+        A.addFirst(9);
     }
-    /*
-    private void resize(int arraysize){
-        T[] a = (T []) new Object[arraysize];
-        System.arraycopy(items, 0,
-                a, 0, size);
-        items = a;
 
-    }*/
+    private void resize(int arraysize, int index){
+        T[] newarray = (T []) new Object[arraysize];
+        System.arraycopy(items, 0, newarray, 0, index);
+        System.arraycopy(items, index, newarray, index+1, items.length-index);
+        items = newarray;
+    }
 
     public void addFirst(T item){
-        items[nextFirst] = item;
-        if (nextFirst == 0) {
-            nextFirst = items.length-1;
+        if (size == items.length){
+            resize(++size, nextFirst);
         } else {
-            nextFirst = nextFirst-1;
+            nextFirst = (nextFirst - 1 + items.length) % items.length; //revisit math
         }
-        size +=1;
-        }
+        items[nextFirst] = item;
+        size += 1;
+    }
 
     public void addLast(T item){
         items[nextLast] = item;
