@@ -16,6 +16,7 @@ public class ArrayDeque<T> {
         A.addFirst(1);
         A.addFirst(2);
         A.addFirst(3);
+        A.printDeque();
         A.addFirst(4);
         A.addLast(99999);
         A.addFirst(5);
@@ -24,6 +25,7 @@ public class ArrayDeque<T> {
         A.addFirst(8);
         A.addFirst(9);
         A.addLast(10);
+
     }
 
     private void resize(int arraysize, int index){
@@ -58,6 +60,9 @@ public class ArrayDeque<T> {
     }
 
     public boolean isEmpty(){
+       if (size == 0){
+           return false;
+       }
        return true;
     }
 
@@ -66,7 +71,20 @@ public class ArrayDeque<T> {
     }
 
     public void printDeque(){
-        return;
+        if (size == 0){
+            return;
+        } else if (size < items.length) {
+           for (int i = 0; i < items.length; i++){
+               if (items[i] == null){
+                   continue;
+               }
+               System.out.print(items[i] + " ");
+            }
+        } else {
+            for (int i =0; i <size; i++){
+                System.out.print(items[i] + " ");
+            }
+        }
     }
 
     public T removeFirst(){
