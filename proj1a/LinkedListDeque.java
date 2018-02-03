@@ -153,6 +153,4 @@ public class LinkedListDeque<T> {
     public T getRecursive(int index) {
         return helperget(index, sentinel);
     }
-
-
 }
