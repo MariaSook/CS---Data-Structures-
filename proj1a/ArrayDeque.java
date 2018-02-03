@@ -78,9 +78,9 @@ public class ArrayDeque<T> {
 
     public boolean isEmpty(){
        if (size == 0){
-           return false;
+           return true;
        }
-       return true;
+       return false;
     }
 
     public int size(){
