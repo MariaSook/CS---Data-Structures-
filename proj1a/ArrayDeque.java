@@ -36,9 +36,10 @@ public class ArrayDeque<T> {
         if (size == items.length) {
             resize(2*sizehold);
         }
+        items[nextFirst] = item;
         size += 1 ;
         nextFirst = (nextFirst -1) % items.length;
-        items[nextFirst] = item;
+
     }
 
     public void addLast(T item) {
@@ -47,9 +48,10 @@ public class ArrayDeque<T> {
         if (size == items.length) {
             resize(2*sizehold);
         }
+        items[nextLast] = item;
         size += 1;
         nextLast = (nextLast +1) %items.length;
-        items[nextLast] = item;
+
     }
 
     public T removeFirst() {
@@ -74,6 +76,8 @@ public class ArrayDeque<T> {
         item exists, returns null.*/
         if (size == 0){
             return null;
+        } else if {
+
         } else if (size * 4 < items.length && items.length >= 16) {
             resize(items.length / 2);
         }
