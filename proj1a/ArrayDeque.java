@@ -11,7 +11,7 @@ public class ArrayDeque<T> {
         nextLast = 1;
     }
 
-    private static void main(String[] args) {
+    public static void main(String[] args) {
         ArrayDeque A = new ArrayDeque();
         A.addFirst(1);
         A.addFirst(2);
@@ -22,6 +22,7 @@ public class ArrayDeque<T> {
         A.addFirst(7);
         A.addFirst(8);
         A.addFirst(9);
+        A.addLast(10);
     }
 
     private void resize(int arraysize, int index){
@@ -42,12 +43,12 @@ public class ArrayDeque<T> {
     }
 
     public void addLast(T item){
-        items[nextLast] = item;
-        if (nextLast == items.length-1){
-            nextLast = 0;
+        if (size == items.length){
+            resize(++size, nextLast);
         } else {
-            nextLast = nextLast+1;
+            nextLast = (nextLast + 1) % items.length; //revisit math
         }
+        items[nextLast] = item;
         size += 1;
     }
 
