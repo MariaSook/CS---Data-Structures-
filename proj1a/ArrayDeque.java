@@ -53,25 +53,22 @@ public class ArrayDeque<T> {
     }
 
      public void addFirst(T item){
-        int nextFirsthold = nextFirst;
-        if (size == items.length){ /*size == items.length*/
-            resize(size*2);
-        } else {
-            nextFirst = (nextFirst - 1) % items.length;
+        if (size == items.length) { /*size == items.length*/
+            resize(size * 2);
         }
+        nextFirst = (nextFirst - 1) % items.length;
         size += 1;
-        items[nextFirsthold] =  item;
+        items[nextFirst] =  item;
     }
 
     public void addLast(T item){
-        int nextlasthold = nextLast;
+
         if (size == items.length){
             resize(size*2);
-        } else {
-            nextLast = (nextLast + 1) % items.length;
-        }
+
+        nextLast = (nextLast + 1) % items.length;
         size += 1;
-        items[nextlasthold] = item;
+        items[nextLast] = item;
     }
 
     public boolean isEmpty(){
@@ -103,40 +100,26 @@ public class ArrayDeque<T> {
     }
 
     public T removeFirst(){
-        T nextLasthold = items[nextLast];
-//        if (size <= 1){
-//            size = 0;
-//            T[] newarray = (T []) new Object[8];
-//            items = newarray;
-//            nextFirst = 0;
-//            nextLast = 1;
-//            return nextLasthold;
         if (items.length >= 16 && size*4 < items.length){
             resize(items.length/2);
         }
-        items[nextFirst] = null;
         nextLast = (nextLast + 1) % items.length;
+        T holdvalue = items[nextFirst];
+        items[nextFirst] = null;
         size -= 1;
-        return nextLasthold;
+        return holdvalue;
     }
 
     public T removeLast(){
-        T nextfirsthold = items[nextFirst];
-//        if (size <= 1) {
-//            size = 0;
-//            T[] newarray = (T[]) new Object[8];
-//            items = newarray;
-//            nextFirst = 0;
-//            nextLast = 1;
-//            return nextfirsthold;
+//
         if (items.length >= 16 && size * 4 <items.length) {
             resize(items.length/2);
         }
-
         nextFirst = (nextFirst - 1 + items.length) % items.length;
+        T holdvalue = items[nextFirst];
         size -= 1;
         items[nextLast] = null;
-        return nextfirsthold;
+        return holdvalue;
     }
 
     public T get(int index){
