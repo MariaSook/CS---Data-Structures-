@@ -38,7 +38,7 @@ public class ArrayDeque<T> {
         }
         items[nextFirst] = item;
         size += 1 ;
-        nextFirst = (nextFirst -1) % items.length;
+        nfc();
 
     }
 
@@ -50,7 +50,7 @@ public class ArrayDeque<T> {
         }
         items[nextLast] = item;
         size += 1;
-        nextLast = (nextLast +1) %items.length;
+        nlc();
 
     }
 
@@ -63,25 +63,35 @@ public class ArrayDeque<T> {
         } else if (size * 4 < items.length && items.length >= 16) {
             resize(items.length / 2);
         }
-        nextFirst = Math.floorMod(nextFirst + 1, items.length);
+        nfc();
         T holdval = items[nextFirst];
         items[nextFirst] = null;
         size -= 1;
         return holdval;
     }
 
+    private void nfc(){
+        nextFirst= (nextFirst+1) % items.length;
+    }
+
+    private void nlc(){
+        /*next last length change*/
+        nextLast = (nextLast-1) % items.length;
+    }
+
     public T removeLast() {
         /*Removes and returns the item at the back of the deque.
         If no such
         item exists, returns null.*/
-        if (size == 0){
-            return null;
-        } else if {
-
+        if (size <= 1){
+            T itemhold = items[nextLast-1];
+            items[nextLast-1] = null;
+            size = 0;
+            nextLast = (nextLast-1) % items.length;
         } else if (size * 4 < items.length && items.length >= 16) {
             resize(items.length / 2);
         }
-        nextLast = Math.floorMod(nextLast - 1, items.length);
+        nlc();
         T holdval = items[nextLast];
         items[nextLast] = null;
         size -= 1;
