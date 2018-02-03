@@ -104,40 +104,38 @@ public class ArrayDeque<T> {
 
     public T removeFirst(){
         T nextLasthold = items[nextLast];
-        if (size <= 1){
-            size = 0;
-            T[] newarray = (T []) new Object[8];
-            items = newarray;
-            nextFirst = 0;
-            nextLast = 1;
-            return nextLasthold;
-        } else if (items.length >= 16 && size*4 < items.length){
+//        if (size <= 1){
+//            size = 0;
+//            T[] newarray = (T []) new Object[8];
+//            items = newarray;
+//            nextFirst = 0;
+//            nextLast = 1;
+//            return nextLasthold;
+        if (items.length >= 16 && size*4 < items.length){
             resize(items.length/2);
-        } else {
-            resize(--size); //resize factor is -1
-            nextLast = (nextLast + 1) % items.length;
         }
-        items[nextLasthold] = item;
+        items[nextFirst] = null;
+        nextLast = (nextLast + 1) % items.length;
         size -= 1;
         return nextLasthold;
     }
 
     public T removeLast(){
         T nextfirsthold = items[nextFirst];
-        if (size <= 1) {
-            size = 0;
-            T[] newarray = (T[]) new Object[8];
-            items = newarray;
-            nextFirst = 0;
-            nextLast = 1;
-            return nextfirsthold;
-        } else if (items.length >= 16 && size * 4 <items.length) {
+//        if (size <= 1) {
+//            size = 0;
+//            T[] newarray = (T[]) new Object[8];
+//            items = newarray;
+//            nextFirst = 0;
+//            nextLast = 1;
+//            return nextfirsthold;
+        if (items.length >= 16 && size * 4 <items.length) {
             resize(items.length/2);
-        } else {
-            resize(size);
-            nextFirst = (nextFirst - 1 + items.length) % items.length;
         }
+
+        nextFirst = (nextFirst - 1 + items.length) % items.length;
         size -= 1;
+        items[nextLast] = null;
         return nextfirsthold;
     }
 
