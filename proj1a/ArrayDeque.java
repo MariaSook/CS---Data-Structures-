@@ -11,7 +11,7 @@ public class ArrayDeque<T> {
         nextLast = 1;
     }
 
-    private static void main(String[] args) {
+    public static void main(String[] args) {
         ArrayDeque A = new ArrayDeque();
         A.addFirst(1);
         A.addFirst(2);
@@ -35,13 +35,14 @@ public class ArrayDeque<T> {
 
     public void addFirst(T item){
         int nextFirsthold = nextFirst;
-        if (size == items.length){
+        if (size == items.length){ /*size == items.length*/
             resize(++size, nextFirst);
         } else {
-            nextFirst = (nextFirst - 1 + items.length) % items.length; //revisit math
+            nextFirst = (nextFirst - 1 + items.length) % items.length;
+            size += 1;
         }
         items[nextFirsthold] = item;
-        size += 1;
+
     }
 
     public void addLast(T item){
@@ -49,10 +50,11 @@ public class ArrayDeque<T> {
         if (size == items.length){
             resize(++size, nextLast);
         } else {
-            nextLast = (nextLast + 1) % items.length; //revisit math
+            nextLast = (nextLast + 1) % items.length;
+            size += 1;
         }
         items[nextlasthold] = item;
-        size += 1;
+
     }
 
     public boolean isEmpty(){
