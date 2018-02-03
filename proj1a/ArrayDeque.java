@@ -52,27 +52,25 @@ public class ArrayDeque<T> {
         nextFirst = items.length - 1;
     }
 
-    public void addFirst(T item){
+     public void addFirst(T item){
         int nextFirsthold = nextFirst;
         if (size == items.length){ /*size == items.length*/
             resize(size*2);
-            size += 1;
         } else {
-            nextFirst = (nextFirst - 1 + items.length) % items.length;
-            size += 1;
+            nextFirst = (nextFirst - 1) % items.length;
         }
-        items[nextFirsthold] = item;
+        size += 1;
+        items[nextFirsthold] =  item;
     }
 
     public void addLast(T item){
         int nextlasthold = nextLast;
         if (size == items.length){
             resize(size*2);
-            size += 1;
         } else {
             nextLast = (nextLast + 1) % items.length;
-            size += 1;
         }
+        size += 1;
         items[nextlasthold] = item;
     }
 
@@ -119,6 +117,7 @@ public class ArrayDeque<T> {
             resize(--size); //resize factor is -1
             nextLast = (nextLast + 1) % items.length;
         }
+        items[nextLasthold] = item;
         size -= 1;
         return nextLasthold;
     }
@@ -143,7 +142,7 @@ public class ArrayDeque<T> {
     }
 
     public T get(int index){
-        return items[index];
+        return items[(nextFirst + 1 + index) % items.length];
     }
 
 
