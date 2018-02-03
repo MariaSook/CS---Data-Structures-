@@ -61,26 +61,29 @@ public class ArrayDeque<T> {
         items[nextFirst] =  item;
     }
 
-    public void addLast(T item){
+    public void addLast(T item) {
 
-        if (size == items.length){
-            resize(size*2);
+        if (size == items.length) {
+            resize(size * 2);
 
-        nextLast = (nextLast + 1) % items.length;
-        size += 1;
-        items[nextLast] = item;
-    }
-
-    public boolean isEmpty(){
-       if (size == 0){
-           return true;
-       }
-       return false;
+            nextLast = (nextLast + 1) % items.length;
+            size += 1;
+            items[nextLast] = item;
+        }
     }
 
     public int size(){
-        return size;
-    }
+            return size;
+        }
+
+
+    public boolean isEmpty(){
+            if (size == 0){
+                return true;
+            }
+            return false;
+        }
+
 
     public void printDeque(){
         if (size == 0){
