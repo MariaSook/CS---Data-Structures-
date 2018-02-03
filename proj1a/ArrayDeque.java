@@ -74,7 +74,7 @@ public class ArrayDeque<T> {
         nextLast = Math.floorMod(nextLast - 1, items.length);
         T holdval = items[nextLast];
         items[nextLast] = null;
-        size -= ;
+        size -= 1;
         return holdval;
     }
 
