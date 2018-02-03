@@ -11,7 +11,7 @@ public class ArrayDeque<T> {
         nextLast = 1;
     }
 
-    public static void main(String[] args) {
+    private static void main(String[] args) {
         ArrayDeque A = new ArrayDeque();
         A.addFirst(1);
         A.addFirst(2);
@@ -31,7 +31,7 @@ public class ArrayDeque<T> {
         items = newarray;
     }
 
-    private void addFirst(T item){
+    public void addFirst(T item){
         if (size == items.length){
             resize(++size, nextFirst);
         } else {
