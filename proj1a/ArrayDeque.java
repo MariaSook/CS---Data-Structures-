@@ -36,16 +36,16 @@ public class ArrayDeque<T> {
     }
     private void resize(int arraysize) {
         T[] newarray = (T[]) new Object[arraysize];
-        int first = nextFirst + 1;
+        int firstvalue = nextFirst + 1;
         for (int i = 0; i < items.length; i++) {
-            while (first > items.length) {
-                first -= items.length;
+            while (firstvalue > items.length) {
+                firstvalue -= items.length;
             }
-            if (items[first] == null) {
+            if (items[firstvalue] == null) {
                 break;
             }
-            newarray[i] = items[first];
-            first += 1;
+            newarray[i] = items[firstvalue];
+            firstvalue += 1;
         }
         items = newarray;
         nextLast = size;
@@ -113,10 +113,13 @@ public class ArrayDeque<T> {
             nextFirst = 0;
             nextLast = 1;
             return nextLasthold;
+        } else if (items.length >= 16 && size*4 < items.length){
+            resize(items.length/2);
         } else {
             resize(--size); //resize factor is -1
             nextLast = (nextLast + 1) % items.length;
         }
+        size -= 1;
         return nextLasthold;
     }
 
@@ -129,10 +132,13 @@ public class ArrayDeque<T> {
             nextFirst = 0;
             nextLast = 1;
             return nextfirsthold;
+        } else if (items.length >= 16 && size * 4 <items.length) {
+            resize(items.length/2);
         } else {
-            resize(--size);
+            resize(size);
             nextFirst = (nextFirst - 1 + items.length) % items.length;
         }
+        size -= 1;
         return nextfirsthold;
     }
 
