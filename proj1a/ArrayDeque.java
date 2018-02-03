@@ -117,8 +117,5 @@ public class ArrayDeque<T> {
         return items[nextFirst];
     }
 
-    public T getrecursive(int index){
-        return items[nextFirst];
-    }
-
+    
 }
