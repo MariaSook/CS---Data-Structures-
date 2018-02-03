@@ -4,4 +4,4 @@ In 61a I could finish a project in one day, then project 0 was relatively simple
 
 It took more time than I thought it would to grasp the concept of a sentinel, and then to start coding.
 
-I also had problems with my java visualizer in Intellij and made very little progress until I fixed my problem. 
+I also had problems with my java visualizer in Intellij and made very little progress until I fixed my problem.
