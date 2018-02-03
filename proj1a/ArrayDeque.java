@@ -31,7 +31,7 @@ public class ArrayDeque<T> {
         items = newarray;
     }
 
-    public void addFirst(T item){
+    private void addFirst(T item){
         if (size == items.length){
             resize(++size, nextFirst);
         } else {
