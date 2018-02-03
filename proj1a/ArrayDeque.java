@@ -11,12 +11,13 @@ public class ArrayDeque<T> {
         nextLast = 1;
     }
 
-    private static void main(String[] args) {
+    public static void main(String[] args) {
         ArrayDeque A = new ArrayDeque();
         A.addFirst(1);
         A.addFirst(2);
         A.addFirst(3);
         A.addFirst(4);
+        A.addLast(99999);
         A.addFirst(5);
         A.addFirst(6);
         A.addFirst(7);
@@ -33,22 +34,24 @@ public class ArrayDeque<T> {
     }
 
     public void addFirst(T item){
+        int nextFirsthold = nextFirst;
         if (size == items.length){
             resize(++size, nextFirst);
         } else {
             nextFirst = (nextFirst - 1 + items.length) % items.length; //revisit math
         }
-        items[nextFirst] = item;
+        items[nextFirsthold] = item;
         size += 1;
     }
 
     public void addLast(T item){
+        int nextlasthold = nextLast;
         if (size == items.length){
             resize(++size, nextLast);
         } else {
             nextLast = (nextLast + 1) % items.length; //revisit math
         }
-        items[nextLast] = item;
+        items[nextlasthold] = item;
         size += 1;
     }
 
