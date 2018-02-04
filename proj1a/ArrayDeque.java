@@ -11,7 +11,7 @@ public class ArrayDeque<T> {
         nextLast = 1;
     }
 
-    private static void main(String[] args) {
+    public static void main(String[] args) {
         ArrayDeque A = new ArrayDeque();
         A.addFirst(1);
         A.addFirst(2);
@@ -48,11 +48,6 @@ public class ArrayDeque<T> {
         nextLast = size;
     }
 
-    private void nflc(){
-        /*next first length change*/
-        nextFirst = Math.floorMod(nextFirst - 1, items.length);
-    }
-
     private void nllc(){
         /*next last length change*/
         nextLast = Math.floorMod(nextLast + 1, items.length);
@@ -65,8 +60,8 @@ public class ArrayDeque<T> {
             resize(2*sizehold);
         }
         items[nextFirst] = item;
+        nextFirst = (nextFirst - 1) % items.length;
         size += 1 ;
-        nflc();
     }
 
     //@Andrew Crowley and I worked on adds/removes in the same room, and we talked our way through the problems/debugging we both faced
@@ -77,8 +72,8 @@ public class ArrayDeque<T> {
             resize(2*sizehold);
         }
         items[nextLast] = item;
+        nextLast = (nextLast + 1) % items.length;
         size += 1;
-        nllc();
     }
 
     public T removeFirst() {
@@ -86,12 +81,10 @@ public class ArrayDeque<T> {
         If no such item exists, returns null.*/
         if (size == 0){
             return null;
-        } else if (items[(nextFirst-1)%items.length] == null){
-            return null;
-        } else if (size * 4 < items.length && items.length >= 16) {
+        } else if (items.length >= 16 && size*4 <items.length) {
             resize(items.length / 2);
         }
-        nflc();
+        nextFirst = (nextFirst +1)%items.length;
         T returnval = items[nextFirst];
         items[nextFirst] = null;
         size -= 1;
@@ -103,12 +96,10 @@ public class ArrayDeque<T> {
         If no such item exists, returns null.*/
         if (size == 0){
             return null;
-        } else if (items[(nextLast+1)%items.length] == null){
-            return null;
-        } else if (size * 4 < items.length && items.length >= 16) {
+        } else if (items.length >= 16 && size*4 <items.length) {
             resize(items.length / 2);
         }
-        nllc();
+        nextLast = (nextLast -1)%items.length;
         T returnval = items[nextLast];
         items[nextLast] = null;
         size -= 1;
