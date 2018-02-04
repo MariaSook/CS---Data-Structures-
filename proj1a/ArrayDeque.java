@@ -52,19 +52,20 @@ public class ArrayDeque<T> {
         /*Adds an item of type T to the front of the array.*/
         int sizehold = size();
         if (size == items.length) {
-            resize(2*sizehold);
+            resize(2 * sizehold);
         }
         items[nextFirst] = item;
         nextFirst = Math.floorMod(nextFirst - 1, items.length);
-        size += 1 ;
+        size += 1;
     }
 
     //@Andrew Crowley and I worked on adds/removes in the same room, and we talked our way through the problems/debugging we both faced
+    //some help from another CS major at Berkeley
     public void addLast(T item) {
         /*Adds an item of type T to the back of the array. */
         int sizehold = size();
         if (size == items.length) {
-            resize(2*sizehold);
+            resize(2 * sizehold);
         }
         items[nextLast] = item;
         nextLast = Math.floorMod(nextLast + 1, items.length);
@@ -74,9 +75,9 @@ public class ArrayDeque<T> {
     public T removeFirst() {
         /*Removes and returns the item at the front of the deque.
         If no such item exists, returns null.*/
-        if (size == 0){
+        if (size == 0) {
             return null;
-        } else if (items.length >= 16 && size*4 <items.length) {
+        } else if (items.length >= 16 && size * 4 < items.length) {
             resize(items.length / 2);
         }
         nextFirst = Math.floorMod(nextFirst + 1, items.length);
@@ -89,9 +90,9 @@ public class ArrayDeque<T> {
     public T removeLast() {
         /*Removes and returns the item at the back of the deque.
         If no such item exists, returns null.*/
-        if (size == 0){
+        if (size == 0) {
             return null;
-        } else if (items.length >= 16 && size*4 <items.length) {
+        } else if (items.length >= 16 && size * 4 < items.length) {
             resize(items.length / 2);
         }
         nextLast = Math.floorMod(nextLast - 1, items.length);
@@ -113,14 +114,14 @@ public class ArrayDeque<T> {
         return size;
     }
 
-    public void printDeque(){
+    public void printDeque() {
         /*Prints the items in the array from first to last,
         separated by a space.*/
-        if (size == 0){
+        if (size == 0) {
             return;
         } else {
-            for (int i = 0; i < items.length; i++){
-                if (items[i] == null){
+            for (int i = 0; i < items.length; i++) {
+                if (items[i] == null) {
                     continue;
                 }
                 System.out.print(items[i] + " ");

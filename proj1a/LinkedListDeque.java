@@ -126,10 +126,10 @@ public class LinkedListDeque<T> {
      exists, returns null. Must not alter the deque!*/
         int i = index;
 
-        if (size == 0){
+        if (size == 0) {
             return null;
 
-        } else{
+        } else {
             HelperNode dummynode = new HelperNode(sentinel.next, null, sentinel.next);
             while (i >= 1) {
                 sentinel.next = sentinel.next.next;
