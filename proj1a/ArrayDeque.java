@@ -144,6 +144,6 @@ public class ArrayDeque<T> {
     }
 
     public T get(int index) {
-        return items[(nextFirst + 1 + index )%items.length];
+        return items[Math.floorMod(nextFirst + 1 + index, items.length)];
     }
 }
