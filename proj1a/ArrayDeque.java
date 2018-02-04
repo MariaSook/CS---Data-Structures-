@@ -85,8 +85,8 @@ public class ArrayDeque<T> {
         If no such
         item exists, returns null.*/
         if (size == 0){
-            T[] temp = (T[]) new Object[8];
-            items = temp;
+            return null;
+        } else if (items[nextLast-1] == null){
             return null;
         } else if (size * 4 < items.length && items.length >= 16) {
             resize(items.length / 2);
@@ -103,8 +103,8 @@ public class ArrayDeque<T> {
         If no such
         item exists, returns null.*/
         if (size == 0){
-            T[] temp = (T[]) new Object[8];
-            items = temp;
+            return null;
+        } else if (items[nextLast-1] == null){
             return null;
         } else if (size * 4 < items.length && items.length >= 16) {
             resize(items.length / 2);
@@ -144,6 +144,7 @@ public class ArrayDeque<T> {
     }
 
     public T get(int index) {
-        return items[Math.floorMod(nextFirst + 1 + index, items.length)];
+        int val = Math.floorMod(nextFirst + 1 + index, items.length);
+        return items[val];
     }
 }
