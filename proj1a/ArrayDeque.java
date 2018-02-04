@@ -29,7 +29,8 @@ public class ArrayDeque<T> {
 
     }
 
-    //@Gabby Shvartsman helped me visualize what resize was supposed to do, and a good way to approach this problem
+    //@Gabby Shvartsman helped me visualize what resize
+    //was supposed to do, and a good way to approach this problem
     private void resize(int resizeval) {
         T[] newArray = (T[]) new Object[resizeval];
         int firstvalindex = nextFirst + 1;
@@ -59,7 +60,8 @@ public class ArrayDeque<T> {
         size += 1;
     }
 
-    //@Andrew Crowley and I worked on adds/removes in the same room, and we talked our way through the problems/debugging we both faced
+    //@Andrew Crowley and I worked on adds/removes in the same room,
+    // and we talked our way through the problems/debugging we both faced
     //some help from another CS major at Berkeley
     public void addLast(T item) {
         /*Adds an item of type T to the back of the array. */
@@ -87,6 +89,7 @@ public class ArrayDeque<T> {
         return returnval;
     }
 
+    //@andrew crowley
     public T removeLast() {
         /*Removes and returns the item at the back of the deque.
         If no such item exists, returns null.*/

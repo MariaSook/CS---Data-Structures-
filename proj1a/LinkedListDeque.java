@@ -4,7 +4,7 @@ public class LinkedListDeque<T> {
         private T item;
         private HelperNode previous;
 
-        public HelperNode(HelperNode p, T i, HelperNode n) {
+        HelperNode(HelperNode p, T i, HelperNode n) {
             previous = p;
             item = i;
             next = n;
