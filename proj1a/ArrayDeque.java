@@ -11,7 +11,7 @@ public class ArrayDeque<T> {
         nextLast = 1;
     }
 
-    public static void main(String[] args) {
+    private static void main(String[] args) {
         ArrayDeque A = new ArrayDeque();
         A.addFirst(1);
         A.addFirst(2);
@@ -25,6 +25,7 @@ public class ArrayDeque<T> {
         A.addFirst(2);
         A.addFirst(3);
         A.addFirst(4);
+        A.removeFirst();
 
     }
 
