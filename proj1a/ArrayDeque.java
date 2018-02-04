@@ -11,20 +11,20 @@ public class ArrayDeque<T> {
         nextLast = 1;
     }
 
-    private static void main(String[] args) {
+    public static void main(String[] args) {
         ArrayDeque A = new ArrayDeque();
         A.addFirst(1);
         A.addFirst(2);
         A.addFirst(3);
         A.addFirst(4);
-        A.addFirst(1);
-        A.addFirst(2);
-        A.addFirst(3);
-        A.addFirst(4);
-        A.addFirst(1);
-        A.addFirst(2);
-        A.addFirst(3);
-        A.addFirst(4);
+        A.addFirst(5);
+        A.addFirst(6);
+        A.addFirst(7);
+        A.addFirst(8);
+        A.addFirst(9);
+        A.addFirst(10);
+        A.addFirst(11);
+        A.addFirst(12);
         A.removeFirst();
 
     }
@@ -50,19 +50,19 @@ public class ArrayDeque<T> {
 
     private void nflc(){
         /*next first length change*/
-        nextFirst = (nextFirst - 1) % items.length;
+        nextFirst = Math.floorMod(nextFirst - 1, items.length);
     }
 
     private void nllc(){
         /*next last length change*/
-        nextLast = (nextLast - 1) % items.length;
+        nextLast = Math.floorMod(nextLast + 1, items.length);
     }
 
     public void addFirst(T item) {
         /*Adds an item of type T to the front of the array.*/
         int sizehold = size();
         if (size == items.length) {
-            resize(sizehold*2);
+            resize(2*sizehold);
         }
         items[nextFirst] = item;
         size += 1 ;
@@ -74,7 +74,7 @@ public class ArrayDeque<T> {
         /*Adds an item of type T to the back of the array. */
         int sizehold = size();
         if (size == items.length) {
-            resize(sizehold*2);
+            resize(2*sizehold);
         }
         items[nextLast] = item;
         size += 1;
