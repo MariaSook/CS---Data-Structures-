@@ -14,7 +14,6 @@ public class LinkedListDeque<T> {
     private HelperNode sentinel;
     private int size;
 
-
     public LinkedListDeque() {
         sentinel = new HelperNode(sentinel, null, sentinel);
         size = 0;
