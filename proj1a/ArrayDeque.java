@@ -55,7 +55,7 @@ public class ArrayDeque<T> {
             resize(2*sizehold);
         }
         items[nextFirst] = item;
-        nextFirst = (nextFirst - 1) % items.length;
+        nextFirst = Math.floorMod(nextFirst - 1, items.length);
         size += 1 ;
     }
 
@@ -67,7 +67,7 @@ public class ArrayDeque<T> {
             resize(2*sizehold);
         }
         items[nextLast] = item;
-        nextLast = (nextLast + 1) % items.length;
+        nextLast = Math.floorMod(nextLast + 1, items.length);
         size += 1;
     }
 
@@ -79,7 +79,7 @@ public class ArrayDeque<T> {
         } else if (items.length >= 16 && size*4 <items.length) {
             resize(items.length / 2);
         }
-        nextFirst = (nextFirst +1)%items.length;
+        nextFirst = Math.floorMod(nextFirst + 1, items.length);
         T returnval = items[nextFirst];
         items[nextFirst] = null;
         size -= 1;
@@ -94,7 +94,7 @@ public class ArrayDeque<T> {
         } else if (items.length >= 16 && size*4 <items.length) {
             resize(items.length / 2);
         }
-        nextLast = (nextLast -1)%items.length;
+        nextLast = Math.floorMod(nextLast - 1, items.length);
         T returnval = items[nextLast];
         items[nextLast] = null;
         size -= 1;
