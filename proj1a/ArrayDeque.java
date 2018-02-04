@@ -11,7 +11,7 @@ public class ArrayDeque<T> {
         nextLast = 1;
     }
 
-    public static void main(String[] args) {
+    private static void main(String[] args) {
         ArrayDeque A = new ArrayDeque();
         A.addFirst(1);
         A.addFirst(2);
@@ -46,11 +46,6 @@ public class ArrayDeque<T> {
         items = newArray;
         nextFirst = items.length - 1;
         nextLast = size;
-    }
-
-    private void nllc(){
-        /*next last length change*/
-        nextLast = Math.floorMod(nextLast + 1, items.length);
     }
 
     public void addFirst(T item) {
