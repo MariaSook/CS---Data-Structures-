@@ -11,16 +11,32 @@ public class ArrayDeque<T> {
         nextLast = 1;
     }
 
-    //@talked over implementation with Gabby shvartsman
+    public static void main(String[] args) {
+        ArrayDeque A = new ArrayDeque();
+        A.addFirst(1);
+        A.addFirst(2);
+        A.addFirst(3);
+        A.addFirst(4);
+        A.addFirst(1);
+        A.addFirst(2);
+        A.addFirst(3);
+        A.addFirst(4);
+        A.addFirst(1);
+        A.addFirst(2);
+        A.addFirst(3);
+        A.addFirst(4);
+
+    }
+
+    //@Gabby Shvartsman helped me visualize what resize was supposed to do
     private void resize(int resizeval) {
         T[] newArray = (T[]) new Object[resizeval];
         int firstvalindex = nextFirst + 1;
         for (int i = 0; i < items.length; i++) {
-            T firstval = items[firstvalindex];
             while (firstvalindex >= items.length) {
                 firstvalindex -= items.length;
             }
-            if (firstval == null) {
+            if (items[firstvalindex] == null) {
                 break;
             }
             newArray[i] = items[firstvalindex];
@@ -31,36 +47,36 @@ public class ArrayDeque<T> {
         nextLast = size;
     }
 
+    private void nflc(){
+        /*next first length change*/
+        nextFirst = Math.floorMod(nextFirst - 1, items.length);
+    }
+
+    private void nllc(){
+        /*next last length change*/
+        nextLast = Math.floorMod(nextLast - 1, items.length);
+    }
+
     public void addFirst(T item) {
         /*Adds an item of type T to the front of the array.*/
-        int sizehold = size;
+        int sizehold = size();
         if (size == items.length) {
-            resize(2*sizehold);
+            resize(sizehold*2);
         }
         items[nextFirst] = item;
         size += 1 ;
-        nfc();
+        nflc();
     }
 
     public void addLast(T item) {
         /*Adds an item of type T to the back of the array. */
-        int sizehold = size;
+        int sizehold = size();
         if (size == items.length) {
-            resize(2*sizehold);
+            resize(sizehold*2);
         }
         items[nextLast] = item;
         size += 1;
-        nlc();
-    }
-
-    private void nfc(){
-        /*next first length change*/
-        nextFirst= Math.floorMod(nextLast - 1, items.length);
-    }
-
-    private void nlc(){
-        /*next last length change*/
-        nextLast = Math.floorMod(nextLast + 1, items.length);
+        nllc();
     }
 
     public T removeFirst() {
@@ -74,7 +90,7 @@ public class ArrayDeque<T> {
         } else if (size * 4 < items.length && items.length >= 16) {
             resize(items.length / 2);
         }
-        nfc();
+        nflc();
         T holdval = items[nextFirst];
         items[nextFirst] = null;
         size -= 1;
@@ -92,7 +108,7 @@ public class ArrayDeque<T> {
         } else if (size * 4 < items.length && items.length >= 16) {
             resize(items.length / 2);
         }
-        nlc();
+        nllc();
         T holdval = items[nextLast];
         items[nextLast] = null;
         size -= 1;
@@ -116,21 +132,17 @@ public class ArrayDeque<T> {
         separated by a space.*/
         if (size == 0){
             return;
-        } else if (size < items.length) {
+        } else {
             for (int i = 0; i < items.length; i++){
                 if (items[i] == null){
                     continue;
                 }
                 System.out.print(items[i] + " ");
             }
-        } else {
-            for (int i = 0; i < size; i++){
-                System.out.print(items[i] + " ");
-            }
         }
     }
 
     public T get(int index) {
-        return items[index];
+        return items[(nextFirst + 1 + index )%items.length];
     }
 }
