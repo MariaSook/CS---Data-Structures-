@@ -11,6 +11,7 @@ public class ArrayDeque<T> {
         nextLast = 1;
     }
 
+    //@talked over implementation with Gabby shvartsman
     private void resize(int resizeval) {
         T[] newArray = (T[]) new Object[resizeval];
         int firstvalindex = nextFirst + 1;
@@ -54,12 +55,12 @@ public class ArrayDeque<T> {
 
     private void nfc(){
         /*next first length change*/
-        nextFirst= (nextFirst+1) % items.length;
+        nextFirst= Math.floorMod(nextLast - 1, items.length);
     }
 
     private void nlc(){
         /*next last length change*/
-        nextLast = (nextLast-1) % items.length;
+        nextLast = Math.floorMod(nextLast + 1, items.length);
     }
 
     public T removeFirst() {
