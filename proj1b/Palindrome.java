@@ -1,4 +1,4 @@
-public class Palindrome extends OffByOne{
+public class Palindrome extends OffByOne {
     public Deque<Character> wordToDeque(String word) {
         /* given a String, will return a Deque where the
         characters appear in the same order as in the String
@@ -30,19 +30,18 @@ public class Palindrome extends OffByOne{
         return isPalindrome(dequetoString(palindromeword));
     }
 
-    public boolean isPalindrome(String word, CharacterComparator cc){
+    public boolean isPalindrome(String word, CharacterComparator cc) {
         Deque palindromeword = wordToDeque(word);
 
-        if (palindromeword.size() == 0 || palindromeword.size()== 1){
+        if (palindromeword.size() == 0 || palindromeword.size() == 1) {
             return true;
-        } else if (cc.equalChars(word.charAt(0), word.charAt(word.length()-1))){
+        } else if (cc.equalChars(word.charAt(0), word.charAt(word.length() - 1))) {
             palindromeword.removeFirst();
             palindromeword.removeLast();
             String newword = dequetoString(palindromeword);
             return isPalindrome(newword, cc);
-        } return false;
+        }
+        return false;
     }
 
 }
-
-
