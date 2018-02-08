@@ -1,4 +1,5 @@
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 public class TestPalindrome {
@@ -18,7 +19,7 @@ public class TestPalindrome {
     }
 
     @Test
-    public void testisPalidrome(){
+    public void testisPalidrome() {
         assertTrue(palindrome.isPalindrome("racecar"));
         assertTrue(palindrome.isPalindrome("noon"));
         assertTrue(palindrome.isPalindrome("a"));
@@ -29,20 +30,19 @@ public class TestPalindrome {
         assertFalse(palindrome.isPalindrome("aaaaab"));
 
 
-
-        //overloaded Palendrome
-        assertTrue(palindrome.isPalindrome("adfabgeb", offByOne));
+        //overloaded Palindrome -- how to write the test cases?!??!?!?!?1
+        //how to test non-numeric values
+        assertTrue(palindrome.isPalindrome("acdb", offByOne));
         assertTrue(palindrome.isPalindrome("sdfafgbect", offByOne));
         assertTrue(palindrome.isPalindrome("a", offByOne));
         assertTrue(palindrome.isPalindrome("", offByOne));
+        assertTrue(palindrome.isPalindrome(";:", offByOne));
 
         assertFalse(palindrome.isPalindrome("aaaaaaa", offByOne));
         assertFalse(palindrome.isPalindrome("abcdefg", offByOne));
         assertFalse(palindrome.isPalindrome("asdgfhrhtrstrefd", offByOne));
 
     }
-
-
 
 
 }
