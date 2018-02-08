@@ -19,18 +19,28 @@ public class Palindrome {
         } return s + d.removeFirst() + dequetoString(d);
     }
 
+    //question -- can it be a palendrome if it's like %bb% ? -- so have non-letters in the palendrome?
+
     public boolean isPalindrome(String word){
         Deque palindromeword = wordToDeque(word);
-        if (word.length() == 0 || word.length()==1){
+        if (palindromeword.size() == 0 || palindromeword.size() == 1){
             return true;
         } else if (palindromeword.removeFirst() != palindromeword.removeLast()){
             return false;
         } return isPalindrome(dequetoString(palindromeword));
     }
 
+
+//    //unsure how to call Off by one method here -- red highlighted below is a problem
 //    public boolean isPalindrome(String word, CharacterComparator cc){
-//
+//        Deque palindromeword = wordToDeque(word);
+//        if (palindromeword.size() == 0 || palindromeword.size()== 1){
+//            return true;
+//        } else if (cc.OffByOne(palindromeword.removeFirst(), palindromeword.removeLast()) == false){
+//            return false;
+//        } return isPalindrome(dequetoString(palindromeword));
 //    }
+
 
     }
 

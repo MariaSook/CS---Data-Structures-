@@ -5,6 +5,7 @@ public class TestPalindrome {
     /* You must use this palindrome, and not instantiate
      new Palindromes, or the autograder might be upset. */
     static Palindrome palindrome = new Palindrome();
+    static CharacterComparator offByOne = new OffByOne();
 
     @Test
     public void testWordToDeque() {
@@ -19,17 +20,29 @@ public class TestPalindrome {
     @Test
     public void testisPalidrome(){
         assertTrue(palindrome.isPalindrome("racecar"));
-
         assertTrue(palindrome.isPalindrome("noon"));
+        assertTrue(palindrome.isPalindrome("a"));
+        assertTrue(palindrome.isPalindrome(""));
 
         assertFalse(palindrome.isPalindrome("horse"));
-
         assertFalse(palindrome.isPalindrome("rancor"));
-
         assertFalse(palindrome.isPalindrome("aaaaab"));
 
-        assertTrue(palindrome.isPalindrome("a"));
 
-        assertTrue(palindrome.isPalindrome(""));
+
+        //overloaded Palendrome
+        assertTrue(palindrome.isPalindrome("adfabgeb", offByOne));
+        assertTrue(palindrome.isPalindrome("sdfafgbect", offByOne));
+        assertTrue(palindrome.isPalindrome("a", offByOne));
+        assertTrue(palindrome.isPalindrome("", offByOne));
+
+        assertFalse(palindrome.isPalindrome("aaaaaaa", offByOne));
+        assertFalse(palindrome.isPalindrome("abcdefg", offByOne));
+        assertFalse(palindrome.isPalindrome("asdgfhrhtrstrefd", offByOne));
+
     }
+
+
+
+
 }
