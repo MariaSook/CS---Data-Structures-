@@ -4,27 +4,27 @@ ArrayDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A: More helper methods to prevent repetition in code
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: all of it. 
 
 Q: What's something that was particularly inelegant in your code, if anything?
 
-A:
+A: repetition and random math
 
 Q: What did you learn by talking to your partner about writing ArrayDeque?
 
-A:
+A: we all wrote redundant code in some places, and all struggled with resize
 
 Q: What do you wish you would have known before writing ArrayDeque, if anything?
 
-A:
+A: How to operly think about resize, I had a method that worked but didn’t perfectly match the spec
 
 Q: If you wrote ArrayDeque again, what would you do differently, if anything?
 
-A:
+A: try to get rid of redundancy
 
 -----
 
@@ -32,27 +32,27 @@ LinkedListDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A: I thought my linked list was clear and concise
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: I think it was easy to read
 
 Q: What's something that was particularly inelegant in your code, if anything?
 
-A:
+A: nothing
 
 Q: What did you learn by talking to your partner about writing LinkedListDeque?
 
-A:
+A: We all thought it was relatively easy
 
 Q: What do you wish you would have known before writing LinkedListDeque, if anything?
 
-A:
+A: n/a
 
 Q: If you wrote LinkedListDeque again, what would you do differently, if anything?
 
-A:
+A: n/a
 
 -----
 
@@ -60,4 +60,4 @@ Meta:
 
 Q: Did you like this design review process? Anything we should do differently next time?
 
-A: 
+A: Yes, it was interesting to see the staff solutions
