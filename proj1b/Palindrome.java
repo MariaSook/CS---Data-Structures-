@@ -1,4 +1,4 @@
-public class Palindrome extends OffByOne {
+public class Palindrome {
     public Deque<Character> wordToDeque(String word) {
         /* given a String, will return a Deque where the
         characters appear in the same order as in the String

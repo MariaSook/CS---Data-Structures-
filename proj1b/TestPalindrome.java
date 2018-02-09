@@ -30,8 +30,6 @@ public class TestPalindrome {
         assertFalse(palindrome.isPalindrome("aaaaab"));
 
 
-        //overloaded Palindrome -- how to write the test cases?!??!?!?!?1
-        //how to test non-numeric values
         assertTrue(palindrome.isPalindrome("acdb", offByOne));
         assertTrue(palindrome.isPalindrome("sdfafgbect", offByOne));
         assertTrue(palindrome.isPalindrome("a", offByOne));
