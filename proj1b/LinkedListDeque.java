@@ -1,19 +1,6 @@
 public class LinkedListDeque<T> implements Deque<T> {
-    private class HelperNode {
-        private HelperNode next;
-        private T item;
-        private HelperNode previous;
-
-        HelperNode(HelperNode p, T i, HelperNode n) {
-            previous = p;
-            item = i;
-            next = n;
-        }
-    }
-
     private HelperNode sentinel;
     private int size;
-
     public LinkedListDeque() {
         sentinel = new HelperNode(sentinel, null, sentinel);
         size = 0;
@@ -159,5 +146,17 @@ public class LinkedListDeque<T> implements Deque<T> {
 
     public T getRecursive(int index) {
         return helperget(index, sentinel);
+    }
+
+    private class HelperNode {
+        private HelperNode next;
+        private T item;
+        private HelperNode previous;
+
+        HelperNode(HelperNode p, T i, HelperNode n) {
+            previous = p;
+            item = i;
+            next = n;
+        }
     }
 }

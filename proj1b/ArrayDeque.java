@@ -97,8 +97,6 @@ public class ArrayDeque<T> {
     }
 
     //@andrew crowley
-
-
     public T removeLast() {
         /*Removes and returns the item at the back of the deque.
         If no such item exists, returns null.*/
