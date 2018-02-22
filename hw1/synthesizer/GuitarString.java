@@ -51,7 +51,7 @@ public class GuitarString {
     public void tic() {
         double first = buffer.dequeue();
         double avg = (first + buffer.peek())/2;
-        buffer.enqueue(avg);
+        buffer.enqueue(avg*DECAY);
         // TODO: Dequeue the front sample and enqueue a new sample that is
         //       the average of the two multiplied by the DECAY factor.
         //       Do not call StdAudio.play().
