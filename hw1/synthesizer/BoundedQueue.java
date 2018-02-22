@@ -11,16 +11,18 @@ public interface BoundedQueue<T> {
 
     default boolean isEmpty(){
         // is the buffer empty (fillCount equals zero)?
-        if (fillCount()== 0){
+        if (fillCount() == 0) {
             return true;
-        } return false;
+        }
+        return false;
     }
 
     default boolean isFull(){
         // is the buffer full (fillCount is same as capacity)?
-        if (fillCount() == capacity()){
+        if (fillCount() == capacity()) {
             return true;
-        } return false;
+        }
+        return false;
     }
 
 }
