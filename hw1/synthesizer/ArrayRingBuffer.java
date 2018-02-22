@@ -1,6 +1,5 @@
 // TODO: Make sure to make this class a part of the synthesizer package
 package synthesizer;
-import java.util.Iterator;
 
 //TODO: Make sure to make this class and all of its methods public
 //TODO: Make sure to make this class extend AbstractBoundedQueue<t>
@@ -16,11 +15,11 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      * Create a new ArrayRingBuffer with the given capacity.
      */
     public ArrayRingBuffer(int capacity) {
-            first = 0;
-            last = 0;
-            this.fillCount = 0;
-            this.capacity = capacity;
-            this.rb = (T[]) new Object[capacity];
+        first = 0;
+        last = 0;
+        this.fillCount = 0;
+        this.capacity = capacity;
+        this.rb = (T[]) new Object[capacity];
 
         // TODO: Create new array with capacity elements.
         //       first, last, and fillCount should all be set to 0.
@@ -37,12 +36,16 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
 
     @Override
     public void enqueue(T x) {
-        if (this.fillCount == capacity){
+        if (this.fillCount == capacity) {
             throw new RuntimeException("Ring Buffer overflow");
         } else {
             this.fillCount += 1;
             rb[last] = x;
-            last += 1;
+            if (last == capacity-1){
+                last = 0;
+            } else {
+                last += 1;
+            }
         }
         // TODO: Enqueue the item. Don't forget to increase fillCount and update last.
     }
@@ -55,13 +58,18 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
 
     @Override
     public T dequeue() {
-        if (this.fillCount == 0){
+        if (this.fillCount == 0) {
             throw new RuntimeException("Ring buffer underflow");
         } else {
             this.fillCount -= 1;
             T firsthold = rb[first];
             rb[first] = null;
-            first += 1;
+            if (first == capacity-1)
+            {
+                first = 0;
+            } else {
+                first += 1;
+            }
             return firsthold;
         }
         // TODO: Dequeue the first item. Don't forget to decrease fillCount and update 
