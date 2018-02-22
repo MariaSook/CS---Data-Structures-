@@ -93,10 +93,13 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
             if (current == capacity - 1) {
                 current = 0;
             }
-            return (count == fillCount);
+            return (count != fillCount);
         }
 
         public T next() {
+            if (current == capacity - 1) {
+                current = 0;
+            }
             count += 1;
             T returnval = rb[current];
             current += 1;
