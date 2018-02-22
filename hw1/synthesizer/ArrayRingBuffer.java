@@ -41,7 +41,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         } else {
             this.fillCount += 1;
             rb[last] = x;
-            if (last == capacity-1){
+            if (last == capacity - 1) {
                 last = 0;
             } else {
                 last += 1;
@@ -64,8 +64,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
             this.fillCount -= 1;
             T firsthold = rb[first];
             rb[first] = null;
-            if (first == capacity-1)
-            {
+            if (first == capacity - 1) {
                 first = 0;
             } else {
                 first += 1;
