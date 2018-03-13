@@ -14,7 +14,7 @@ public class Percolation {
         // create N-by-N grid, with all sites initially blocked
         this.N = N;
         this.world = new boolean[N][N];
-        this.wquf = new WeightedQuickUnionUF(N);
+        this.wquf = new WeightedQuickUnionUF(N*N);
         for (int x = 0; x < N; x++) {
             for (int y = 0; y < N; y++) {
                 world[x][y] = false;
@@ -22,13 +22,21 @@ public class Percolation {
         }
     }
 
+    private void unionTopBottom(int row, int col, int me) {
+        if (row == 0) {
+            wquf.union(me, virtualTopSite);
+        } else if (row == N-1) {
+            wquf.union(me, virtualBottomSite);
+        }
+    }
+
     private void unionMiddle(int row, int col, int me) {
         if (row != 0 && row != N-1 && col != 0 && col != N-1) {
-            if (isOpen(row - 1, col)) {
-                wquf.union(me, xyTo1D(row - 1, col));
-            }
             if (isOpen(row + 1, col)) {
                 wquf.union(me, xyTo1D(row + 1, col));
+            }
+            if (isOpen(row - 1, col)) {
+                wquf.union(me, xyTo1D(row - 1, col));
             }
             if (isOpen(row, col + 1)) {
                 wquf.union(me, xyTo1D(row, col + 1));
@@ -129,6 +137,7 @@ public class Percolation {
     private void unionNeighbors(int row, int col) {
         int me = xyTo1D(row, col);
 
+        unionTopBottom(row, col, me);
         unionEdgeCases(row, col, me);
         unionMiddle(row, col, me);
         unionRows(row, col, me);
@@ -182,16 +191,18 @@ public class Percolation {
 
     public boolean percolates() {
         // does the system percolate?
+        System.out.print(wquf.connected(virtualTopSite, virtualBottomSite));
         return wquf.connected(virtualTopSite, virtualBottomSite);
     }
 
     public static void main(String[] args) {
         Percolation perc = new Percolation(5);
+        perc.open(0, 2);
+        perc.open(1,2);
         perc.open(2, 2);
-        perc.open(3,3);
-        perc.open(0, 4);
+        perc.open(3, 2);
+        perc.open(4, 2);
         perc.percolates();
-        perc.numberOfOpenSites();
     }
 }
 
