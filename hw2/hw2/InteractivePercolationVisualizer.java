@@ -58,5 +58,5 @@ public class InteractivePercolationVisualizer {
             }
             StdDraw.show(DELAY);
         }
-    }*/
+    } */
 }
