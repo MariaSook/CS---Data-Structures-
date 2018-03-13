@@ -23,114 +23,131 @@ public class Percolation {
     }
 
     private void unionMiddle(int row, int col, int me) {
-        if (isOpen(row - 1, col)) {
-            wquf.union(me, xyTo1D(row-1, col));
-        }
-        if (isOpen(row + 1, col)) {
-            wquf.union(me, xyTo1D(row+1, col));
-        }
-        if (isOpen(row, col + 1)) {
-            wquf.union(me, xyTo1D(row, col+1));
-        }
-        if (isOpen(row, col - 1)) {
-            wquf.union(me, xyTo1D(row, col-1));
-        }
-    }
-
-    private void unionColsLeft(int row, int col, int me) {
-        if (isOpen(row - 1, col)) {
-            wquf.union(me, xyTo1D(row - 1, col));
-        }
-        if (isOpen(row + 1, col)) {
-            wquf.union(me, xyTo1D(row + 1, col));
-        }
-        if (isOpen(row, col+1)) {
-            wquf.union(me, xyTo1D(row, col+1));
+        if (row != 0 && row != N-1 && col != 0 && col != N-1) {
+            if (isOpen(row - 1, col)) {
+                wquf.union(me, xyTo1D(row - 1, col));
+            }
+            if (isOpen(row + 1, col)) {
+                wquf.union(me, xyTo1D(row + 1, col));
+            }
+            if (isOpen(row, col + 1)) {
+                wquf.union(me, xyTo1D(row, col + 1));
+            }
+            if (isOpen(row, col - 1)) {
+                wquf.union(me, xyTo1D(row, col - 1));
+            }
         }
     }
 
-    private void unionColsRight(int row, int col, int me) {
-        if (isOpen(row - 1, col)) {
-            wquf.union(me, xyTo1D(row-1, col));
-        }
-        if (isOpen(row + 1, col)) {
-            wquf.union(me, xyTo1D(row + 1, col));
-        }
-        if (isOpen(row, col-1)) {
-            wquf.union(me, xyTo1D(row, col-1));
-        }
-    }
-
-    private void unionRowsTop(int row, int col, int me) {
-        if (isOpen(row-1, col)) {
-            wquf.union(me, xyTo1D(row-1, col));
-        }
-        if (isOpen(row, col+1)) {
-            wquf.union(me, xyTo1D(row, col+1));
-        }
-        if (isOpen(row, col-1)) {
-            wquf.union(me, xyTo1D(row, col-1));
-        }
-    }
-
-    private void unionRowsBottom(int row, int col, int me) {
-        if (isOpen(row+1, col)) {
-            wquf.union(me, xyTo1D(row-1, col));
-        }
-        if (isOpen(row, col+1)) {
-            wquf.union(me, xyTo1D(row, col+1));
-        }
-        if (isOpen(row, col-1)) {
-            wquf.union(me, xyTo1D(row, col-1));
+    private void unionCols(int row, int col, int me) {
+        if (me != 0 && me != N-1 && me != (N-1)*N && me != (N*N)-1) {
+            if (col == 0) {
+                if (isOpen(row + 1, col)) {
+                    wquf.union(me, xyTo1D(row + 1, col));
+                }
+                if (isOpen(row - 1, col)) {
+                    wquf.union(me, xyTo1D(row - 1, col));
+                }
+                if (isOpen(row, col - 1)) {
+                    wquf.union(me, xyTo1D(row, col - 1));
+                }
+            } else if (col == N - 1) {
+                if (isOpen(row - 1, col)) {
+                    wquf.union(me, xyTo1D(row - 1, col));
+                }
+                if (isOpen(row + 1, col)) {
+                    wquf.union(me, xyTo1D(row + 1, col));
+                }
+                if (isOpen(row, col + 1)) {
+                    wquf.union(me, xyTo1D(row, col + 1));
+                }
+            }
         }
     }
 
-    private void unionEdgeCases(int row, int col, int me){
-        if (isOpen(row, col-1)) {
-            wquf.union(me, xyTo1D(row, col-1));
-        } else if (isOpen(row+1, col)) {
-            wquf.union(me, xyTo1D(row+1, col));
-        } else if (isOpen(row-1, col)) {
-            wquf.union(me, xyTo1D(row-1, col));
-        } else if (isOpen(row, col+1)) {
-            wquf.union(me, xyTo1D(row, col+1));
+    private void unionEdgeCases(int row, int col, int me) {
+        if (me == 0) {
+            if (isOpen(row+1, col)) {
+                wquf.union(me, xyTo1D(row + 1, col));
+            }
+            if (isOpen(row, col+1)){
+                wquf.union(me, xyTo1D(row, col+1));
+            }
+        } else if (me == N-1) {
+            if (isOpen(row+1, col)) {
+                wquf.union(me, xyTo1D(row + 1, col));
+            }
+            if (isOpen(row, col-1)){
+                wquf.union(me, xyTo1D(row, col-1));
+            }
+        } else if (me == (N-1)*N) {
+            if (isOpen(row-1, col)) {
+                wquf.union(me, xyTo1D(row - 1, col));
+            }
+            if (isOpen(row, col+1)){
+                wquf.union(me, xyTo1D(row, col+1));
+            }
+        } else if (me == (N*N)-1){
+            if (isOpen(row-1, col)) {
+                wquf.union(me, xyTo1D(row - 1, col));
+            }
+            if (isOpen(row, col-1)){
+                wquf.union(me, xyTo1D(row, col-1));
+            }
+        }
+
+    }
+
+    private void unionRows(int row, int col, int me) {
+        if (me != 0 && me != N-1 && me != (N-1)*N && me != (N*N)-1) {
+            if (row == 0) {
+                if (isOpen(row, col - 1)) {
+                    wquf.union(me, xyTo1D(row, col - 1));
+                }
+                if (isOpen(row, col + 1)) {
+                    wquf.union(me, xyTo1D(row, col + 1));
+                }
+                if (isOpen(row + 1, col)) {
+                    wquf.union(me, xyTo1D(row + 1, col));
+                }
+                wquf.union(me, virtualTopSite);
+            } else if (row == N - 1) {
+                if (isOpen(row, col + 1)) {
+                    wquf.union(me, xyTo1D(row, col + 1));
+                }
+                if (isOpen(row, col - 1)) {
+                    wquf.union(me, xyTo1D(row, col - 1));
+                }
+                if (isOpen(row - 1, col)) {
+                    wquf.union(me, xyTo1D(row - 1, col));
+                }
+                wquf.union(me, virtualBottomSite);
+            }
         }
     }
 
     private void unionNeighbors(int row, int col) {
         int me = xyTo1D(row, col);
 
-        if (row != 0 && row != N - 1 && col != 0 && col != N-1) {
-            unionMiddle(row, col, me);
-        } else if (col == 0 && (row != 0 || row != N-1)) {
-            unionColsLeft(row, col, me);
-        } else if (col == N-1 && (row != 0 || row != N-1)) {
-            unionColsRight(row, col, me);
-        } else if (row == 0 && (col != 0 && col != N-1)) {
-            unionRowsTop(row, col, me);
-        } else if (row == N-1 && (col != 0 && col != N-1)) {
-            unionRowsBottom(row, col, me);
-        }
         unionEdgeCases(row, col, me);
+        unionMiddle(row, col, me);
+        unionRows(row, col, me);
+        unionCols(row, col, me);
+
     }
+
 
     public void open(int row, int col) {
         // open the site (row, col) if it is not open already
-        int me = xyTo1D(row, col);
         if (row >= N || col >= N) {
             throw new IndexOutOfBoundsException("Out of bounds");
-        } else if (row <= 0 || col <= 0) {
+        } else if (row < 0 || col < 0) {
             throw new IllegalArgumentException("Illegal Argument");
-        }
-
-        if (row == 0) {
-            wquf.union(me, virtualTopSite);
-        } else if (row == N-1) {
-            wquf.union(me, virtualBottomSite);
         }
 
         world[row][col] = true;
         numopen += 1;
+
         unionNeighbors(row, col);
     }
 
@@ -138,7 +155,7 @@ public class Percolation {
         // is the site (row, col) open?
         if (row >= N || col >= N) {
             throw new IndexOutOfBoundsException("Index Out of bounds");
-        } else if (row <= 0 || col <= 0) {
+        } else if (row < 0 || col < 0) {
             throw new IllegalArgumentException("Illegal Argument");
         }
         return world[row][col];
@@ -149,7 +166,7 @@ public class Percolation {
         int me = xyTo1D(row, col);
         if (row >= N || col >= N) {
             throw new IndexOutOfBoundsException("Index Out of bounds");
-        } else if (row <= 0 || col <= 0) {
+        } else if (row < 0 || col < 0) {
             throw new IllegalArgumentException("Illegal Argument");
         }
        return wquf.connected(me, virtualTopSite);
@@ -172,7 +189,9 @@ public class Percolation {
         Percolation perc = new Percolation(5);
         perc.open(2, 2);
         perc.open(3,3);
-        perc.open(1, 4);
+        perc.open(0, 4);
+        perc.percolates();
+        perc.numberOfOpenSites();
     }
 }
 
