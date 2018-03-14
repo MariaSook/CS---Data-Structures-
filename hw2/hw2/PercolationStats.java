@@ -6,37 +6,41 @@ import edu.princeton.cs.algs4.StdStats;
 public class PercolationStats {
     private int T;
     private double[] tDoubleData;
-    private double percfrac;
     private Percolation percolation;
+    private double mean;
+    private double std;
+    private int N;
 
     // @help from Gabby Schvartsmann
-    public PercolationStats(int N, int T, PercolationFactory pf) {
+    public PercolationStats(PercolationFactory pf, int N, int T) {
         // perform T independent experiments on an N-by-N grid
         if (N <= 0 || T <= 0) {
             throw new IllegalArgumentException("Illegal Argument");
         }
         this.T = T;
         this.tDoubleData = new double[T];
+        this.N = N;
 
-        for (int i = 0; i < T; i++) {
-            percolation = pf.make(N);
-            while (!percolation.percolates()) {
-                int row = StdRandom.uniform(N);
-                int col = StdRandom.uniform(N);
-                percolation.open(row, col);
+        for (int simulation = 0; simulation < T; simulation++) {
+            this.percolation = pf.make(N);
+            while (!this.percolation.percolates()) {
+                int row = StdRandom.uniform(0, N);
+                int col = StdRandom.uniform(0, N);
+                this.percolation.open(row, col);
             }
-            percfrac = (double) percolation.numberOfOpenSites() / (N * N);
-            tDoubleData[i] = percfrac;
+            this.tDoubleData[simulation] = (double) percolation.numberOfOpenSites() / (N * N);
         }
 
     }
 
     public double mean() {
-        return StdStats.mean(tDoubleData);
+        this.mean = StdStats.mean(tDoubleData);
+        return this.mean;
     }
 
     public double stddev() {
-        return StdStats.stddev(tDoubleData);
+        this.std = StdStats.stddev(tDoubleData);
+        return this.std;
     }
 
     public double confidenceLow() {

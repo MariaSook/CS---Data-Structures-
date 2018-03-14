@@ -220,11 +220,7 @@ public class Percolation {
         } else if (row < 0 || col < 0) {
             throw new IndexOutOfBoundsException("Index Out of bounds");
         }
-
-        if (wfull.connected(me, virtualTopSite)) {
-            return true;
-        }
-        return false;
+        return wfull.connected(me, virtualTopSite);
     }
 
     private int xyTo1D(int row, int col) {
@@ -237,7 +233,6 @@ public class Percolation {
 
     public boolean percolates() {
         // does the system percolate?
-
         return w.connected(virtualBottomSite, virtualTopSite);
     }
 
