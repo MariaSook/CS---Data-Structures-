@@ -9,8 +9,8 @@ public class PercolationStats {
     private double[] tDoubleData;
     private PercolationFactory pf;
     private double percfrac;
-    private double m;
-    private double s;
+    private double mean;
+    private double stddev;
     private double conlow;
     private double conhigh;
 
@@ -34,34 +34,33 @@ public class PercolationStats {
             }
             percfrac = perc.numberOfOpenSites() / (N * N);
             tDoubleData[i] = percfrac;
-            T--;
         }
 
     }
 
     public double mean() {
         // sample mean of percolation threshold
-        m = StdStats.mean(tDoubleData);
-        return m;
+        mean = StdStats.mean(tDoubleData);
+        return mean;
     }
 
     public double stddev() {
         // sample standard deviation of percolation threshold
-        s = StdStats.stddev(tDoubleData);
-        return s;
+        stddev = StdStats.stddev(tDoubleData);
+        return stddev;
     }
 
     public double confidenceLow() {
         // low endpoint of 95% confidence interval
         double sqrtT = Math.sqrt(T);
-        conlow = m - ((1.96 * s) / sqrtT);
+        conlow = mean - ((1.96 * stddev) / sqrtT);
         return conlow;
     }
-
     public double confidenceHigh() {
         // high endpoint of 95% confidence interval
         double sqrtT = Math.sqrt(T);
-        conhigh = m + ((1.96 * s) / sqrtT);
-        return conhigh;
+        conlow = mean + ((1.96 * stddev) / sqrtT);
+        return conlow;
     }
+
 }
