@@ -1,7 +1,7 @@
 package hw2;
 
-import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.StdRandom;
+import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
     private int T;
@@ -11,6 +11,7 @@ public class PercolationStats {
     private PercolationFactory pf;
     private double percfrac;
 
+    // @help from Gabby Schvartsmann
     public PercolationStats(int N, int T, PercolationFactory pf) {
         // perform T independent experiments on an N-by-N grid
         if (N <= 0 || T <= 0) {
@@ -23,13 +24,13 @@ public class PercolationStats {
 
         for (int i = 0; i < T; i++) {
             Percolation perc = pf.make(N);
-            while (!perc.percolates()){
+            while (!perc.percolates()) {
                 int row = StdRandom.uniform(N);
                 int col = StdRandom.uniform(N);
                 perc.open(row, col);
 
             }
-            percfrac = perc.numberOfOpenSites()/(N*N);
+            percfrac = perc.numberOfOpenSites() / (N * N);
             tDoubleData[i] = percfrac;
         }
 
