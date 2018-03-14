@@ -7,6 +7,7 @@ public class PercolationStats {
     private int T;
     private int N;
     private double[] tDoubleData;
+    private Percolation perc;
     private PercolationFactory pf;
     private double percfrac;
     private double mean;
@@ -26,7 +27,7 @@ public class PercolationStats {
         this.tDoubleData = new double[T];
 
         for (int i = 0; i < T; i++) {
-            Percolation perc = pf.make(N);
+            this.perc = pf.make(N);
             while (!perc.percolates()) {
                 int row = StdRandom.uniform(0, N);
                 int col = StdRandom.uniform(0, N);
