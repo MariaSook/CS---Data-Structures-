@@ -207,13 +207,7 @@ public class Percolation {
 
     public boolean percolates() {
         // does the system percolate?
-        boolean perc = false;
-        for (int i = (N - 1) * N; i < (N * N) - 1; i++) {
-            if (w.connected(i, virtualTopSite)) {
-                perc = true;
-            }
-        }
-        return perc;
+        return w.connected(virtualBottomSite, virtualTopSite);
     }
 
     public static void main(String[] args) {

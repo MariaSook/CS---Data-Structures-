@@ -35,6 +35,7 @@ public class PercolationStats {
             }
             percfrac = perc.numberOfOpenSites() / (N * N);
             tDoubleData[i] = percfrac;
+            T--;
         }
 
     }
@@ -61,7 +62,7 @@ public class PercolationStats {
     public double confidenceHigh() {
         // high endpoint of 95% confidence interval
         double sqrtT = Math.sqrt(T);
-        conlow = m + ((1.96 * s) / sqrtT);
-        return conlow;
+        conhigh = m + ((1.96 * s) / sqrtT);
+        return conhigh;
     }
 }
