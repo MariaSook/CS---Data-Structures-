@@ -159,7 +159,7 @@ public class Percolation {
             throw new IndexOutOfBoundsException("Out of bounds");
         }
 
-        if (!isOpen(row, col)) {
+        if (isOpen(row, col)== false) {
             world[row][col] = true;
             numopen += 1;
             if (N > 2) {
@@ -179,7 +179,7 @@ public class Percolation {
         if (row >= N || col >= N) {
             throw new IndexOutOfBoundsException("Index Out of bounds");
         } else if (row < 0 || col < 0) {
-            throw new IllegalArgumentException("Illegal Argument");
+            throw new IndexOutOfBoundsException("Index Out of bounds");
         }
         return world[row][col];
     }
@@ -190,7 +190,7 @@ public class Percolation {
         if (row >= N || col >= N) {
             throw new IndexOutOfBoundsException("Index Out of bounds");
         } else if (row < 0 || col < 0) {
-            throw new IllegalArgumentException("Illegal Argument");
+            throw new IndexOutOfBoundsException("Index Out of bounds");
         }
 
         return w.connected(me, virtualTopSite);
