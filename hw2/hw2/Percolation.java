@@ -13,6 +13,9 @@ public class Percolation {
     public Percolation(int N) {
         // create N-by-N grid, with all sites initially blocked
         this.N = N;
+        if (N <= 0) {
+            throw new IllegalArgumentException("Illegal Argument");
+        }
         this.world = new boolean[N][N];
         this.w = new WeightedQuickUnionUF(N * N + 2);
         this.virtualTopSite = N * N;
@@ -154,11 +157,16 @@ public class Percolation {
         } else if (row < 0 || col < 0) {
             throw new IllegalArgumentException("Illegal Argument");
         }
+
         if (!isOpen(row, col)) {
             world[row][col] = true;
             numopen += 1;
-
-            unionNeighbors(row, col);
+            if (N > 2) {
+                unionNeighbors(row, col);
+            } else if (N == 2) {
+                int me = xyTo1D(row, col);
+                unionEdgeCases(row, col, me);
+            }
         }
     }
 
@@ -196,7 +204,6 @@ public class Percolation {
 
     public boolean percolates() {
         // does the system percolate?
-
         boolean perc = false;
         for (int i = (N - 1) * N; i < (N * N) - 1; i++) {
             if (w.connected(i, virtualTopSite)) {
@@ -207,15 +214,9 @@ public class Percolation {
     }
 
     public static void main(String[] args) {
-        Percolation perc = new Percolation(5);
-        perc.isOpen(0, 0);
-        perc.open(0, 2);
-        perc.open(1, 2);
-        perc.open(2, 2);
-        perc.open(3, 2);
-        perc.open(4, 2);
+        Percolation perc = new Percolation(1);
 
-        perc.isOpen(0, 1);
+
     }
 }
 
