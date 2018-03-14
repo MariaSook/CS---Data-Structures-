@@ -52,13 +52,13 @@ public class Percolation {
     private void unionCols(int row, int col, int me) {
         if (me != 0 && me != N - 1 && me != (N - 1) * N && me != (N * N) - 1) {
             if (col == 0) {
-                if (isOpen(row-1, col)) {
-                    w.union(me, xyTo1D(row-1, col));
+                if (isOpen(row - 1, col)) {
+                    w.union(me, xyTo1D(row - 1, col));
                 }
-                if (isOpen(row+1, col)) {
-                    w.union(me, xyTo1D(row+1, col));
+                if (isOpen(row + 1, col)) {
+                    w.union(me, xyTo1D(row + 1, col));
                 }
-                if (isOpen(row, col+1)) {
+                if (isOpen(row, col + 1)) {
                     w.union(me, xyTo1D(row, col + 1));
                 }
             } else if (col == N - 1) {
@@ -68,7 +68,7 @@ public class Percolation {
                 if (isOpen(row - 1, col)) {
                     w.union(me, xyTo1D(row - 1, col));
                 }
-                if (isOpen(row, col- 1)) {
+                if (isOpen(row, col - 1)) {
                     w.union(me, xyTo1D(row, col - 1));
                 }
             }
@@ -198,7 +198,7 @@ public class Percolation {
         // does the system percolate?
 
         boolean perc = false;
-        for (int i = (N-1)*N; i < (N*N)-1; i ++){
+        for (int i = (N - 1) * N; i < (N * N) - 1; i++) {
             if (w.connected(i, virtualTopSite)) {
                 perc = true;
             }
