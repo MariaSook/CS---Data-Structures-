@@ -152,6 +152,7 @@ public class Percolation {
 
     public void open(int row, int col) {
         // open the site (row, col) if it is not open already
+        int me = xyTo1D(row, col);
         if (row >= N || col >= N) {
             throw new IndexOutOfBoundsException("Out of bounds");
         } else if (row < 0 || col < 0) {
@@ -164,8 +165,10 @@ public class Percolation {
             if (N > 2) {
                 unionNeighbors(row, col);
             } else if (N == 2) {
-                int me = xyTo1D(row, col);
+                unionTopBottom(row, col, me);
                 unionEdgeCases(row, col, me);
+            } else if (N == 1) {
+                unionTopBottom(row, col, me);
             }
         }
     }
