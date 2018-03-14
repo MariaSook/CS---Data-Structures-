@@ -7,11 +7,12 @@ public class PercolationStats {
     private int T;
     private double[] tDoubleData;
     private double percfrac;
-    private double mean;
-    private double stddev;
+    private double m;
+    private double s;
     private double conlow;
     private double conhigh;
     private Percolation percolation;
+    private double sqrtT = Math.sqrt(T);
 
     // @help from Gabby Schvartsmann
     public PercolationStats(int N, int T, PercolationFactory pf) {
@@ -36,26 +37,24 @@ public class PercolationStats {
     }
 
     public double mean() {
-        mean = StdStats.mean(tDoubleData);
-        return mean;
+        m = StdStats.mean(tDoubleData);
+        return m;
     }
 
     public double stddev() {
-        stddev = StdStats.stddev(tDoubleData);
-        return stddev;
+        s = StdStats.stddev(tDoubleData);
+        return s;
     }
 
     public double confidenceLow() {
         // low endpoint of 95% confidence interval
-        double sqrtT = Math.sqrt(T);
-        conlow = mean - ((1.96 * stddev) / sqrtT);
+        conlow = m - ((1.96 * s) / sqrtT);
         return conlow;
     }
 
     public double confidenceHigh() {
         // high endpoint of 95% confidence interval
-        double sqrtT = Math.sqrt(T);
-        conhigh = mean + ((1.96 * stddev) / sqrtT);
+        conhigh = m + ((1.96 * s) / sqrtT);
         return conhigh;
     }
 
