@@ -159,7 +159,7 @@ public class Percolation {
             throw new IndexOutOfBoundsException("Out of bounds");
         }
 
-        if (isOpen(row, col) == false) {
+        if (!isOpen(row, col)) {
             world[row][col] = true;
             numopen += 1;
             if (N > 2) {

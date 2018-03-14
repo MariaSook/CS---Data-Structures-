@@ -11,7 +11,7 @@ public class PercolationStats {
     private double stddev;
     private double conlow;
     private double conhigh;
-    private double sumpercfrac;
+    private Percolation percolation;
 
     // @help from Gabby Schvartsmann
     public PercolationStats(int N, int T, PercolationFactory pf) {
@@ -21,10 +21,9 @@ public class PercolationStats {
         }
         this.T = T;
         this.tDoubleData = new double[T];
-        this.sumpercfrac = 0;
 
         for (int i = 0; i < T; i++) {
-            Percolation percolation = pf.make(N);
+            percolation = pf.make(N);
             while (!percolation.percolates()) {
                 int row = StdRandom.uniform(N);
                 int col = StdRandom.uniform(N);
@@ -32,22 +31,16 @@ public class PercolationStats {
             }
             percfrac = percolation.numberOfOpenSites() / (N * N);
             tDoubleData[i] = percfrac;
-            sumpercfrac += percfrac;
         }
 
     }
 
     public double mean() {
-        // sample mean of percolation threshold
-        mean = sumpercfrac / T;
-        //mean = StdStats.mean(tDoubleData);
+        mean = StdStats.mean(tDoubleData);
         return mean;
     }
 
     public double stddev() {
-        // sample standard deviation of percolation threshold
-
-
         stddev = StdStats.stddev(tDoubleData);
         return stddev;
     }
