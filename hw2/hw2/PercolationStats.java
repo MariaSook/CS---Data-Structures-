@@ -25,7 +25,7 @@ public class PercolationStats {
                 int col = StdRandom.uniform(N);
                 percolation.open(row, col);
             }
-            percfrac = percolation.numberOfOpenSites() / (N * N);
+            percfrac = (double) percolation.numberOfOpenSites() / (N * N);
             tDoubleData[i] = percfrac;
         }
 
