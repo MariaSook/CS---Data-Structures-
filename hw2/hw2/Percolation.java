@@ -9,6 +9,7 @@ public class Percolation {
     private int virtualTopSite;
     private int virtualBottomSite;
     private WeightedQuickUnionUF w;
+    private WeightedQuickUnionUF wfull;
 
     public Percolation(int N) {
         // create N-by-N grid, with all sites initially blocked
@@ -18,6 +19,7 @@ public class Percolation {
         }
         this.world = new boolean[N][N];
         this.w = new WeightedQuickUnionUF(N * N + 2);
+        this.wfull = new WeightedQuickUnionUF(N * N + 2);
         this.virtualTopSite = N * N;
         this.virtualBottomSite = N * N + 1;
         for (int x = 0; x < N; x++) {
@@ -30,6 +32,7 @@ public class Percolation {
     private void unionTopBottom(int row, int col, int me) {
         if (row == 0) {
             w.union(me, virtualTopSite);
+            wfull.union(me, virtualTopSite);
         } else if (row == N - 1) {
             w.union(me, virtualBottomSite);
         }
@@ -39,15 +42,19 @@ public class Percolation {
         if (row != 0 && row != N - 1 && col != 0 && col != N - 1) {
             if (isOpen(row + 1, col)) {
                 w.union(me, xyTo1D(row + 1, col));
+                wfull.union(me, xyTo1D(row + 1, col));
             }
             if (isOpen(row - 1, col)) {
                 w.union(me, xyTo1D(row - 1, col));
+                wfull.union(me, xyTo1D(row - 1, col));
             }
             if (isOpen(row, col + 1)) {
                 w.union(me, xyTo1D(row, col + 1));
+                wfull.union(me, xyTo1D(row, col + 1));
             }
             if (isOpen(row, col - 1)) {
                 w.union(me, xyTo1D(row, col - 1));
+                wfull.union(me, xyTo1D(row, col - 1));
             }
         }
     }
@@ -57,22 +64,28 @@ public class Percolation {
             if (col == 0) {
                 if (isOpen(row - 1, col)) {
                     w.union(me, xyTo1D(row - 1, col));
+                    wfull.union(me, xyTo1D(row - 1, col));
                 }
                 if (isOpen(row + 1, col)) {
                     w.union(me, xyTo1D(row + 1, col));
+                    wfull.union(me, xyTo1D(row + 1, col));
                 }
                 if (isOpen(row, col + 1)) {
                     w.union(me, xyTo1D(row, col + 1));
+                    wfull.union(me, xyTo1D(row, col + 1));
                 }
             } else if (col == N - 1) {
                 if (isOpen(row + 1, col)) {
                     w.union(me, xyTo1D(row + 1, col));
+                    wfull.union(me, xyTo1D(row + 1, col));
                 }
                 if (isOpen(row - 1, col)) {
                     w.union(me, xyTo1D(row - 1, col));
+                    wfull.union(me, xyTo1D(row - 1, col));
                 }
                 if (isOpen(row, col - 1)) {
                     w.union(me, xyTo1D(row, col - 1));
+                    wfull.union(me, xyTo1D(row, col - 1));
                 }
             }
         }
@@ -83,23 +96,29 @@ public class Percolation {
             if (row == 0) {
                 if (isOpen(row, col - 1)) {
                     w.union(me, xyTo1D(row, col - 1));
+                    wfull.union(me, xyTo1D(row, col - 1));
                 }
                 if (isOpen(row, col + 1)) {
                     w.union(me, xyTo1D(row, col + 1));
+                    wfull.union(me, xyTo1D(row, col + 1));
                 }
                 if (isOpen(row + 1, col)) {
                     w.union(me, xyTo1D(row + 1, col));
+                    wfull.union(me, xyTo1D(row + 1, col));
                 }
                 w.union(me, virtualTopSite);
             } else if (row == N - 1) {
                 if (isOpen(row, col + 1)) {
                     w.union(me, xyTo1D(row, col + 1));
+                    wfull.union(me, xyTo1D(row, col + 1));
                 }
                 if (isOpen(row, col - 1)) {
                     w.union(me, xyTo1D(row, col - 1));
+                    wfull.union(me, xyTo1D(row, col - 1));
                 }
                 if (isOpen(row - 1, col)) {
                     w.union(me, xyTo1D(row - 1, col));
+                    wfull.union(me, xyTo1D(row - 1, col));
                 }
                 w.union(me, virtualBottomSite);
             }
@@ -110,30 +129,38 @@ public class Percolation {
         if (me == 0) {
             if (isOpen(row + 1, col)) {
                 w.union(me, xyTo1D(row + 1, col));
+                wfull.union(me, xyTo1D(row + 1, col));
             }
             if (isOpen(row, col + 1)) {
                 w.union(me, xyTo1D(row, col + 1));
+                wfull.union(me, xyTo1D(row, col + 1));
             }
         } else if (me == N - 1) {
             if (isOpen(row + 1, col)) {
                 w.union(me, xyTo1D(row + 1, col));
+                wfull.union(me, xyTo1D(row + 1, col));
             }
             if (isOpen(row, col - 1)) {
                 w.union(me, xyTo1D(row, col - 1));
+                wfull.union(me, xyTo1D(row, col - 1));
             }
         } else if (me == (N - 1) * N) {
             if (isOpen(row - 1, col)) {
                 w.union(me, xyTo1D(row - 1, col));
+                wfull.union(me, xyTo1D(row - 1, col));
             }
             if (isOpen(row, col + 1)) {
                 w.union(me, xyTo1D(row, col + 1));
+                wfull.union(me, xyTo1D(row, col + 1));
             }
         } else if (me == (N * N) - 1) {
             if (isOpen(row - 1, col)) {
                 w.union(me, xyTo1D(row - 1, col));
+                wfull.union(me, xyTo1D(row - 1, col));
             }
             if (isOpen(row, col - 1)) {
                 w.union(me, xyTo1D(row, col - 1));
+                wfull.union(me, xyTo1D(row, col - 1));
             }
         }
 
@@ -193,7 +220,10 @@ public class Percolation {
             throw new IndexOutOfBoundsException("Index Out of bounds");
         }
 
-        return w.connected(me, virtualTopSite);
+        if (wfull.connected(me, virtualTopSite)) {
+            return true;
+        }
+        return false;
     }
 
     private int xyTo1D(int row, int col) {
@@ -206,6 +236,7 @@ public class Percolation {
 
     public boolean percolates() {
         // does the system percolate?
+
         return w.connected(virtualBottomSite, virtualTopSite);
     }
 
