@@ -4,7 +4,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
     private boolean[][] world;
-    private int numopen;
+    private int numopen = 0;
     private int N;
     private int virtualTopSite;
     private int virtualBottomSite;
@@ -20,7 +20,6 @@ public class Percolation {
         this.w = new WeightedQuickUnionUF(N * N + 2);
         this.virtualTopSite = N * N;
         this.virtualBottomSite = N * N + 1;
-        this.numopen = 0;
         for (int x = 0; x < N; x++) {
             for (int y = 0; y < N; y++) {
                 world[x][y] = false;

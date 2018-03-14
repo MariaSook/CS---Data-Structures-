@@ -12,7 +12,6 @@ public class PercolationStats {
     private double conlow;
     private double conhigh;
     private Percolation percolation;
-    private double sqrtT = Math.sqrt(T);
 
     // @help from Gabby Schvartsmann
     public PercolationStats(int N, int T, PercolationFactory pf) {
@@ -48,14 +47,16 @@ public class PercolationStats {
 
     public double confidenceLow() {
         // low endpoint of 95% confidence interval
+        double sqrtT = Math.sqrt(T);
         conlow = m - ((1.96 * s) / sqrtT);
         return conlow;
     }
-
     public double confidenceHigh() {
         // high endpoint of 95% confidence interval
+        double sqrtT = Math.sqrt(T);
         conhigh = m + ((1.96 * s) / sqrtT);
         return conhigh;
     }
+
 
 }
