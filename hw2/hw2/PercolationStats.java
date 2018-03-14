@@ -31,7 +31,6 @@ public class PercolationStats {
                 int row = StdRandom.uniform(0, N);
                 int col = StdRandom.uniform(0, N);
                 perc.open(row, col);
-
             }
             percfrac = perc.numberOfOpenSites() / (N * N);
             tDoubleData[i] = percfrac;
