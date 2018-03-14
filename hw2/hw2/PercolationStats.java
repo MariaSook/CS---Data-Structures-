@@ -39,7 +39,7 @@ public class PercolationStats {
 
     public double mean() {
         // sample mean of percolation threshold
-        mean = sumpercfrac/T;
+        mean = sumpercfrac / T;
         //mean = StdStats.mean(tDoubleData);
         return mean;
     }
