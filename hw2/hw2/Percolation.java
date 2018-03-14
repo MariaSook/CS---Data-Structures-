@@ -197,6 +197,7 @@ public class Percolation {
             } else if (N == 1) {
                 w.union(me, virtualTopSite);
                 w.union(me, virtualBottomSite);
+                wfull.union(me, virtualTopSite);
             }
         }
     }
