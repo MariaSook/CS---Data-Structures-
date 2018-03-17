@@ -41,7 +41,7 @@ public class SimpleOomage implements Oomage {
             return red + green + blue;
         } else {
             // replace line
-            return (red * 32 * 32) + (green * 32) + blue;
+            return (red * 32 * 32 * 100) + (green * 32 * 10) + blue;
         }
     }
 
