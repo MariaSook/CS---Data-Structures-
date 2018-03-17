@@ -3,7 +3,8 @@ package hw3.hash;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdRandom;
 
-import java.awt.*;
+import java.awt.Color;
+//import java.awt.*;
 
 
 public class SimpleOomage implements Oomage {
@@ -41,7 +42,7 @@ public class SimpleOomage implements Oomage {
             return red + green + blue;
         } else {
             // replace line
-            return (red * 32 * 32 * 100000) + (green * 32 * 100) + blue;
+            return (red * 100000000) + (green * 100000) + blue;
         }
     }
 
