@@ -6,9 +6,9 @@ import java.util.HashSet;
 
 import static org.junit.Assert.*;
 
-//import java.util.Set;
-//import java.util.List;
-//import java.util.ArrayList;
+import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 
 public class TestSimpleOomage {
@@ -62,8 +62,7 @@ public class TestSimpleOomage {
         assertTrue(hashSet.contains(ooA2));
     }
 
-    /* Uncomment this test after you finish haveNiceHashCode Spread in OomageTestUtility */
-    /*@Test
+    @Test
     public void testRandomOomagesHashCodeSpread() {
         List<Oomage> oomages = new ArrayList<>();
         int N = 10000;
@@ -73,7 +72,7 @@ public class TestSimpleOomage {
         }
 
         assertTrue(OomageTestUtility.haveNiceHashCodeSpread(oomages, 10));
-    }*/
+    }
 
     /**
      * Calls tests for SimpleOomage.
