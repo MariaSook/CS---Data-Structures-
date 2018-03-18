@@ -3,7 +3,7 @@ package hw3.hash;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdRandom;
 
-import java.awt.Color;
+import java.awt.*;
 //import java.awt.*;
 
 
@@ -29,11 +29,8 @@ public class SimpleOomage implements Oomage {
         }
 
         SimpleOomage that = (SimpleOomage) o;
-        if (that.red == this.red && that.green == this.green && that.blue == this.blue) {
-            return true;
-        } else {
-            return false;
-        }
+        boolean value = that.red == this.red && that.green == this.green && that.blue == this.blue;
+        return value;
     }
 
     @Override
