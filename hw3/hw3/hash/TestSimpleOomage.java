@@ -6,7 +6,6 @@ import java.util.HashSet;
 
 import static org.junit.Assert.*;
 
-import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 
