@@ -15,8 +15,8 @@ public class OomageTestUtility {
         int count = 0;
         for (int i = 0; i < oomages.size(); i++) {
             int bucketNum = (oomages.get(i).hashCode() & 0x7FFFFFFF) % M;
-            if (bucketNum >= (oomages.size()/50) && bucketNum <= (oomages.size()/2.5)) {
-              count +=1;
+            if (bucketNum >= (oomages.size() / 50) && bucketNum <= (oomages.size() / 2.5)) {
+                count += 1;
             }
         }
         return count == oomages.size();
