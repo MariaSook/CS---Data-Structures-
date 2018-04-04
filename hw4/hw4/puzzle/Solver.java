@@ -8,9 +8,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Solver {
-    private MinPQ nodes;
-    private Set<WorldState> seen;
-    private Stack<WorldState> returnvals;
+    protected MinPQ nodes;
+    protected Set<WorldState> seen;
+    protected Stack<WorldState> returnvals;
 
 
     public Solver(WorldState initial) {

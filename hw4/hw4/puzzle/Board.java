@@ -34,7 +34,7 @@ public class Board implements WorldState {
     }
 
     public int size() {
-        return N * N - 1;
+        return N;
     }
 
     // @source http://joshh.ug/neighbors.html
@@ -78,22 +78,32 @@ public class Board implements WorldState {
         int counter = 1;
         int returnval = 0;
         for (int row = 0; row < N; row++) {
-            for (int column = 0; column < N; column++) {
+            for (int col = 0; col < N; col++) {
                 if (counter == N * N - 1) {
                     break;
                 }
-                if (board[row][column] != counter) {
+                if (board[row][col] != counter && board[row][col] != 0) {
                     returnval += 1;
                 }
                 counter += 1;
             }
         }
-        return returnval;
+        return returnval + 1;
     }
 
     public int manhattan() {
         //Manhattan estimate described below
-
+        // if the value of board[r][c] is 0, skip it
+        int returnval = 0;
+        int counter = 1;
+        for (int row = 0; row < N; row ++) {
+            for (int col = 0; col < N; col ++) {
+                if (board[row][col] != counter && board[row][col] != 0) {
+                    
+                }
+                counter ++;
+            }
+        }
 
         return 0;
     }
@@ -111,22 +121,23 @@ public class Board implements WorldState {
         if (y == null) {
             return false;
         }
-        if (getClass() != y.getClass()) {
+        if (this.getClass() != y.getClass()) {
             return false;
         }
 
         Board you = (Board) y;
 
-        boolean val = true;
-        for (int row = 0; row < you.N; row++) {
-            for (int col = 0; col < you.N; col++) {
-                if (this.board[row][col] != you.board[row][col]) {
-                    val = false;
-                    break;
+        if (this.size() == you.size()) {
+            for (int row = 0; row < you.N; row++) {
+                for (int col = 0; col < you.N; col++) {
+                    if (this.board[row][col] != you.board[row][col]) {
+                        return false;
+                    }
                 }
             }
+            return true;
         }
-        return val;
+        return false;
     }
 
     @Override
