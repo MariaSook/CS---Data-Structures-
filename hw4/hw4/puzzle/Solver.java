@@ -5,7 +5,6 @@ import edu.princeton.cs.algs4.Stack;
 
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.TreeSet;
 import java.util.Set;
 
 public class Solver {
