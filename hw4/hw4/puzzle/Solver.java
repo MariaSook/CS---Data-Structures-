@@ -9,7 +9,6 @@ import java.util.Set;
 
 public class Solver {
     private MinPQ nodes;
-    private int moves;
     private Set<WorldState> seen;
     private Stack<WorldState> returnvals;
 
@@ -40,7 +39,6 @@ public class Solver {
         WorldState currws = curr.returnws();
         if (currws.isGoal()) {
             findPrevious(curr);
-            this.moves = curr.moves;
             return;
         } else {
             for (WorldState n : currws.neighbors()) {

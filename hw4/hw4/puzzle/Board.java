@@ -77,11 +77,26 @@ public class Board implements WorldState{
 
     public int hamming() {
     //Hamming estimate described below
-        return 0;
+        int counter = 1;
+        int returnval = 0;
+        for (int row = 0; row < N; row ++) {
+            for (int column = 0; column < N; column ++) {
+                if (counter == N*N -1) {
+                    break;
+                }
+                if (board[row][column] != counter) {
+                    returnval += 1;
+                }
+                counter += 1;
+            }
+        }
+        return returnval;
     }
 
     public int manhattan() {
     //Manhattan estimate described below
+
+
         return 0;
     }
 
@@ -95,8 +110,29 @@ public class Board implements WorldState{
     public boolean equals(Object y) {
     //Returns true if this board's tile values are the same
         //              position as y's
+        if (y == null) {
+            return false;
+        }
+        if (getClass() != y.getClass()) {
+            return false;
+        }
 
-        return true;
+        Board you = (Board) y;
+
+        boolean val = true;
+        for (int row = 0; row < you.N; row ++) {
+            for (int col = 0; col < you.N; col ++) {
+                if (this.board[row][col] != you.board[row][col]) {
+                    val = false;
+                    break;
+                }
+            }
+        }
+        return val;
+    }
+
+    public int HashCode() {
+        return 0;
     }
 
     /** Returns the string representation of the board. 
