@@ -56,7 +56,7 @@ public class Solver {
     }
 
     public int moves() {
-        return this.moves;
+        return returnvals.size();
     }
 
     public Iterable<WorldState> solution() {

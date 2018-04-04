@@ -2,7 +2,7 @@ package hw4.puzzle;
 
 import edu.princeton.cs.algs4.Queue;
 
-public class Board {
+public class Board implements WorldState{
     private int[][] board;
     private int N;
 
@@ -22,10 +22,17 @@ public class Board {
 
     public int tileAt(int i, int j) {
     //Returns value of tile at row i, column j (or 0 if blank)
-    if (i < 0 || j < 0  || i > N-1 || j > N-1) {
-        throw new java.lang.IndexOutOfBoundsException;
-    }
-    return board[i][j];
+        if (i < 0 || j < 0  || i > N-1 || j > N-1) {
+        throw new java.lang.IndexOutOfBoundsException();
+        }
+
+        if (board[i][j] == 0) {
+            return 0;
+        }
+
+        else {
+            return board[i][j];
+        }
     }
 
     public int size() {
