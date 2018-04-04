@@ -1,29 +1,33 @@
 package hw4.puzzle;
 
 import edu.princeton.cs.algs4.MinPQ;
-
-import java.util.Comparator;
 import java.util.Set;
+import java.util.HashSet;
+import java.util.Comparator;
 
 public class Solver {
     private MinPQ nodes;
     private int moves;
     private Set<WorldState> seen;
+    private Set<WorldState> returnvals;
 
     public Solver(WorldState initial) {
         SearchNode initialSN = new SearchNode(initial, 0, null);
-        //this.nodes = new MinPQ(SNComparator<SearchNode>);
-        this.nodes = new MinPQ();
+        SNComparator comp = new SNComparator();
+        this.nodes = new MinPQ(comp);
+        this.seen = new HashSet<>();
+        this.returnvals = new HashSet<>();
 
         nodes.insert(initialSN);
+        seen.add(initial);
 
         solverHelper();
     }
 
     private void solverHelper() {
         SearchNode curr = (SearchNode) nodes.delMin();
-        WorldState currws = (WorldState) curr.returnws();
-        seen.add(currws);
+        WorldState currws = curr.returnws();
+        returnvals.add(currws);
         if (currws.isGoal()) {
             this.moves = curr.moves;
             return;
@@ -33,7 +37,9 @@ public class Solver {
                     SearchNode me = new SearchNode(n, curr.moves + 1, curr);
                     nodes.insert(me);
                 }
+                seen.add(n);
             }
+
             solverHelper();
         }
     }
@@ -43,7 +49,7 @@ public class Solver {
     }
 
     public Iterable<WorldState> solution() {
-        return null;
+        return returnvals;
     }
 
     private class SearchNode {
@@ -71,10 +77,10 @@ public class Solver {
     private class SNComparator implements Comparator {
         @Override
         public int compare(Object obj1, Object obj2) {
-            SearchNode me = (SearchNode) obj1;
-            SearchNode you = (SearchNode) obj2;
-
+            Solver.SearchNode me = (Solver.SearchNode) obj1;
+            Solver.SearchNode you = (Solver.SearchNode) obj2;
             return me.priotiy() - you.priotiy();
         }
     }
+
 }
