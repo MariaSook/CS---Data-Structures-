@@ -3,15 +3,21 @@ package hw4.puzzle;
 import edu.princeton.cs.algs4.Queue;
 
 public class Board {
-    private int[][] tiles;
+    private int[][] board;
     private int N;
 
     public Board(int[][] tiles) {
     //Constructs a board from an
         // N-by-N array of tiles where//
         // tiles[i][j] = tile at row i, column j
-        this.tiles = tiles;
+
         this.N = tiles.length;
+        this.board = new int[N][N];
+        for (int row = 0; row < N; row ++) {
+            for (int column = 0; column < N; column ++) {
+                board[row][column] = tiles[row][column];
+            }
+        }
     }
 
     public int tileAt(int i, int j) {
@@ -19,7 +25,7 @@ public class Board {
     if (i < 0 || j < 0  || i > N-1 || j > N-1) {
         throw new java.lang.IndexOutOfBoundsException;
     }
-    return tiles[i][j];
+    return board[i][j];
     }
 
     public int size() {
@@ -35,7 +41,7 @@ public class Board {
         int zug = -1;
         for (int rug = 0; rug < hug; rug++) {
             for (int tug = 0; tug < hug; tug++) {
-                if (tileAt(rug, tug) == BLANK) {
+                if (tileAt(rug, tug) == 0) {
                     bug = rug;
                     zug = tug;
                 }
@@ -51,11 +57,11 @@ public class Board {
             for (int lil1il1 = 0; lil1il1 < hug; lil1il1++) {
                 if (Math.abs(-bug + l11il) + Math.abs(lil1il1 - zug) - 1 == 0) {
                     ili1li1[bug][zug] = ili1li1[l11il][lil1il1];
-                    ili1li1[l11il][lil1il1] = BLANK;
+                    ili1li1[l11il][lil1il1] = 0;
                     Board neighbor = new Board(ili1li1);
                     neighbors.enqueue(neighbor);
                     ili1li1[l11il][lil1il1] = ili1li1[bug][zug];
-                    ili1li1[bug][zug] = BLANK;
+                    ili1li1[bug][zug] = 0;
                 }
             }
         }
@@ -64,23 +70,26 @@ public class Board {
 
     public int hamming() {
     //Hamming estimate described below
+        return 0;
     }
 
     public int manhattan() {
     //Manhattan estimate described below
+        return 0;
     }
 
     public int estimatedDistanceToGoal() {
     //Estimated distance to goal. This method should
         //simply return the results of manhattan() when submitted to
         //              Gradescope.
+        return manhattan();
     }
 
     public boolean equals(Object y) {
     //Returns true if this board's tile values are the same
         //              position as y's
 
-
+        return true;
     }
 
     /** Returns the string representation of the board. 
