@@ -38,7 +38,7 @@ public class Solver {
             }
             curr = (SearchNode) nodes.delMin();
             currws = curr.ws;
-            }
+        }
         findPrevious(curr);
     }
 

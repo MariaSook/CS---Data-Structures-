@@ -71,7 +71,7 @@ public class CommonBugDetector {
 
 
     public static void main(String[] args) {
-        CommonBugPuzzleState cbps = new CommonBugPuzzleState();
+        /*CommonBugPuzzleState cbps = new CommonBugPuzzleState();
         Solver s = new Solver(cbps);
 
         // s.moves() should be 5
@@ -82,5 +82,6 @@ public class CommonBugDetector {
         System.out.println(s.nodes.size());
         // if you print out the total number of items enqueued by s3
         // it should be approximately 25, not approximately 50.
+    }*/
     }
 }
