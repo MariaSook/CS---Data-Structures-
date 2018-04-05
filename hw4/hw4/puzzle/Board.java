@@ -113,18 +113,10 @@ public class Board implements WorldState {
         return manhattan();
     }
 
-
     public boolean equals(Object y) {
         //Returns true if this board's tile values are the same
         //              position as y's
         if (!(y instanceof Board)) {
-            return false;
-        }
-
-        if (this == y) {
-            return true;
-        }
-        if (y == null) {
             return false;
         }
 
@@ -137,9 +129,9 @@ public class Board implements WorldState {
             return false;
         }
 
-        for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board.length; col++) {
-                if (this.board[row][col] != you.board[row][col]) {
+        for (int row = 0; row < N; row++) {
+            for (int col = 0; col < N; col++) {
+                if (this.tileAt(row, col) != you.tileAt(row, col)) {
                     return false;
                 }
             }

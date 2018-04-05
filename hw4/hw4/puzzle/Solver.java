@@ -27,14 +27,14 @@ public class Solver {
 
     private void solverHelper() {
         SearchNode curr = (SearchNode) nodes.delMin();
-        WorldState currws = curr.ws;
+        WorldState currws = curr.returnws();
         while (!currws.isGoal()) {
             for (WorldState n : currws.neighbors()) {
                 if (!seen.contains(n) && !n.equals(curr.previous)) {
                     SearchNode me = new SearchNode(n, curr.moves + 1, curr);
                     nodes.insert(me);
-                    seen.add(n);
                 }
+                seen.add(n);
             }
             curr = (SearchNode) nodes.delMin();
             currws = curr.ws;

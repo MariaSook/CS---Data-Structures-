@@ -18,7 +18,6 @@ public class EightPuzzleSolver {
             }
         }
         Board initial = new Board(tiles);
-        System.out.println(initial.manhattan());
         Solver solver = new Solver(initial);
         StdOut.println("Minimum number of moves = " + solver.moves());
 
