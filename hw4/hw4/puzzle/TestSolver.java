@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
  * in order to run the tests.
  */
 public class TestSolver {
-    public static class BoardPuzzleSolution {
+    /*public static class BoardPuzzleSolution {
         final String name;
         final Board board;
         final int numMoves;
@@ -44,9 +44,10 @@ public class TestSolver {
      *  the number of enqueues used by the reference solution to
      *  solve the puzzle. Returns null if String isn't a valid word puzzle.
      */
+    /*
     public static WordPuzzleSolution stringToWordPuzzle(String wp) {
         try {
-            /* skip comments and blank lines */
+            /* skip comments and blank lines
             if (wp.charAt(0) == '#') {
                 return null;
             }
@@ -79,7 +80,7 @@ public class TestSolver {
             assertEquals(errorMessage, wps.numMoves, s.moves());
         }
     }
-
+*/
 
  /* Uncomment everything in this block once you've written Board.
      public static Board readBoard(String filename) {
