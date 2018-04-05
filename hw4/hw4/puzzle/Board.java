@@ -100,11 +100,10 @@ public class Board implements WorldState {
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
                 if (board[row][col] == counter && board[row][col] != 0) {
-                    int r = counter / size();
-                    int c = counter % size();
-                    int diffrow = Math.abs(row - r);
-                    int diffcol = Math.abs(col - c);
-                    returnval += diffcol + diffrow;
+                    int r = (counter - 1) / size();
+                    int c = (counter - 1) % size();
+                    int diffvals = Math.abs(r - row) + Math.abs(c - col);
+                    returnval += diffvals;
                 }
                 counter++;
             }
@@ -124,6 +123,10 @@ public class Board implements WorldState {
     public boolean equals(Object y) {
         //Returns true if this board's tile values are the same
         //              position as y's
+        if (!(y instanceof Board)) {
+            return false;
+        }
+
         if (this == y) {
             return true;
         }
