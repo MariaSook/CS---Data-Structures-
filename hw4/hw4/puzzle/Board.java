@@ -115,6 +115,9 @@ public class Board implements WorldState {
     public boolean equals(Object y) {
         //Returns true if this board's tile values are the same
         //              position as y's
+        if (this == y) {
+            return true;
+        }
         if (y == null) {
             return false;
         }

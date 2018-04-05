@@ -8,9 +8,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Solver {
-    protected MinPQ nodes;
-    protected Set<WorldState> seen;
-    protected Stack<WorldState> returnvals;
+    private MinPQ nodes;
+    private Set<WorldState> seen;
+    private Stack<WorldState> returnvals;
 
 
     public Solver(WorldState initial) {
@@ -45,8 +45,8 @@ public class Solver {
                 if (!seen.contains(n) && !n.equals(curr.previous)) {
                     SearchNode me = new SearchNode(n, curr.moves + 1, curr);
                     nodes.insert(me);
+                    seen.add(n);
                 }
-                seen.add(n);
             }
 
             solverHelper();
