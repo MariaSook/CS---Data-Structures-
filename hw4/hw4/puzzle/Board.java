@@ -113,14 +113,12 @@ public class Board implements WorldState {
         return manhattan();
     }
 
+
+    //@source help from andrew crowley
     public boolean equals(Object y) {
         //Returns true if this board's tile values are the same
         //              position as y's
         if (!(y instanceof Board)) {
-            return false;
-        }
-
-        if (y.getClass() != this.getClass()) {
             return false;
         }
 
