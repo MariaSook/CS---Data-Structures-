@@ -89,26 +89,20 @@ public class Board implements WorldState {
     }
 
 
-    //return N * row + col
-
-
     public int manhattan() {
-        //Manhattan estimate described below
-        // if the value of board[r][c] is 0, skip it
         int returnval = 0;
-        int counter = 1;
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
-                if (board[row][col] == counter && board[row][col] != 0) {
-                    int r = (counter - 1) / size();
-                    int c = (counter - 1) % size();
-                    int diffvals = Math.abs(r - row) + Math.abs(c - col);
-                    returnval += diffvals;
+                if (board[row][col] == 0) {
+                    continue;
                 }
-                counter++;
+                int r = (board[row][col] - 1) / size();
+                int c = (board[row][col] - 1) % size();
+                int diffCol = Math.abs(r - row);
+                int diffRow = Math.abs(c - col);
+                returnval += (diffCol + diffRow);
             }
         }
-
         return returnval;
     }
 
