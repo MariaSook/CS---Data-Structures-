@@ -25,22 +25,10 @@ public class Solver {
         solverHelper();
     }
 
-    private void findPrevious(SearchNode curr) {
-        if (curr.previous == null) {
-            returnvals.push(curr.ws);
-            return;
-        }
-        returnvals.push(curr.ws);
-        findPrevious(curr.previous);
-    }
-
     private void solverHelper() {
         SearchNode curr = (SearchNode) nodes.delMin();
-        WorldState currws = curr.returnws();
-        if (currws.isGoal()) {
-            findPrevious(curr);
-            return;
-        } else {
+        WorldState currws = curr.ws;
+        while (!currws.isGoal()) {
             for (WorldState n : currws.neighbors()) {
                 if (!seen.contains(n) && !n.equals(curr.previous)) {
                     SearchNode me = new SearchNode(n, curr.moves + 1, curr);
@@ -48,9 +36,19 @@ public class Solver {
                     seen.add(n);
                 }
             }
+            curr = (SearchNode) nodes.delMin();
+            currws = curr.ws;
+            }
+        findPrevious(curr);
+    }
 
-            solverHelper();
+    private void findPrevious(SearchNode curr) {
+        if (curr.previous == null) {
+            returnvals.push(curr.ws);
+            return;
         }
+        returnvals.push(curr.ws);
+        findPrevious(curr.previous);
     }
 
     public int moves() {

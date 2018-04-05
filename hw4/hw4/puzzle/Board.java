@@ -95,22 +95,25 @@ public class Board implements WorldState {
         int counter = 1;
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
-                if (board[row][col] != counter && board[row][col] != 0) {
-                    return 0;  //fix
+                if (board[row][col] == counter && board[row][col] != 0) {
+                    int vert = 0;
+                    int horiz = 0;
+                    returnval += (vert + horiz);
                 }
                 counter++;
             }
         }
 
-        return 0;
+        return returnval;
     }
 
     public int estimatedDistanceToGoal() {
-        //Estimated distance to goal. This method should
+        //Estimated distanice to goal. This method should
         //simply return the results of manhattan() when submitted to
         //              Gradescope.
         return manhattan();
     }
+
 
     public boolean equals(Object y) {
         //Returns true if this board's tile values are the same
@@ -118,16 +121,13 @@ public class Board implements WorldState {
         if (this == y) {
             return true;
         }
-        if (y == null) {
-            return false;
-        }
-        if (this.getClass() != y.getClass()) {
+        if (y == null || this.getClass() != y.getClass()) {
             return false;
         }
 
         Board you = (Board) y;
 
-        if (this.size() != you.size()) {
+        if (you.size() != this.size()) {
             return false;
         }
 
