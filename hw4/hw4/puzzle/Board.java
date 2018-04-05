@@ -88,7 +88,7 @@ public class Board implements WorldState {
         return returnval;
     }
 
-
+    //@source Andrew Crowley and I talked about implementation
     public int manhattan() {
         int returnval = 0;
         for (int row = 0; row < N; row++) {
