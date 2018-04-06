@@ -12,28 +12,26 @@ public class MazeBreadthFirstPaths extends MazeExplorer {
     public int[] edgeTo;
     public boolean[] marked;
     */
-    private Maze maze;
-    private int source;
-    private int target;
+    public Maze maze;
+    public int s;
+    public int t;
     private boolean targetFound;
     private ArrayDeque fringe;
-
-
 
     public MazeBreadthFirstPaths(Maze m, int sourceX, int sourceY, int targetX, int targetY) {
         super(m);
         this.maze = m;
-        this.source = maze.xyTo1D(sourceX, sourceY);
-        this.target = maze.xyTo1D(targetX, targetY);
-        distTo[source] = 0;
-        edgeTo[source] = source;
+        this.s = maze.xyTo1D(sourceX, sourceY);
+        this.t = maze.xyTo1D(targetX, targetY);
+        distTo[this.s] = 0;
+        edgeTo[this.s] = s;
 
         // Add more variables here!
     }
 
     /** Conducts a breadth first search of the maze starting at the source. */
     private void bfs() {
-       solverBfs(source);
+       solverBfs(s);
     }
 /*
     marked[v] = true;
@@ -61,7 +59,7 @@ public class MazeBreadthFirstPaths extends MazeExplorer {
 
     */
     private void solverBfs(int v) {
-        if (v == target) {
+        if (v == t) {
             targetFound = true;
         }
 
