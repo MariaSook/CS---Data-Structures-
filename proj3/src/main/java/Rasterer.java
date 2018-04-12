@@ -8,6 +8,11 @@ import java.util.Map;
  * not draw the output correctly.
  */
 public class Rasterer {
+    //input an upper left latitude and longitude, a lower right
+    // latitude and longitude, a window width, and a window height.
+    // Using these six numbers, it will produce a 2D array of filenames
+    // corresponding to the files to be rendered
+
 
     public Rasterer() {
         // YOUR CODE HERE

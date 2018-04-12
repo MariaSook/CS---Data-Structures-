@@ -17,6 +17,12 @@ import java.util.ArrayList;
  *
  * @author Alan Yao, Josh Hug
  */
+
+//will read in the Open Street Map dataset and store it as a
+// graph. Each node in the graph will represent a single
+// intersection, and each edge will represent a road. How you
+// store your graph is up to you.
+
 public class GraphDB {
     /** Your instance variables for storing the graph. You should consider
      * creating helper classes, e.g. Node, Edge, etc. */
