@@ -1,3 +1,5 @@
+//import com.sun.tools.jdeps.Graph;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -13,17 +15,6 @@ import java.util.regex.Pattern;
  */
 public class Router {
 
-    //class will take as input a GraphDB, a starting latitude
-    // and longitude, and a destination latitude and longitude,
-    // and it will produce a list of nodes (i.e. intersections)
-    // that you get from the start point to the end point. This
-    // part will be similar to the PuzzleSolver assignment, since
-    // you’ll be implementing A* again, but now with an explicit
-    // graph object (that you build in GraphDB). As an additional
-    // feature, you will be taking that list to generate a sequence
-    // of driving instructions that the server will then be able
-    // display.
-
     /**
      * Return a List of longs representing the shortest path from the node
      * closest to a start location and the node closest to the destination
@@ -37,6 +28,9 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
+
+
+
         return null; // FIXME
     }
 
@@ -77,7 +71,7 @@ public class Router {
 
         /** Default name for an unknown way. */
         public static final String UNKNOWN_ROAD = "unknown road";
-        
+
         /** Static initializer. */
         static {
             DIRECTIONS[START] = "Start";
