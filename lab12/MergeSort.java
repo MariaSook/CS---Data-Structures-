@@ -34,8 +34,15 @@ public class MergeSort {
     /** Returns a queue of queues that each contain one item from items. */
     private static <Item extends Comparable> Queue<Queue<Item>>
             makeSingleItemQueues(Queue<Item> items) {
-        // Your code here!
-        return null;
+
+        Queue returnval = new Queue();
+        for (int i = 0; i < items.size(); i ++) {
+            Queue ival = new Queue();
+            ival.enqueue(items.dequeue());
+            returnval.enqueue(ival);
+        }
+
+        return returnval;
     }
 
     /**
@@ -62,5 +69,23 @@ public class MergeSort {
             Queue<Item> items) {
         // Your code here!
         return items;
+    }
+
+    public static void main(String[] args) {
+        Queue unsorted = new Queue();
+        MergeSort merge = new MergeSort();
+
+        unsorted.enqueue("Maria");
+        unsorted.enqueue("Mateo");
+        unsorted.enqueue("Bryce");
+        unsorted.enqueue("Yoshi");
+
+        System.out.println(unsorted);
+
+        Queue newone = merge.mergeSort(unsorted);
+
+        System.out.println(unsorted);
+        System.out.println(newone);
+
     }
 }
