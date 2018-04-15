@@ -1,7 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.ArrayList;
 
 /**
  * This class provides all code necessary to take a query box and produce
@@ -10,13 +9,7 @@ import java.util.ArrayList;
  * not draw the output correctly.
  */
 public class Rasterer {
-    //input an upper left latitude and longitude, a lower right
-    // latitude and longitude, a window width, and a window height.
-    // Using these six numbers, it will produce a 2D array of filenames
-    // corresponding to the files to be rendered
-
-    private String[][] render_grid;
-    private Map params;
+    private String[][] rendergrid;
     private double ullon;
     private double ullat;
     private double lrlon;
@@ -24,46 +17,52 @@ public class Rasterer {
     private double depth;
     private double w;
     private double h;
-    private boolean query_success;
+    private boolean querysuccess;
+    private double numImages;
+    private double k;
     private double LonDPP;
+    private ArrayList x;
+    private ArrayList y;
+    private double rasterullon;
+    private double rasterullat;
+    private double rasterlrlon;
+    private double rasterlrlat;
+    private int startTileLeft;
+    private int startTileUpper;
+    private int endTileRight;
+    private int endTileLower;
 
-
-    //returns String[][] that corresponds to the files that should
-    // be displayed in response to this query.
-
-    //LonDPP = (lower right lat - upper left long)/width of image (or box) in pixels
-
-    //images in String[][] must include any region of query box
-    //have greatest LonDPP that is less than or equal to the LonDPP
-    // of the query box (as zoomed out as possible). If the requested
-    // LonDPP is less than what is available in the data files, you should
-    // use the lowest LonDPP available instead (i.e. depth 7 images).
-
-    //nput an upper left latitude and longitude, a lower right
-    // latitude and longitude, a window width, and a window height.
 
     public Rasterer() {
+
+    }
+
+    public static void main(String[] args) {
+        Rasterer raster = new Rasterer();
+
+        double londpp = raster.lonDPP(122.2104604264636, 122.30410170759153, 1085);
+        System.out.print(raster.goalDepth(londpp));
+
 
     }
 
     /**
      * Takes a user query and finds the grid of images that best matches the query. These
      * images will be combined into one big image (rastered) by the front end. <br>
-     *
-     *     The grid of images must obey the following properties, where image in the
-     *     grid is referred to as a "tile".
-     *     <ul>
-     *         <li>The tiles collected must cover the most longitudinal distance per pixel
-     *         (LonDPP) possible, while still covering less than or equal to the amount of
-     *         longitudinal distance per pixel in the query box for the user viewport size. </li>
-     *         <li>Contains all tiles that intersect the query bounding box that fulfill the
-     *         above condition.</li>
-     *         <li>The tiles must be arranged in-order to reconstruct the full image.</li>
-     *     </ul>
+     * <p>
+     * The grid of images must obey the following properties, where image in the
+     * grid is referred to as a "tile".
+     * <ul>
+     * <li>The tiles collected must cover the most longitudinal distance per pixel
+     * (LonDPP) possible, while still covering less than or equal to the amount of
+     * longitudinal distance per pixel in the query box for the user viewport size. </li>
+     * <li>Contains all tiles that intersect the query bounding box that fulfill the
+     * above condition.</li>
+     * <li>The tiles must be arranged in-order to reconstruct the full image.</li>
+     * </ul>
      *
      * @param params Map of the HTTP GET request's query parameters - the query box and
      *               the user viewport width and height.
-     *
      * @return A map of results for the front end as specified: <br>
      * "render_grid"   : String[][], the files to display. <br>
      * "raster_ul_lon" : Number, the bounding upper left longitude of the rastered image. <br>
@@ -72,14 +71,22 @@ public class Rasterer {
      * "raster_lr_lat" : Number, the bounding lower right latitude of the rastered image. <br>
      * "depth"         : Number, the depth of the nodes of the rastered image <br>
      * "query_success" : Boolean, whether the query was able to successfully complete; don't
-     *                    forget to set this to true on success! <br>
+     * forget to set this to true on success! <br>
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
-        //System.out.println(params);
         setValues(params);
-        //this.render_grid = calculateFiles(params);
-        Map<String, Object> results = new HashMap<>();
+        goalDepth(LonDPP);
+        buildBox();
+        rendergrid = chooseImages();
 
+        Map<String, Object> results = new HashMap<>();
+        results.put("render_grid", rendergrid);
+        results.put("raster_ul_lon", rasterullon);
+        results.put("raster_ul_lat", rasterullat);
+        results.put("raster_lr_lon", rasterlrlon);
+        results.put("raster_lr_lat", rasterlrlat);
+        results.put("depth", goalDepth(LonDPP));
+        results.put("query_success", true);
         return results;
     }
 
@@ -90,68 +97,75 @@ public class Rasterer {
         this.lrlon = params.get("lrlat");
         this.w = params.get("w");
         this.h = params.get("h");
-        this.LonDPP = (lrlat - ullon)/w;
+        this.LonDPP = lonDPP(lrlon, ullon, w);
+        this.depth = goalDepth(LonDPP);
     }
 
-//    private String[][] calculateFiles(Map<String, Double> params) {
-//
-//    }
-
-    private int findDepth(String name) {
-        String s = "" + name.charAt(1);
-        return Integer.parseInt(s);
-    }
-
-    private int returnNumValFromString(String name, char val) {
-        ArrayList array = new ArrayList();
-        boolean wall = false;
-        for (int i = 0; i < name.length(); i ++) {
-            if (name.charAt(i) == '_') {
-                wall = false;
-            }
-
-            if (name.charAt(i) == val) {
-                wall = true;
-            }
-            else if (wall == true) {
-                array.add(name.charAt(i));
+    private int goalDepth(double lonDPP) {
+        for (int i = 0; i < 8; i++) {
+            if (lonDPPDepth(i) <= lonDPP) {
+                this.depth = i;
+                this.numImages = Math.pow(4, i);
+                this.k = Math.pow(2, i) - 1;
+                return i;
             }
         }
-        int returnval = arrayToInt(array);
+        this.depth = 7;
+        this.numImages = Math.pow(4, 7);
+        this.k = Math.pow(2, 7) - 1;
+        return 7;
+    }
+
+    private double lonDPP(double lrlon, double ullon, double width) {
+        return Math.abs((lrlon - ullon) / width);
+    }
+
+    private double lonDPPDepth(int nodedepth) {
+        //More generally, at the Dth level of zoom, there are 4^D images,
+        // with names ranging from dD_x0_y0 to dD_xk_yk, where k is 2^D - 1.
+        double worldlon = Math.abs(MapServer.ROOT_LRLON - MapServer.ROOT_ULLON);
+        double tilelon = worldlon / Math.pow(2, nodedepth);
+
+        return tilelon / 256;
+    }
+
+
+    //total width of world, then dist from left to query
+    //.2/.5 *2 (num tiles) = .8 -- then round down
+    //
+
+    private void buildBox() {
+        double worldLon = Math.abs(MapServer.ROOT_LRLON - MapServer.ROOT_ULLON);
+        double worldLat = Math.abs(MapServer.ROOT_LRLAT - MapServer.ROOT_ULLAT);
+
+        double eachTileLon = worldLon / Math.pow(2, depth);
+        double eachTileLat = worldLat / Math.pow(2, depth);
+
+        double queryLonLeft = Math.abs(ullon - MapServer.ROOT_ULLON);
+        double queryLonRight = Math.abs(lrlon - MapServer.ROOT_LRLON);
+        double queryLatUpper = Math.abs(ullat - MapServer.ROOT_ULLAT);
+        double queryLatLower = Math.abs(lrlat - MapServer.ROOT_LRLAT);
+
+        this.startTileLeft = (int) ((queryLonLeft / worldLon) * Math.pow(2, depth));
+        this.startTileUpper = (int) ((queryLatUpper / worldLat) * Math.pow(2, depth));
+        this.endTileRight = (int) ((queryLonRight / worldLon) * Math.pow(2, depth));
+        this.endTileLower = (int) ((queryLatLower / worldLat) * Math.pow(2, depth));
+
+        this.rasterullon = MapServer.ROOT_ULLON + eachTileLon * startTileLeft;
+        this.rasterullat = MapServer.ROOT_ULLAT + eachTileLat * startTileUpper;
+        this.rasterlrlon = MapServer.ROOT_LRLON + eachTileLon * endTileRight;
+        this.rasterlrlat = MapServer.ROOT_ULLON + eachTileLat * endTileLower;
+    }
+
+    private String[][] chooseImages() {
+        String[][] returnval = new String[(endTileRight-startTileLeft)][(endTileLower-startTileUpper)];
+
+        for (int row = startTileLeft; row < endTileRight; row++) {
+            for (int col = startTileUpper; col < endTileLower; col++) {
+                returnval[row][col] = "d" + depth + "_x" + row + "_y" + col + ".png";
+            }
+        }
         return returnval;
     }
-
-    private int arrayToInt(ArrayList list) {
-        String s = "";
-        for (int i = 0; i < list.size(); i++) {
-            s += list.get(i);
-        }
-        return Integer.parseInt(s);
-    }
-
-    private int numTiles(int width, int height) {
-        int num1 = (int) (width/256);
-        int num2 = (int) (height/256) + 1;
-
-        return num1*num2;
-    }
-
-    public static void main(String[] args) {
-        Rasterer raster = new Rasterer();
-
-        String image = "d8_x11111_y2";
-
-        //w=1085.0, h=566.0,
-
-        int width = 1085;
-        int height = 566;
-
-        System.out.println(raster.numTiles(width, height));
-
-
-
-    }
-
-
 
 }
