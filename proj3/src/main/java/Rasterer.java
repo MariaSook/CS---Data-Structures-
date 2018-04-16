@@ -91,15 +91,16 @@ public class Rasterer {
     }
 
     private void setValues(Map<String, Double> params) {
-        this.ullon = params.get("ullon");
-        this.ullat = params.get("ullat");
+        ullon = params.get("ullon");
+        ullat = params.get("ullat");
 
-        this.lrlon = params.get("lrlon");
-        this.lrlat = params.get("lrlat");
-        this.w = params.get("w");
-        this.h = params.get("h");
-        this.LonDPP = lonDPP(lrlon, ullon, w);
-        System.out.println(params.values());
+        lrlon = params.get("lrlon");
+        lrlat = params.get("lrlat");
+
+        w = params.get("w");
+        h = params.get("h");
+
+        LonDPP = lonDPP(lrlon, ullon, w);
     }
 
     private boolean querySuccess() {
@@ -113,23 +114,18 @@ public class Rasterer {
         return true;
     }
 
-    private void goalDepth(double londpp) {
+    private int goalDepth(double londpp) {
         for (int i = 0; i < 7; i++) {
             if (lonDPPDepth(i) <= londpp) {
-                System.out.println("for loop tracker: " + i);
                 this.depth = i;
-                break;
+                return i;
             }
         }
-        if (lonDPPDepth(7) >= londpp || lonDPPDepth(8) >= londpp) {
-            this.depth = 8;
-        }
+        this.depth = 7;
+        return 7;
     }
 
     private double lonDPP(double lrLon, double ulLon, double width) {
-        System.out.println("lrlon: " + lrLon);
-        System.out.println("ulLon: " + ulLon);
-        System.out.println("width: " + width);
         return (lrLon - ulLon) / width;
     }
 
@@ -137,7 +133,6 @@ public class Rasterer {
         double worldlon = Math.abs(MapServer.ROOT_LRLON - MapServer.ROOT_ULLON);
         double tilelon = worldlon / Math.pow(2, nodedepth) / 256;
 
-        System.out.println("lonDPPDepth (nodepath): " + tilelon);
         return tilelon;
     }
 
@@ -155,19 +150,19 @@ public class Rasterer {
         double queryLatUpper = Math.abs(ullat - MapServer.ROOT_ULLAT);
         double queryLatLower = Math.abs(lrlat - MapServer.ROOT_ULLAT);
 
-        this.startTileLeft = (int) ((queryLonLeft / worldLon) * numTilesWide);
-        this.endTileRight = (int) ((queryLonRight / worldLon) * numTilesWide);
+        startTileLeft = (int) ((queryLonLeft / worldLon) * numTilesWide);
+        endTileRight = (int) ((queryLonRight / worldLon) * numTilesWide);
 
-        this.startTileUpper = (int) ((queryLatUpper / worldLat) * numTilesWide);
-        this.endTileLower = (int) ((queryLatLower / worldLat) * numTilesWide);
+        startTileUpper = (int) ((queryLatUpper / worldLat) * numTilesWide);
+        endTileLower = (int) ((queryLatLower / worldLat) * numTilesWide);
 
         valueCheck();
 
-        this.rasterullon = MapServer.ROOT_ULLON + (lonTileLength * startTileLeft); //wrong
-        this.rasterlrlon = MapServer.ROOT_ULLON + (lonTileLength * endTileRight); //wrong
+        rasterullon = MapServer.ROOT_ULLON + (lonTileLength * startTileLeft); //correct
+        rasterlrlon = MapServer.ROOT_ULLON + (lonTileLength * (endTileRight + 1));
 
-        this.rasterullat = MapServer.ROOT_ULLAT + (latTileLength * startTileUpper); //wrong
-        this.rasterlrlat = MapServer.ROOT_ULLAT + (latTileLength * endTileLower); //wrong
+        rasterullat = MapServer.ROOT_ULLAT - (latTileLength * startTileUpper); //correct
+        rasterlrlat = MapServer.ROOT_ULLAT - (latTileLength * (endTileLower + 1));
     }
 
     private void valueCheck() {
@@ -199,10 +194,8 @@ public class Rasterer {
     }
 
     private String[][] chooseImages() {
-        int cols = Math.abs(endTileRight - startTileLeft) + 1; //x-val
         int rows = Math.abs(endTileLower - startTileUpper) + 1; //y-val
-
-        System.out.println("depth: " + depth);
+        int cols = Math.abs(endTileRight - startTileLeft) + 1; //x-val
 
         String[][] returnval = new String[rows][cols];
 
