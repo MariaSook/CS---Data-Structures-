@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,6 +7,7 @@ import java.util.Map;
  * seven of the required fields, otherwise the front end code will probably
  * not draw the output correctly.
  */
+
 public class Rasterer {
     private String[][] rendergrid;
     private double ullon;
@@ -17,12 +17,7 @@ public class Rasterer {
     private double depth;
     private double w;
     private double h;
-    private boolean querysuccess;
-    private double numImages;
-    private double k;
     private double LonDPP;
-    private ArrayList x;
-    private ArrayList y;
     private double rasterullon;
     private double rasterullat;
     private double rasterlrlon;
@@ -32,18 +27,21 @@ public class Rasterer {
     private int endTileRight;
     private int endTileLower;
 
-
     public Rasterer() {
-
     }
 
     public static void main(String[] args) {
         Rasterer raster = new Rasterer();
 
-        double londpp = raster.lonDPP(122.2104604264636, 122.30410170759153, 1085);
-        System.out.print(raster.goalDepth(londpp));
+        HashMap<String, Double> params = new HashMap<>();
+        params.put("lrlon", -122.2104604264636);
+        params.put("ullon", -122.30410170759153);
+        params.put("w", 1085.0);
+        params.put("h", 566.0);
+        params.put("ullat", 37.870213571328854);
+        params.put("lrlat", 37.8318576119893);
 
-
+        raster.getMapRaster(params);
     }
 
     /**
@@ -73,6 +71,7 @@ public class Rasterer {
      * "query_success" : Boolean, whether the query was able to successfully complete; don't
      * forget to set this to true on success! <br>
      */
+
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
         setValues(params);
         goalDepth(LonDPP);
@@ -85,84 +84,132 @@ public class Rasterer {
         results.put("raster_ul_lat", rasterullat);
         results.put("raster_lr_lon", rasterlrlon);
         results.put("raster_lr_lat", rasterlrlat);
-        results.put("depth", goalDepth(LonDPP));
-        results.put("query_success", true);
+        results.put("depth", (int) depth);
+        results.put("query_success", querySuccess());
+
         return results;
     }
 
     private void setValues(Map<String, Double> params) {
         this.ullon = params.get("ullon");
         this.ullat = params.get("ullat");
+
         this.lrlon = params.get("lrlon");
-        this.lrlon = params.get("lrlat");
+        this.lrlat = params.get("lrlat");
         this.w = params.get("w");
         this.h = params.get("h");
         this.LonDPP = lonDPP(lrlon, ullon, w);
-        this.depth = goalDepth(LonDPP);
+        System.out.println(params.values());
     }
 
-    private int goalDepth(double lonDPP) {
-        for (int i = 0; i < 8; i++) {
-            if (lonDPPDepth(i) <= lonDPP) {
+    private boolean querySuccess() {
+        if (ullon < MapServer.ROOT_ULLON || lrlon > MapServer.ROOT_LRLON
+                || ullat > MapServer.ROOT_ULLAT || lrlat < MapServer.ROOT_LRLAT) {
+            return false;
+        }
+        if (ullon > lrlon || ullat < lrlat) {
+            return false;
+        }
+        return true;
+    }
+
+    private void goalDepth(double londpp) {
+        for (int i = 0; i < 7; i++) {
+            if (lonDPPDepth(i) <= londpp) {
+                System.out.println("for loop tracker: " + i);
                 this.depth = i;
-                this.numImages = Math.pow(4, i);
-                this.k = Math.pow(2, i) - 1;
-                return i;
+                break;
             }
         }
-        this.depth = 7;
-        this.numImages = Math.pow(4, 7);
-        this.k = Math.pow(2, 7) - 1;
-        return 7;
+        if (lonDPPDepth(7) >= londpp || lonDPPDepth(8) >= londpp) {
+            this.depth = 8;
+        }
     }
 
-    private double lonDPP(double lrlon, double ullon, double width) {
-        return Math.abs((lrlon - ullon) / width);
+    private double lonDPP(double lrLon, double ulLon, double width) {
+        System.out.println("lrlon: " + lrLon);
+        System.out.println("ulLon: " + ulLon);
+        System.out.println("width: " + width);
+        return (lrLon - ulLon) / width;
     }
 
     private double lonDPPDepth(int nodedepth) {
-        //More generally, at the Dth level of zoom, there are 4^D images,
-        // with names ranging from dD_x0_y0 to dD_xk_yk, where k is 2^D - 1.
         double worldlon = Math.abs(MapServer.ROOT_LRLON - MapServer.ROOT_ULLON);
-        double tilelon = worldlon / Math.pow(2, nodedepth);
+        double tilelon = worldlon / Math.pow(2, nodedepth) / 256;
 
-        return tilelon / 256;
+        System.out.println("lonDPPDepth (nodepath): " + tilelon);
+        return tilelon;
     }
-
-
-    //total width of world, then dist from left to query
-    //.2/.5 *2 (num tiles) = .8 -- then round down
-    //
 
     private void buildBox() {
         double worldLon = Math.abs(MapServer.ROOT_LRLON - MapServer.ROOT_ULLON);
         double worldLat = Math.abs(MapServer.ROOT_LRLAT - MapServer.ROOT_ULLAT);
+        double numTilesWide = Math.pow(2, depth);
 
-        double eachTileLon = worldLon / Math.pow(2, depth);
-        double eachTileLat = worldLat / Math.pow(2, depth);
+        double lonTileLength = worldLon / numTilesWide;
+        double latTileLength = worldLat / numTilesWide;
 
         double queryLonLeft = Math.abs(ullon - MapServer.ROOT_ULLON);
-        double queryLonRight = Math.abs(lrlon - MapServer.ROOT_LRLON);
+        double queryLonRight = Math.abs(lrlon - MapServer.ROOT_ULLON);
+
         double queryLatUpper = Math.abs(ullat - MapServer.ROOT_ULLAT);
-        double queryLatLower = Math.abs(lrlat - MapServer.ROOT_LRLAT);
+        double queryLatLower = Math.abs(lrlat - MapServer.ROOT_ULLAT);
 
-        this.startTileLeft = (int) ((queryLonLeft / worldLon) * Math.pow(2, depth));
-        this.startTileUpper = (int) ((queryLatUpper / worldLat) * Math.pow(2, depth));
-        this.endTileRight = (int) ((queryLonRight / worldLon) * Math.pow(2, depth));
-        this.endTileLower = (int) ((queryLatLower / worldLat) * Math.pow(2, depth));
+        this.startTileLeft = (int) ((queryLonLeft / worldLon) * numTilesWide);
+        this.endTileRight = (int) ((queryLonRight / worldLon) * numTilesWide);
 
-        this.rasterullon = MapServer.ROOT_ULLON + eachTileLon * startTileLeft;
-        this.rasterullat = MapServer.ROOT_ULLAT + eachTileLat * startTileUpper;
-        this.rasterlrlon = MapServer.ROOT_LRLON + eachTileLon * endTileRight;
-        this.rasterlrlat = MapServer.ROOT_ULLON + eachTileLat * endTileLower;
+        this.startTileUpper = (int) ((queryLatUpper / worldLat) * numTilesWide);
+        this.endTileLower = (int) ((queryLatLower / worldLat) * numTilesWide);
+
+        valueCheck();
+
+        this.rasterullon = MapServer.ROOT_ULLON + (lonTileLength * startTileLeft); //wrong
+        this.rasterlrlon = MapServer.ROOT_ULLON + (lonTileLength * endTileRight); //wrong
+
+        this.rasterullat = MapServer.ROOT_ULLAT + (latTileLength * startTileUpper); //wrong
+        this.rasterlrlat = MapServer.ROOT_ULLAT + (latTileLength * endTileLower); //wrong
+    }
+
+    private void valueCheck() {
+        if (startTileLeft > Math.pow(2, depth) - 1) {
+            startTileLeft = (int) (Math.pow(2, depth) - 1);
+        }
+        if (startTileUpper > Math.pow(2, depth) - 1) {
+            startTileUpper = (int) (Math.pow(2, depth) - 1);
+        }
+        if (endTileRight > Math.pow(2, depth) - 1) {
+            endTileRight = (int) (Math.pow(2, depth) - 1);
+        }
+        if (endTileLower > Math.pow(2, depth) - 1) {
+            endTileLower = (int) (Math.pow(2, depth) - 1);
+        }
+
+        if (startTileLeft < 0) {
+            startTileLeft = 0;
+        }
+        if (startTileUpper < 0) {
+            startTileUpper = 0;
+        }
+        if (endTileRight < 0) {
+            endTileRight = 0;
+        }
+        if (endTileLower < 0) {
+            endTileLower = 0;
+        }
     }
 
     private String[][] chooseImages() {
-        String[][] returnval = new String[(endTileRight-startTileLeft)][(endTileLower-startTileUpper)];
+        int cols = Math.abs(endTileRight - startTileLeft) + 1; //x-val
+        int rows = Math.abs(endTileLower - startTileUpper) + 1; //y-val
 
-        for (int row = startTileLeft; row < endTileRight; row++) {
-            for (int col = startTileUpper; col < endTileLower; col++) {
-                returnval[row][col] = "d" + depth + "_x" + row + "_y" + col + ".png";
+        System.out.println("depth: " + depth);
+
+        String[][] returnval = new String[rows][cols];
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                returnval[row][col] = "d" + (int) (depth) + "_x"
+                        + (col + startTileLeft) + "_y" + (row + startTileUpper) + ".png";
             }
         }
         return returnval;
