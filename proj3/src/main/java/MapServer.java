@@ -1,17 +1,24 @@
-import com.google.gson.Gson;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.IOException;
 
-import static spark.Spark.*;
 
 /* Maven is used to pull in these dependencies. */
+import com.google.gson.Gson;
+
+import static spark.Spark.*;
 
 /**
  * This MapServer class is the entry point for running the JavaSpark web server for the BearMaps
@@ -19,7 +26,6 @@ import static spark.Spark.*;
  * requested images and routes. You should not need to modify this file unless you're
  * doing the Autocomplete part of the project, though you are welcome to do so.
  * This code is using BearMaps skeleton code version 2.0.
- *
  * @author Alan Yao, Josh Hug
  */
 public class MapServer {
@@ -30,25 +36,15 @@ public class MapServer {
      */
     public static final double ROOT_ULLAT = 37.892195547244356, ROOT_ULLON = -122.2998046875,
             ROOT_LRLAT = 37.82280243352756, ROOT_LRLON = -122.2119140625;
-    /**
-     * Each tile is 256x256 pixels.
-     */
+    /** Each tile is 256x256 pixels. */
     public static final int TILE_SIZE = 256;
-    /**
-     * Route stroke information: typically roads are not more than 5px wide.
-     */
-    public static final float ROUTE_STROKE_WIDTH_PX = 5.0f;
-    /**
-     * Route stroke information: Cyan with half transparency.
-     */
-    public static final Color ROUTE_STROKE_COLOR = new Color(108, 181, 230, 200);
-    /**
-     * HTTP failed response.
-     */
+    /** HTTP failed response. */
     private static final int HALT_RESPONSE = 403;
-    /**
-     * The tile images are in the IMG_ROOT folder.
-     */
+    /** Route stroke information: typically roads are not more than 5px wide. */
+    public static final float ROUTE_STROKE_WIDTH_PX = 5.0f;
+    /** Route stroke information: Cyan with half transparency. */
+    public static final Color ROUTE_STROKE_COLOR = new Color(108, 181, 230, 200);
+    /** The tile images are in the IMG_ROOT folder. */
     private static final String IMG_ROOT = "../library-sp18/data/proj3_imgs/";
     /**
      * The OSM XML file path. Downloaded from <a href="http://download.bbbike.org/osm/">here</a>
@@ -177,8 +173,7 @@ public class MapServer {
     /**
      * Validate & return a parameter map of the required request parameters.
      * Requires that all input parameters are doubles.
-     *
-     * @param req            HTTP Request.
+     * @param req HTTP Request.
      * @param requiredParams TestParams to validate.
      * @return A populated map of input parameter to it's numerical value.
      */
@@ -283,7 +278,6 @@ public class MapServer {
 
     /**
      * In linear time, collect all the names of OSM locations that prefix-match the query string.
-     *
      * @param prefix Prefix string to be searched for. Could be any case, with our without
      *               punctuation.
      * @return A <code>List</code> of the full names of locations whose cleaned name matches the
@@ -296,7 +290,6 @@ public class MapServer {
     /**
      * Collect all locations that match a cleaned <code>locationName</code>, and return
      * information about each node that matches.
-     *
      * @param locationName A full name of a location searched for.
      * @return A list of locations whose cleaned name matches the
      * cleaned <code>locationName</code>, and each location is a map of parameters for the Json
@@ -312,7 +305,6 @@ public class MapServer {
 
     /**
      * Validates that Rasterer has returned a result that can be rendered.
-     *
      * @param rip : Parameters provided by the rasterer
      */
     private static boolean validateRasteredImgParams(Map<String, Object> rip) {
@@ -340,7 +332,7 @@ public class MapServer {
         List<Router.NavigationDirection> directions = Router.routeDirections(graph, route);
         StringBuilder sb = new StringBuilder();
         int step = 1;
-        for (Router.NavigationDirection d : directions) {
+        for (Router.NavigationDirection d: directions) {
             sb.append(String.format("%d. %s <br>", step, d));
             step += 1;
         }
