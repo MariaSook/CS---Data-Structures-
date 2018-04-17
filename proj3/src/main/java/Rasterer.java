@@ -30,20 +30,6 @@ public class Rasterer {
     public Rasterer() {
     }
 
-    public static void main(String[] args) {
-        Rasterer raster = new Rasterer();
-
-        HashMap<String, Double> params = new HashMap<>();
-        params.put("lrlon", -122.2104604264636);
-        params.put("ullon", -122.30410170759153);
-        params.put("w", 1085.0);
-        params.put("h", 566.0);
-        params.put("ullat", 37.870213571328854);
-        params.put("lrlat", 37.8318576119893);
-
-        raster.getMapRaster(params);
-    }
-
     /**
      * Takes a user query and finds the grid of images that best matches the query. These
      * images will be combined into one big image (rastered) by the front end. <br>
@@ -117,11 +103,11 @@ public class Rasterer {
     private int goalDepth(double londpp) {
         for (int i = 0; i < 7; i++) {
             if (lonDPPDepth(i) <= londpp) {
-                this.depth = i;
+                depth = i;
                 return i;
             }
         }
-        this.depth = 7;
+        depth = 7;
         return 7;
     }
 
