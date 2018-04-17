@@ -28,6 +28,23 @@ public class GraphDB {
      * creating helper classes, e.g. Node, Edge, etc. */
 
 
+
+
+    private class Node {
+        private Node() {
+
+        }
+
+    }
+
+    private class Edge {
+        private Edge() {
+
+        }
+    }
+
+
+
     /**
      * Example constructor shows how to create and start an XML parser.
      * You do not need to modify this constructor, but you're welcome to do so.
