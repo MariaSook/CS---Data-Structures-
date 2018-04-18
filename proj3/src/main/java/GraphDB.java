@@ -1,3 +1,4 @@
+import example.CSCourseDB;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -6,7 +7,8 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.util.ArrayList;
+import java.util.*;
+
 
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
@@ -24,30 +26,17 @@ import java.util.ArrayList;
 // store your graph is up to you.
 
 public class GraphDB {
-    /** Your instance variables for storing the graph. You should consider
-     * creating helper classes, e.g. Node, Edge, etc. */
-
-
-
-
-    private class Node {
-        private Node() {
-
-        }
-
-    }
-
-    private class Edge {
-        private Edge() {
-
-        }
-    }
-
-
+    /**
+     * Your instance variables for storing the graph. You should consider
+     * creating helper classes, e.g. Node, Edge, etc.
+     */
+    protected HashMap<Long, Node> nodes = new HashMap<>();
+    protected HashMap<Long, Edge> edges = new HashMap<>();
 
     /**
      * Example constructor shows how to create and start an XML parser.
      * You do not need to modify this constructor, but you're welcome to do so.
+     *
      * @param dbPath Path to the XML file to be parsed.
      */
     public GraphDB(String dbPath) {
@@ -68,50 +57,12 @@ public class GraphDB {
 
     /**
      * Helper to process strings into their "cleaned" form, ignoring punctuation and capitalization.
+     *
      * @param s Input string.
      * @return Cleaned string.
      */
     static String cleanString(String s) {
         return s.replaceAll("[^a-zA-Z ]", "").toLowerCase();
-    }
-
-    /**
-     *  Remove nodes with no connections from the graph.
-     *  While this does not guarantee that any two nodes in the remaining graph are connected,
-     *  we can reasonably assume this since typically roads are connected.
-     */
-    private void clean() {
-        // TODO: Your code here.
-    }
-
-    /**
-     * Returns an iterable of all vertex IDs in the graph.
-     * @return An iterable of id's of all vertices in the graph.
-     */
-    Iterable<Long> vertices() {
-        //YOUR CODE HERE, this currently returns only an empty list.
-        return new ArrayList<Long>();
-    }
-
-    /**
-     * Returns ids of all vertices adjacent to v.
-     * @param v The id of the vertex we are looking adjacent to.
-     * @return An iterable of the ids of the neighbors of v.
-     */
-    Iterable<Long> adjacent(long v) {
-        return null;
-    }
-
-    /**
-     * Returns the great-circle distance between vertices v and w in miles.
-     * Assumes the lon/lat methods are implemented properly.
-     * <a href="https://www.movable-type.co.uk/scripts/latlong.html">Source</a>.
-     * @param v The id of the first vertex.
-     * @param w The id of the second vertex.
-     * @return The great-circle distance between the two locations from the graph.
-     */
-    double distance(long v, long w) {
-        return distance(lon(v), lat(v), lon(w), lat(w));
     }
 
     static double distance(double lonV, double latV, double lonW, double latW) {
@@ -126,21 +77,6 @@ public class GraphDB {
         return 3963 * c;
     }
 
-    /**
-     * Returns the initial bearing (angle) between vertices v and w in degrees.
-     * The initial bearing is the angle that, if followed in a straight line
-     * along a great-circle arc from the starting point, would take you to the
-     * end point.
-     * Assumes the lon/lat methods are implemented properly.
-     * <a href="https://www.movable-type.co.uk/scripts/latlong.html">Source</a>.
-     * @param v The id of the first vertex.
-     * @param w The id of the second vertex.
-     * @return The initial bearing between the vertices.
-     */
-    double bearing(long v, long w) {
-        return bearing(lon(v), lat(v), lon(w), lat(w));
-    }
-
     static double bearing(double lonV, double latV, double lonW, double latW) {
         double phi1 = Math.toRadians(latV);
         double phi2 = Math.toRadians(latW);
@@ -153,31 +89,173 @@ public class GraphDB {
         return Math.toDegrees(Math.atan2(y, x));
     }
 
+    void addNode(long id, double lat, double lon, HashMap parent, HashMap childId) {
+        Node newNode = new Node(id, lat, lon, parent, childId);
+        nodes.put(id, newNode);
+    }
+
+    void addEdge(long id) {
+        Edge newEdge = new Edge(id);
+        edges.put(id, newEdge);
+    }
+
+    void removeNode(long id) {
+        if (nodes.containsKey(id)) {
+            nodes.remove(id);
+        }
+    }
+
+    /**
+     * Remove nodes with no connections from the graph.
+     * While this does not guarantee that any two nodes in the remaining graph are connected,
+     * we can reasonably assume this since typically roads are connected.
+     */
+
+    protected void clean() {
+        Set nodeSet = (Set) nodes.keySet();
+        Node[] nodeArray = (Node[]) nodeSet.toArray();
+        for (Node n : nodeArray) {
+            if (n.neighbors == null) {
+                nodes.remove(n.id);
+            }
+        }
+    }
+
+    /**
+     * Returns an iterable of all vertex IDs in the graph.
+     *
+     * @return An iterable of id's of all vertices in the graph.
+     */
+    Iterable<Long> vertices() {
+        ArrayList returnVals = new ArrayList();
+        Set nodeSet = (Set) nodes.keySet();
+        Node[] nodeArray = (Node[]) nodeSet.toArray();
+        for (Node n : nodeArray) {
+            returnVals.add(n.id);
+        }
+        return returnVals;
+    }
+
+    /**
+     * Returns ids of all vertices adjacent to v.
+     *
+     * @param v The id of the vertex we are looking adjacent to.
+     * @return An iterable of the ids of the neighbors of v.
+     */
+
+    //fix
+    Iterable<Long> adjacent(long v) {
+        return nodes.get(v).neighbors;
+    }
+
+    /**
+     * Returns the great-circle distance between vertices v and w in miles.
+     * Assumes the lon/lat methods are implemented properly.
+     * <a href="https://www.movable-type.co.uk/scripts/latlong.html">Source</a>.
+     *
+     * @param v The id of the first vertex.
+     * @param w The id of the second vertex.
+     * @return The great-circle distance between the two locations from the graph.
+     */
+    double distance(long v, long w) {
+        return distance(lon(v), lat(v), lon(w), lat(w));
+    }
+
+    /**
+     * Returns the initial bearing (angle) between vertices v and w in degrees.
+     * The initial bearing is the angle that, if followed in a straight line
+     * along a great-circle arc from the starting point, would take you to the
+     * end point.
+     * Assumes the lon/lat methods are implemented properly.
+     * <a href="https://www.movable-type.co.uk/scripts/latlong.html">Source</a>.
+     *
+     * @param v The id of the first vertex.
+     * @param w The id of the second vertex.
+     * @return The initial bearing between the vertices.
+     */
+    double bearing(long v, long w) {
+        return bearing(lon(v), lat(v), lon(w), lat(w));
+    }
+
     /**
      * Returns the vertex closest to the given longitude and latitude.
+     *
      * @param lon The target longitude.
      * @param lat The target latitude.
      * @return The id of the node in the graph closest to the target.
      */
     long closest(double lon, double lat) {
-        return 0;
+        Node smallestNode = null;
+        double smallestDist = Double.POSITIVE_INFINITY;
+
+        Set nodeSet = (Set) nodes.keySet();
+        Node[] nodeArray = (Node[]) nodeSet.toArray();
+
+        for (Node n : nodeArray) {
+            double bearingval = bearing(lon, lat, n.lon, n.lat);
+            if (bearingval < smallestDist) {
+                smallestNode = n;
+                smallestDist = bearingval;
+            }
+        }
+        return smallestNode.id;
     }
 
     /**
      * Gets the longitude of a vertex.
+     *
      * @param v The id of the vertex.
      * @return The longitude of the vertex.
      */
     double lon(long v) {
-        return 0;
+        return nodes.get(v).lon;
     }
 
     /**
      * Gets the latitude of a vertex.
+     *
      * @param v The id of the vertex.
      * @return The latitude of the vertex.
      */
     double lat(long v) {
-        return 0;
+        return nodes.get(v).lat;
+    }
+
+    private class Node {
+        long id;
+        double lat;
+        double lon;
+        HashMap parent;
+        HashMap child;
+        ArrayList neighbors = new ArrayList();
+        String name;
+
+        private Node(long id, double lat, double lon, HashMap parent, HashMap child) {
+            this.id = id;
+            this.lat = lat;
+            this.lon = lon;
+            this.parent = parent;
+            this.child = child;
+            long cId = (long) child.get("id");
+            long pId = (long) parent.get("id");
+            addNeighbor(pId, cId);
+        }
+
+        private void addNeighbor(long id1, long id2) {
+            neighbors.add(id1);
+            neighbors.add(id2);
+        }
+    }
+
+    private class Edge {
+        private long id;
+        private HashSet nodes;
+        private HashMap<String, String> tags;
+
+        private Edge(long id) {
+            this.id = id;
+            this.nodes = new HashSet();
+            this.tags = new HashMap<>();
+        }
     }
 }

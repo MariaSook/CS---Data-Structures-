@@ -64,6 +64,16 @@ public class Rasterer {
         buildBox();
         rendergrid = chooseImages();
 
+        System.out.println("raster ullon " + rasterullon);
+        System.out.println("raster ullat " + rasterullat);
+        System.out.println("raster lrlon " + rasterlrlon);
+        System.out.println("raster lrlat " + rasterlrlat);
+
+        System.out.println("tile left " + startTileLeft);
+        System.out.println("tile right " + endTileRight);
+        System.out.println("tile upper " + startTileUpper);
+        System.out.println("tile lower " + endTileLower);
+
         Map<String, Object> results = new HashMap<>();
         results.put("render_grid", rendergrid);
         results.put("raster_ul_lon", rasterullon);
@@ -72,6 +82,7 @@ public class Rasterer {
         results.put("raster_lr_lat", rasterlrlat);
         results.put("depth", (int) depth);
         results.put("query_success", querySuccess());
+
 
         return results;
     }
@@ -100,6 +111,10 @@ public class Rasterer {
         return true;
     }
 
+    private double lonDPP(double lrLon, double ulLon, double width) {
+        return (lrLon - ulLon) / width;
+    }
+
     private int goalDepth(double londpp) {
         for (int i = 0; i < 7; i++) {
             if (lonDPPDepth(i) <= londpp) {
@@ -109,10 +124,6 @@ public class Rasterer {
         }
         depth = 7;
         return 7;
-    }
-
-    private double lonDPP(double lrLon, double ulLon, double width) {
-        return (lrLon - ulLon) / width;
     }
 
     private double lonDPPDepth(int nodedepth) {
@@ -192,6 +203,25 @@ public class Rasterer {
             }
         }
         return returnval;
+    }
+
+    public static void main(String[] args) {
+        Rasterer raster = new Rasterer();
+
+        //double londpp = raster.lonDPP(122.2104604264636, 122.30410170759153, 1085);
+        //System.out.print(raster.goalDepth(londpp));
+
+        HashMap<String, Double> params = new HashMap<>();
+        params.put("lrlon", -122.23108224034448);
+        params.put("ullon", -122.23259867369213);
+        params.put("w", 498.0);
+        params.put("h", 691.0);
+        params.put("ullat", 37.840256238827735);
+        params.put("lrlat", 37.83815211143175);
+
+        raster.getMapRaster(params);
+
+        //{depth=7, query_success=true, raster_lr_lat=37.836964293, raster_lr_lon=-122.229850925, raster_ul_lat=37.841212851, raster_ul_lon=-122.233438297, render_grid=[[d7_x37_y36.png, d7_x38_y36.png], [d7_x37_y37.png, d7_x38_y37.png], [d7_x37_y38.png, d7_x38_y38.png]]}
     }
 
 }
