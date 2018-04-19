@@ -249,8 +249,8 @@ public class GraphDB {
             }
         }
 
-        private void addNeighbor(long id) {
-            neighbors.add(id);
+        private void addNeighbor(long inputid) {
+            neighbors.add(inputid);
         }
     }
 }

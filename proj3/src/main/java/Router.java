@@ -1,8 +1,14 @@
 //import com.sun.tools.jdeps.Graph;
 
-import java.util.*;
+import java.util.List;
+import java.util.Stack;
+import java.util.HashSet;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.PriorityQueue;
+import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * This class provides a shortestPath method for finding routes between two points
@@ -30,14 +36,17 @@ public class Router {
      * @return A list of node id's in the order visited on the shortest path.
      */
 
-    public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
-                                          double destlon, double destlat) {
+    public static List<Long> shortestPath(GraphDB g, double stlon,
+                                          double stlat, double destlon,
+                                          double destlat) {
         long startID = g.closest(stlon, stlat);
         long endID = g.closest(destlon, destlat);
 
         Stack<Long> returnVals = new Stack();
-        HashMap<Long, Long> edgeTo = new HashMap(); //edgeto.get(v) give previous node that i'm connected to
-        HashMap<Long, Double> dist = new HashMap(); //node id mapping distance from the source, updating constantly;
+        HashMap<Long, Long> edgeTo = new HashMap(); //edgeto.get(v) give
+        // previous node that i'm connected to
+        HashMap<Long, Double> dist = new HashMap(); //node id mapping distance
+        // from the source, updating constantly;
         HashSet<Long> seen = new HashSet(); //everything visited;
         PriorityQueue<Long> fringe = new PriorityQueue<>(new Comparator<Long>() {
             @Override
