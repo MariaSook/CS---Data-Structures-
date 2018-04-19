@@ -74,7 +74,8 @@ public class GraphBuildingHandler extends DefaultHandler {
             //System.out.println("Node id: " + attributes.getValue("id"));
             //System.out.println("Node lon: " + attributes.getValue("lon"));
             //System.out.println("Node lat: " + attributes.getValue("lat"));
-            GraphDB graph = new GraphDB(qName);
+            //GraphDB graph = new GraphDB(qName);
+
             long id = Long.parseLong(attributes.getValue("id"));
             double lat = Double.parseDouble(attributes.getValue("lat"));
             double lon = Double.parseDouble(attributes.getValue("lon"));
@@ -92,11 +93,7 @@ public class GraphBuildingHandler extends DefaultHandler {
             //System.out.println("Id of a node in this way: " + attributes.getValue("ref"));
             HashMap node = new HashMap();
             long id = Long.parseLong(attributes.getValue("ref"));
-            double lat = Double.parseDouble(attributes.getValue("lat"));
-            double lon = Double.parseDouble(attributes.getValue("lon"));
             node.put("id", id);
-            node.put("lat", lat);
-            node.put("lon", lon);
 
             arrayNodes.add(node);
             /* TODO Use the above id to make "possible" connections between the nodes in this way */
@@ -168,27 +165,25 @@ public class GraphBuildingHandler extends DefaultHandler {
                     HashMap node = (HashMap) arrayNodes.get(i);
                     HashMap child = (HashMap) arrayNodes.get(i + 1);
                     long id = (long) node.get("id");
-                    double lat = (double) node.get("lat");
-                    double lon = (double) node.get("lon");
+                    long cid = (long) child.get("id");
 
-                    g.addNode(id, lat, lon, null, child);
+                    g.addEdge(id, cid);
+                    g.addNode(id, g.lat(id), g.lon(id),  null, child);
                 } else if (i == arrayNodes.size() - 1) {
                     HashMap n = (HashMap) arrayNodes.get(i);
                     HashMap parent = (HashMap) arrayNodes.get(i - 1);
                     long id = (long) n.get("id");
-                    double lat = (double) n.get("lat");
-                    double lon = (double) n.get("lon");
 
-                    g.addNode(id, lat, lon, parent, null);
+
+
+                    g.addNode(id, g.lat(id), g.lon(id), parent, null);
                 } else {
                     HashMap n = (HashMap) arrayNodes.get(i);
                     HashMap parent = (HashMap) arrayNodes.get(i - 1);
                     HashMap child = (HashMap) arrayNodes.get(i + 1);
                     long id = (long) n.get("id");
-                    double lat = (double) n.get("lat");
-                    double lon = (double) n.get("lon");
 
-                    g.addNode(id, lat, lon, parent, child);
+                    g.addNode(id, g.lat(id), g.lon(id), parent, child);
                 }
                 arrayNodes = new ArrayList();
                 flag = false;

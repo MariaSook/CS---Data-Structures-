@@ -242,10 +242,15 @@ public class GraphDB {
             this.lon = lon;
             this.parent = parent;
             this.child = child;
-            long cId = (long) child.get("id");
-            long pId = (long) parent.get("id");
-            addNeighbor(pId);
-            addNeighbor(cId);
+
+            if (child != null) {
+                long cId = (long) child.get("id");
+                addNeighbor(cId);
+            }
+            if (parent != null) {
+                long pId = (long) parent.get("id");
+                addNeighbor(pId);
+            }
         }
 
         private void addNeighbor(long id) {
