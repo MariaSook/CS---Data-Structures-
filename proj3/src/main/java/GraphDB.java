@@ -124,11 +124,9 @@ public class GraphDB {
 
         for (int i = 0; i < removeVals.size(); i++) {
             long indexval = (long) removeVals.get(i);
-            if (removeVals.contains(indexval)) {
-                removeNode(indexval);
+            removeNode(indexval);
             }
         }
-    }
 
     /**
      * Returns an iterable of all vertex IDs in the graph.

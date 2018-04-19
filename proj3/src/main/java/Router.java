@@ -44,7 +44,7 @@ public class Router {
                 double dist1 = dist.get(o1) + g.distance(o1, endID);
                 double dist2 = dist.get(o2) + g.distance(o2, endID);
 
-                return (int) (dist1 - dist2);
+                return Double.compare(dist1, dist2);
             }
         });
 
@@ -63,6 +63,7 @@ public class Router {
                 if (!seen.contains(childID)) {
                     double updateDist = dist.get(curr) + g.distance(curr, childID);
                     if ((!dist.containsKey(childID) || dist.get(childID) > updateDist)) {
+                        dist.remove(childID);
                         dist.put(childID, updateDist);
                         fringe.add(childID);
                         edgeTo.put(childID, curr);
