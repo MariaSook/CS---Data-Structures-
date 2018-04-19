@@ -1,4 +1,3 @@
-import example.CSCourseDB;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -7,7 +6,10 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.util.*;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
@@ -125,8 +127,8 @@ public class GraphDB {
         for (int i = 0; i < removeVals.size(); i++) {
             long indexval = (long) removeVals.get(i);
             removeNode(indexval);
-            }
         }
+    }
 
     /**
      * Returns an iterable of all vertex IDs in the graph.

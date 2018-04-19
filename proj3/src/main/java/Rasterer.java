@@ -30,6 +30,25 @@ public class Rasterer {
     public Rasterer() {
     }
 
+    public static void main(String[] args) {
+        Rasterer raster = new Rasterer();
+
+        //double londpp = raster.lonDPP(122.2104604264636, 122.30410170759153, 1085);
+        //System.out.print(raster.goalDepth(londpp));
+
+        HashMap<String, Double> params = new HashMap<>();
+        params.put("lrlon", -122.23108224034448);
+        params.put("ullon", -122.23259867369213);
+        params.put("w", 498.0);
+        params.put("h", 691.0);
+        params.put("ullat", 37.840256238827735);
+        params.put("lrlat", 37.83815211143175);
+
+        raster.getMapRaster(params);
+
+        //{depth=7, query_success=true, raster_lr_lat=37.836964293, raster_lr_lon=-122.229850925, raster_ul_lat=37.841212851, raster_ul_lon=-122.233438297, render_grid=[[d7_x37_y36.png, d7_x38_y36.png], [d7_x37_y37.png, d7_x38_y37.png], [d7_x37_y38.png, d7_x38_y38.png]]}
+    }
+
     /**
      * Takes a user query and finds the grid of images that best matches the query. These
      * images will be combined into one big image (rastered) by the front end. <br>
@@ -203,25 +222,6 @@ public class Rasterer {
             }
         }
         return returnval;
-    }
-
-    public static void main(String[] args) {
-        Rasterer raster = new Rasterer();
-
-        //double londpp = raster.lonDPP(122.2104604264636, 122.30410170759153, 1085);
-        //System.out.print(raster.goalDepth(londpp));
-
-        HashMap<String, Double> params = new HashMap<>();
-        params.put("lrlon", -122.23108224034448);
-        params.put("ullon", -122.23259867369213);
-        params.put("w", 498.0);
-        params.put("h", 691.0);
-        params.put("ullat", 37.840256238827735);
-        params.put("lrlat", 37.83815211143175);
-
-        raster.getMapRaster(params);
-
-        //{depth=7, query_success=true, raster_lr_lat=37.836964293, raster_lr_lon=-122.229850925, raster_ul_lat=37.841212851, raster_ul_lon=-122.233438297, render_grid=[[d7_x37_y36.png, d7_x38_y36.png], [d7_x37_y37.png, d7_x38_y37.png], [d7_x37_y38.png, d7_x38_y38.png]]}
     }
 
 }
