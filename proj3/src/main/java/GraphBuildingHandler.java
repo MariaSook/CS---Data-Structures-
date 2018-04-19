@@ -74,8 +74,6 @@ public class GraphBuildingHandler extends DefaultHandler {
             //System.out.println("Node id: " + attributes.getValue("id"));
             //System.out.println("Node lon: " + attributes.getValue("lon"));
             //System.out.println("Node lat: " + attributes.getValue("lat"));
-
-
             GraphDB graph = new GraphDB(qName);
             long id = Long.parseLong(attributes.getValue("id"));
             double lat = Double.parseDouble(attributes.getValue("lat"));
@@ -193,7 +191,7 @@ public class GraphBuildingHandler extends DefaultHandler {
                     g.addNode(id, lat, lon, parent, child);
                 }
                 arrayNodes = new ArrayList();
-
+                flag = false;
             }
         }
 

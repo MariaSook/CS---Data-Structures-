@@ -31,7 +31,7 @@ public class GraphDB {
      * creating helper classes, e.g. Node, Edge, etc.
      */
     protected HashMap<Long, Node> nodes = new HashMap<>();
-    protected HashMap<Long, Edge> edges = new HashMap<>();
+
 
     /**
      * Example constructor shows how to create and start an XML parser.
@@ -89,14 +89,9 @@ public class GraphDB {
         return Math.toDegrees(Math.atan2(y, x));
     }
 
-    void addNode(long id, double lat, double lon, HashMap parent, HashMap childId) {
-        Node newNode = new Node(id, lat, lon, parent, childId);
+    void addNode(long id, double lat, double lon, HashMap parent, HashMap child) {
+        Node newNode = new Node(id, lat, lon, parent, child);
         nodes.put(id, newNode);
-    }
-
-    void addEdge(long id) {
-        Edge newEdge = new Edge(id);
-        edges.put(id, newEdge);
     }
 
     void removeNode(long id) {
@@ -105,18 +100,34 @@ public class GraphDB {
         }
     }
 
+    void addEdge(long id1, long id2) {
+        Node one = nodes.get(id1);
+        Node two = nodes.get(id2);
+
+        one.addNeighbor(id2);
+        two.addNeighbor(id1);
+    }
+
+
     /**
      * Remove nodes with no connections from the graph.
      * While this does not guarantee that any two nodes in the remaining graph are connected,
      * we can reasonably assume this since typically roads are connected.
      */
 
-    protected void clean() {
-        Set nodeSet = (Set) nodes.keySet();
-        Node[] nodeArray = (Node[]) nodeSet.toArray();
-        for (Node n : nodeArray) {
-            if (n.neighbors == null) {
-                nodes.remove(n.id);
+    void clean() {
+        Long[] keyArray = (Long[]) nodes.keySet().toArray();
+        ArrayList removeVals = new ArrayList();
+
+        for (Long id: keyArray) {
+            if (adjacent(id) == null) {
+                removeVals.add(id);
+            }
+        }
+
+        for (Long id: keyArray) {
+            if (removeVals.contains(id)) {
+                removeNode(id);
             }
         }
     }
@@ -127,13 +138,8 @@ public class GraphDB {
      * @return An iterable of id's of all vertices in the graph.
      */
     Iterable<Long> vertices() {
-        ArrayList returnVals = new ArrayList();
-        Set nodeSet = (Set) nodes.keySet();
-        Node[] nodeArray = (Node[]) nodeSet.toArray();
-        for (Node n : nodeArray) {
-            returnVals.add(n.id);
-        }
-        return returnVals;
+        Set nodeSet = nodes.keySet();
+         return nodeSet;
     }
 
     /**
@@ -185,20 +191,20 @@ public class GraphDB {
      * @return The id of the node in the graph closest to the target.
      */
     long closest(double lon, double lat) {
-        Node smallestNode = null;
+        long smallestID = 0;
         double smallestDist = Double.POSITIVE_INFINITY;
 
-        Set nodeSet = (Set) nodes.keySet();
-        Node[] nodeArray = (Node[]) nodeSet.toArray();
+        Set nodeSet = nodes.keySet();
+        Long[] nodeArray = (Long[]) nodeSet.toArray();
 
-        for (Node n : nodeArray) {
-            double bearingval = bearing(lon, lat, n.lon, n.lat);
-            if (bearingval < smallestDist) {
-                smallestNode = n;
-                smallestDist = bearingval;
+        for (Long n : nodeArray) {
+            double distval = distance(lon, lat, lon(n), lat(n));
+            if (distval < smallestDist) {
+                smallestID = n;
+                smallestDist = distval;
             }
         }
-        return smallestNode.id;
+        return smallestID;
     }
 
     /**
@@ -238,24 +244,12 @@ public class GraphDB {
             this.child = child;
             long cId = (long) child.get("id");
             long pId = (long) parent.get("id");
-            addNeighbor(pId, cId);
+            addNeighbor(pId);
+            addNeighbor(cId);
         }
 
-        private void addNeighbor(long id1, long id2) {
-            neighbors.add(id1);
-            neighbors.add(id2);
-        }
-    }
-
-    private class Edge {
-        private long id;
-        private HashSet nodes;
-        private HashMap<String, String> tags;
-
-        private Edge(long id) {
-            this.id = id;
-            this.nodes = new HashSet();
-            this.tags = new HashMap<>();
+        private void addNeighbor(long id) {
+            neighbors.add(id);
         }
     }
 }
