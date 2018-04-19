@@ -36,6 +36,8 @@ public class Router {
      * @return A list of node id's in the order visited on the shortest path.
      */
 
+    //@worked heavily with Kevin from lab 271 9-11 am and Liz (I
+    //didn't get her last name) from the same lab
     public static List<Long> shortestPath(GraphDB g, double stlon,
                                           double stlat, double destlon,
                                           double destlat) {
