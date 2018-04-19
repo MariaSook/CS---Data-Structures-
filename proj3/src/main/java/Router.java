@@ -13,12 +13,6 @@ import java.util.regex.Pattern;
  * down to the priority you use to order your vertices.
  */
 public class Router {
-    private static PriorityQueue fringe = new PriorityQueue();
-    private static HashMap<Long, Double> best = new HashMap();
-    private Stack returnvals = new Stack();
-    private static HashSet seen = new HashSet();
-    GraphDB g;
-
 
     public Router() {
     }
@@ -34,115 +28,71 @@ public class Router {
      * @param destlat The latitude of the destination location.
      * @return A list of node id's in the order visited on the shortest path.
      */
+
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        class SearchNode implements Comparator {
-            long id;
-            double lat;
-            double lon;
-            HashSet neighbors;
-            GraphDB g;
-            double priority;
-            SearchNode parent;
+        long startID = g.closest(stlon, stlat);
+        long endID = g.closest(destlon, destlat);
 
-            private SearchNode(GraphDB g, long id, SearchNode parent,
-                               double priority) {
-                this.g = g;
-                this.id = id;
-                this.lat = g.lat(id);
-                this.lon = g.lon(id);
-                this.neighbors = (HashSet) g.adjacent(id);
-                this.parent = parent;
-                this.priority = priority;
-            }
-
+        Stack<Long> returnVals = new Stack();
+        HashMap<Long, Long> edgeTo  = new HashMap(); //edgeto.get(v) give previous node that i'm connected to
+        HashMap<Long, Double> dist = new HashMap(); //node id mapping distance from the source, updating constantly;
+        HashSet<Long> seen = new HashSet(); //everything visited;
+        PriorityQueue<Long> fringe = new PriorityQueue<>(new Comparator<Long>() {
             @Override
-            public int compare(Object obj1, Object obj2) {
-                SearchNode me = (SearchNode) obj1;
-                SearchNode you = (SearchNode) obj2;
+            public int compare(Long o1, Long o2) {
+                double dist1 = dist.get(o1) + g.distance(o1, endID);
+                double dist2 = dist.get(o2) + g.distance(o2, endID);
 
-                if (me.priority > you.priority) {
-                    return -1;
-                } else if (me.priority < you.priority) {
-                    return 1;
-                }
-                return 0;
+                return (int) (dist1 - dist2);
             }
-        }
-        long startIndex = g.closest(stlon, stlat);
-        long endIndex = g.closest(destlon, destlat);
-        double startPriority  = heuristic(g, destlon, destlat, startIndex);
+        });
 
-        SearchNode first = new SearchNode(g, startIndex, null, startPriority);
-        fringe.add(first);
-        seen.add(first);
-        best.put(startIndex, startPriority);
+        dist.put(startID, 0.0);
+        seen.add(startID);
+        fringe.add(startID);
 
-        SearchNode curr = (SearchNode) fringe.poll();
-        long currid = curr.id;
-
-        while (curr.id != endIndex) {
-            for (long id: g.adjacent(currid)) {
-                if (!seen.contains(id) || this path is shorter than what you currently have) {
-                    relax(curr.id, id, stlon, stlat, destlon, destlat, g);
-                    double priority = (double) best.get(id);
-                    SearchNode me = new SearchNode(g, id, curr, priority);
-                    fringe.add(me);
-                    seen.add(me);
+        Long curr = null;
+        while (!fringe.isEmpty()) {
+            curr = fringe.poll();
+            seen.add(curr);
+            if (curr == endID) {
+                break;
+            }
+            for (long childID: g.adjacent(curr)) {
+                if (!seen.contains(childID)) {
+                    double updateDist = dist.get(curr) + g.distance(curr, childID);
+                    if ((!dist.containsKey(childID) || dist.get(childID) > updateDist)) {
+                        dist.put(childID, updateDist);
+                        fringe.add(childID);
+                        edgeTo.put(childID, curr);
+                    }
                 }
             }
-            curr = (SearchNode) fringe.poll();
-            currid = curr.id;
         }
 
-
-    }
-
-
-    private static double priority(GraphDB g, double stlon, double stlat,
-                                   double destlon, double destlat, long vMe,
-                                   long vYou) {
-        double meLon = g.lon(vMe);
-        double meLat = g.lat(vMe);
-        double youLon = g.lon(vYou);
-        double youLat = g.lat(vYou);
-
-        double distStart = g.distance(stlon, stlat, meLon, meLat);
-        double distMetoYou = g.distance(meLon, meLat, youLon, youLat);
-        double heuristic = heuristic(g, destlon, destlat, vYou);
-
-        return distStart + distMetoYou + heuristic;
-    }
-
-    private static double heuristic(GraphDB g, double destlon, double
-                                    destlat, long v) {
-        double meLon = g.lon(v);
-        double meLat = g.lat(v);
-
-        double heuristic = g.distance(meLon, meLat, destlon, destlat);
-        return heuristic;
-    }
-
-    private static void relax(long v, long w, double stlon, double stlat, double destlon,
-                              double destlat, GraphDB g) {
-        double lonvOne = g.lon(v);
-        double latvOne= g.lat(v);
-
-        double lonvTwo = g.lon(w);
-        double latvTwo = g.lat(w);
-
-        double distStartToOne = g.distance(stlon, stlat, lonvOne, latvOne);
-        double distCurrToNext = g.distance(lonvOne, latvOne, lonvTwo, latvTwo);
-
-        double newBest = distCurrToNext + distStartToOne;
-
-        if (newBest < best.get(w)) {
-            best.get(w) = newBest;
-
-            double priority = priority(g, stlon, stlat, destlon, destlat, v, w);
-            fringe.put(w);
+        while (curr != null) {
+            long currTemp = curr;
+            returnVals.push(curr);
+            curr = edgeTo.get(curr);
         }
+
+        long top = returnVals.pop();
+        Stack actualStack = new Stack();
+        actualStack.push(top);
+        while (!returnVals.isEmpty()) {
+            top = returnVals.pop();
+            actualStack.push(top);
+        }
+
+        return actualStack;
     }
+
+
+
+
+
+
 
     public static List<NavigationDirection> routeDirections(GraphDB g, List<Long> route) {
         return null; // FIXME
