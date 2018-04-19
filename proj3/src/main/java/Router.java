@@ -1,7 +1,6 @@
 //import com.sun.tools.jdeps.Graph;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,6 +13,15 @@ import java.util.regex.Pattern;
  * down to the priority you use to order your vertices.
  */
 public class Router {
+    private static PriorityQueue fringe = new PriorityQueue();
+    private static HashMap<Long, Double> best = new HashMap();
+    private Stack returnvals = new Stack();
+    private static HashSet seen = new HashSet();
+    GraphDB g;
+
+
+    public Router() {
+    }
 
     /**
      * Return a List of longs representing the shortest path from the node
@@ -28,20 +36,114 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
+        class SearchNode implements Comparator {
+            long id;
+            double lat;
+            double lon;
+            HashSet neighbors;
+            GraphDB g;
+            double priority;
+            SearchNode parent;
+
+            private SearchNode(GraphDB g, long id, SearchNode parent,
+                               double priority) {
+                this.g = g;
+                this.id = id;
+                this.lat = g.lat(id);
+                this.lon = g.lon(id);
+                this.neighbors = (HashSet) g.adjacent(id);
+                this.parent = parent;
+                this.priority = priority;
+            }
+
+            @Override
+            public int compare(Object obj1, Object obj2) {
+                SearchNode me = (SearchNode) obj1;
+                SearchNode you = (SearchNode) obj2;
+
+                if (me.priority > you.priority) {
+                    return -1;
+                } else if (me.priority < you.priority) {
+                    return 1;
+                }
+                return 0;
+            }
+        }
+        long startIndex = g.closest(stlon, stlat);
+        long endIndex = g.closest(destlon, destlat);
+        double startPriority  = heuristic(g, destlon, destlat, startIndex);
+
+        SearchNode first = new SearchNode(g, startIndex, null, startPriority);
+        fringe.add(first);
+        seen.add(first);
+        best.put(startIndex, startPriority);
+
+        SearchNode curr = (SearchNode) fringe.poll();
+        long currid = curr.id;
+
+        while (curr.id != endIndex) {
+            for (long id: g.adjacent(currid)) {
+                if (!seen.contains(id) || this path is shorter than what you currently have) {
+                    relax(curr.id, id, stlon, stlat, destlon, destlat, g);
+                    double priority = (double) best.get(id);
+                    SearchNode me = new SearchNode(g, id, curr, priority);
+                    fringe.add(me);
+                    seen.add(me);
+                }
+            }
+            curr = (SearchNode) fringe.poll();
+            currid = curr.id;
+        }
 
 
-
-        return null; // FIXME
     }
 
-    /**
-     * Create the list of directions corresponding to a route on the graph.
-     * @param g The graph to use.
-     * @param route The route to translate into directions. Each element
-     *              corresponds to a node from the graph in the route.
-     * @return A list of NavigatiionDirection objects corresponding to the input
-     * route.
-     */
+
+    private static double priority(GraphDB g, double stlon, double stlat,
+                                   double destlon, double destlat, long vMe,
+                                   long vYou) {
+        double meLon = g.lon(vMe);
+        double meLat = g.lat(vMe);
+        double youLon = g.lon(vYou);
+        double youLat = g.lat(vYou);
+
+        double distStart = g.distance(stlon, stlat, meLon, meLat);
+        double distMetoYou = g.distance(meLon, meLat, youLon, youLat);
+        double heuristic = heuristic(g, destlon, destlat, vYou);
+
+        return distStart + distMetoYou + heuristic;
+    }
+
+    private static double heuristic(GraphDB g, double destlon, double
+                                    destlat, long v) {
+        double meLon = g.lon(v);
+        double meLat = g.lat(v);
+
+        double heuristic = g.distance(meLon, meLat, destlon, destlat);
+        return heuristic;
+    }
+
+    private static void relax(long v, long w, double stlon, double stlat, double destlon,
+                              double destlat, GraphDB g) {
+        double lonvOne = g.lon(v);
+        double latvOne= g.lat(v);
+
+        double lonvTwo = g.lon(w);
+        double latvTwo = g.lat(w);
+
+        double distStartToOne = g.distance(stlon, stlat, lonvOne, latvOne);
+        double distCurrToNext = g.distance(lonvOne, latvOne, lonvTwo, latvTwo);
+
+        double newBest = distCurrToNext + distStartToOne;
+
+        if (newBest < best.get(w)) {
+            best.get(w) = newBest;
+
+            double priority = priority(g, stlon, stlat, destlon, destlat, v, w);
+            fringe.put(w);
+        }
+    }
+
     public static List<NavigationDirection> routeDirections(GraphDB g, List<Long> route) {
         return null; // FIXME
     }
@@ -164,6 +266,10 @@ public class Router {
         @Override
         public int hashCode() {
             return Objects.hash(direction, way, distance);
+
         }
+
+
+
     }
 }

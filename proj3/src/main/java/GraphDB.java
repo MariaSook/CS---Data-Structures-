@@ -9,7 +9,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.util.*;
 
-
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
  * Uses your GraphBuildingHandler to convert the XML files into a graph. Your
@@ -89,15 +88,13 @@ public class GraphDB {
         return Math.toDegrees(Math.atan2(y, x));
     }
 
-    void addNode(long id, double lat, double lon, HashMap parent, HashMap child) {
-        Node newNode = new Node(id, lat, lon, parent, child);
+    void addNode(long id, double lat, double lon, long parent) {
+        Node newNode = new Node(id, lat, lon, parent);
         nodes.put(id, newNode);
     }
 
     void removeNode(long id) {
-        if (nodes.containsKey(id)) {
-            nodes.remove(id);
-        }
+        nodes.remove(id);
     }
 
     void addEdge(long id1, long id2) {
@@ -116,18 +113,19 @@ public class GraphDB {
      */
 
     void clean() {
-        Long[] keyArray = (Long[]) nodes.keySet().toArray();
         ArrayList removeVals = new ArrayList();
 
-        for (Long id: keyArray) {
-            if (adjacent(id) == null) {
-                removeVals.add(id);
+        //takes 1 minute 12 seconds to run
+        for (Node n : nodes.values()) {
+            if (n.neighbors.isEmpty()) {
+                removeVals.add(n.id);
             }
         }
 
-        for (Long id: keyArray) {
-            if (removeVals.contains(id)) {
-                removeNode(id);
+        for (int i = 0; i < removeVals.size(); i++) {
+            long indexval = (long) removeVals.get(i);
+            if (removeVals.contains(indexval)) {
+                removeNode(indexval);
             }
         }
     }
@@ -139,7 +137,7 @@ public class GraphDB {
      */
     Iterable<Long> vertices() {
         Set nodeSet = nodes.keySet();
-         return nodeSet;
+        return nodeSet;
     }
 
     /**
@@ -183,8 +181,13 @@ public class GraphDB {
         return bearing(lon(v), lat(v), lon(w), lat(w));
     }
 
+    long getParent(long v) {
+        return nodes.get(v).parent;
+    }
+
     /**
      * Returns the vertex closest to the given longitude and latitude.
+     * b
      *
      * @param lon The target longitude.
      * @param lat The target latitude.
@@ -194,17 +197,18 @@ public class GraphDB {
         long smallestID = 0;
         double smallestDist = Double.POSITIVE_INFINITY;
 
-        Set nodeSet = nodes.keySet();
-        Long[] nodeArray = (Long[]) nodeSet.toArray();
-
-        for (Long n : nodeArray) {
-            double distval = distance(lon, lat, lon(n), lat(n));
+        for (Node n : nodes.values()) {
+            double distval = distance(lon, lat, lon(n.id), lat(n.id));
             if (distval < smallestDist) {
-                smallestID = n;
+                smallestID = n.id;
                 smallestDist = distval;
             }
         }
         return smallestID;
+    }
+
+    void addParent(long id, long parent) {
+        nodes.get(id).parent = parent;
     }
 
     /**
@@ -231,25 +235,17 @@ public class GraphDB {
         long id;
         double lat;
         double lon;
-        HashMap parent;
-        HashMap child;
-        ArrayList neighbors = new ArrayList();
-        String name;
+        long parent;
+        HashSet neighbors = new HashSet();
 
-        private Node(long id, double lat, double lon, HashMap parent, HashMap child) {
+        private Node(long id, double lat, double lon, long parent) {
             this.id = id;
             this.lat = lat;
             this.lon = lon;
             this.parent = parent;
-            this.child = child;
 
-            if (child != null) {
-                long cId = (long) child.get("id");
-                addNeighbor(cId);
-            }
-            if (parent != null) {
-                long pId = (long) parent.get("id");
-                addNeighbor(pId);
+            if (parent != 0) {
+                addNeighbor(parent);
             }
         }
 

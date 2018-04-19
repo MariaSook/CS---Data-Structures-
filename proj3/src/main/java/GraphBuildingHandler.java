@@ -6,23 +6,23 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 /**
- *  Parses OSM XML files using an XML SAX parser. Used to construct the graph of roads for
- *  pathfinding, under some constraints.
- *  See OSM documentation on
- *  <a href="http://wiki.openstreetmap.org/wiki/Key:highway">the highway tag</a>,
- *  <a href="http://wiki.openstreetmap.org/wiki/Way">the way XML element</a>,
- *  <a href="http://wiki.openstreetmap.org/wiki/Node">the node XML element</a>,
- *  and the java
- *  <a href="https://docs.oracle.com/javase/tutorial/jaxp/sax/parsing.html">SAX parser tutorial</a>.
+ * Parses OSM XML files using an XML SAX parser. Used to construct the graph of roads for
+ * pathfinding, under some constraints.
+ * See OSM documentation on
+ * <a href="http://wiki.openstreetmap.org/wiki/Key:highway">the highway tag</a>,
+ * <a href="http://wiki.openstreetmap.org/wiki/Way">the way XML element</a>,
+ * <a href="http://wiki.openstreetmap.org/wiki/Node">the node XML element</a>,
+ * and the java
+ * <a href="https://docs.oracle.com/javase/tutorial/jaxp/sax/parsing.html">SAX parser tutorial</a>.
+ * <p>
+ * You may find the CSCourseGraphDB and CSCourseGraphDBHandler examples useful.
+ * <p>
+ * The idea here is that some external library is going to walk through the XML
+ * file, and your override method tells Java what to do every time it gets to the next
+ * element in the file. This is a very common but strange-when-you-first-see it pattern.
+ * It is similar to the Visitor pattern we discussed for graphs.
  *
- *  You may find the CSCourseGraphDB and CSCourseGraphDBHandler examples useful.
- *
- *  The idea here is that some external library is going to walk through the XML
- *  file, and your override method tells Java what to do every time it gets to the next
- *  element in the file. This is a very common but strange-when-you-first-see it pattern.
- *  It is similar to the Visitor pattern we discussed for graphs.
- *
- *  @author Alan Yao, Maurice Lee
+ * @author Alan Yao, Maurice Lee
  */
 public class GraphBuildingHandler extends DefaultHandler {
     /**
@@ -35,8 +35,8 @@ public class GraphBuildingHandler extends DefaultHandler {
             ("motorway", "trunk", "primary", "secondary", "tertiary", "unclassified",
                     "residential", "living_street", "motorway_link", "trunk_link", "primary_link",
                     "secondary_link", "tertiary_link"));
-    private String activeState = "";
     private final GraphDB g;
+    private String activeState = "";
     private boolean flag = false;
     private ArrayList arrayNodes = new ArrayList();
 
@@ -67,60 +67,35 @@ public class GraphBuildingHandler extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes)
             throws SAXException {
-        /* Some example code on how you might begin to parse XML files. */
         if (qName.equals("node")) {
-            /* We encountered a new <node...> tag. */
             activeState = "node";
-            //System.out.println("Node id: " + attributes.getValue("id"));
-            //System.out.println("Node lon: " + attributes.getValue("lon"));
-            //System.out.println("Node lat: " + attributes.getValue("lat"));
-            //GraphDB graph = new GraphDB(qName);
-
             long id = Long.parseLong(attributes.getValue("id"));
             double lat = Double.parseDouble(attributes.getValue("lat"));
             double lon = Double.parseDouble(attributes.getValue("lon"));
 
-            g.addNode(id, lat, lon, null, null);
-            /* TODO Use the above information to save a "node" to somewhere. */
-            /* Hint: A graph-like structure would be nice. */
-
+            g.addNode(id, lat, lon, 0);
         } else if (qName.equals("way")) {
-            /* We encountered a new <way...> tag. */
             activeState = "way";
-//            System.out.println("Beginning a way...");
-        } else if (activeState.equals("way") && qName.equals("nd")) {
-            /* While looking at a way, we found a <nd...> tag. */
-            //System.out.println("Id of a node in this way: " + attributes.getValue("ref"));
-            HashMap node = new HashMap();
-            long id = Long.parseLong(attributes.getValue("ref"));
-            node.put("id", id);
+            arrayNodes.clear();
+            flag = false;
 
-            arrayNodes.add(node);
-            /* TODO Use the above id to make "possible" connections between the nodes in this way */
-            /* Hint1: It would be useful to remember what was the last node in this way. */
-            /* Hint2: Not all ways are valid. So, directly connecting the nodes here would be
-            cumbersome since you might have to remove the connections if you later see a tag that
-            makes this way invalid. Instead, think of keeping a list of possible connections and
-            remember whether this way is valid or not. */
+        } else if (activeState.equals("way") && qName.equals("nd")) {
+            long id = Long.parseLong(attributes.getValue("ref"));
+            arrayNodes.add(id);
 
         } else if (activeState.equals("way") && qName.equals("tag")) {
             /* While looking at a way, we found a <tag...> tag. */
             String k = attributes.getValue("k");
             String v = attributes.getValue("v");
             if (k.equals("maxspeed")) {
-                //System.out.println("Max Speed: " + v);
-                /*  */
+
             } else if (k.equals("highway")) {
                 if (ALLOWED_HIGHWAY_TYPES.contains(v)) {
                     flag = true;
                 }
-                //System.out.println("Highway type: " + v);
-                /* TODO Figure out whether this way and its connections are valid. */
-                /* Hint: Setting a "flag" is good enough! */
             } else if (k.equals("name")) {
-                //System.out.println("Way Name: " + v);
+
             }
-//            System.out.println("Tag with k=" + k + ", v=" + v + ".");
         } else if (activeState.equals("node") && qName.equals("tag") && attributes.getValue("k")
                 .equals("name")) {
             /* While looking at a node, we found a <tag...> with k="name". */
@@ -128,18 +103,11 @@ public class GraphBuildingHandler extends DefaultHandler {
             String k = attributes.getValue("k");
             String v = attributes.getValue("v");
 
-            //(HashMap) arrayNodes.get(arrayNodes.size()-1).put(k, v,);
-
-            //arrayNodes.get(arrayNodes.size()-1).put(k, v);
-
-            //g.nodes.get(id).tag = v;
             /* Hint: Since we found this <tag...> INSIDE a node, we should probably remember which
             node this tag belongs to. Remember XML is parsed top-to-bottom, so probably it's the
             last node that you looked at (check the first if-case). */
-//            System.out.println("Node's name: " + attributes.getValue("v"));
         }
     }
-
 
     /**
      * Receive notification of the end of an element. You may want to take specific terminating
@@ -156,39 +124,14 @@ public class GraphBuildingHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equals("way") && flag) {
-            /* We are done looking at a way. (We finished looking at the nodes, speeds, etc...)*/
-            /* Hint1: If you have stored the possible connections for this way, here's your
-            chance to actually connect the nodes together if the way is valid. */
-//            System.out.println("Finishing a way...");
-            for (int i = 0; i < arrayNodes.size(); i++) {
-                if (i == 0) {
-                    HashMap node = (HashMap) arrayNodes.get(i);
-                    HashMap child = (HashMap) arrayNodes.get(i + 1);
-                    long id = (long) node.get("id");
-                    long cid = (long) child.get("id");
+            for (int i = 0; i < arrayNodes.size() - 1; i++) {
+                long id = (long) arrayNodes.get(i + 1);
+                long pid = (long) arrayNodes.get(i);
 
-                    g.addEdge(id, cid);
-                    g.addNode(id, g.lat(id), g.lon(id),  null, child);
-                } else if (i == arrayNodes.size() - 1) {
-                    HashMap n = (HashMap) arrayNodes.get(i);
-                    HashMap parent = (HashMap) arrayNodes.get(i - 1);
-                    long id = (long) n.get("id");
-
-
-
-                    g.addNode(id, g.lat(id), g.lon(id), parent, null);
-                } else {
-                    HashMap n = (HashMap) arrayNodes.get(i);
-                    HashMap parent = (HashMap) arrayNodes.get(i - 1);
-                    HashMap child = (HashMap) arrayNodes.get(i + 1);
-                    long id = (long) n.get("id");
-
-                    g.addNode(id, g.lat(id), g.lon(id), parent, child);
-                }
-                arrayNodes = new ArrayList();
-                flag = false;
+                g.addEdge(id, pid);
+                g.addParent(id, pid);
             }
         }
-
     }
 }
+
