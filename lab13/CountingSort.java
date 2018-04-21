@@ -81,17 +81,17 @@ public class CountingSort {
             }
         }
 
-        int notMe = min;
         int[] seen = new int[max - min + 1];
         for (int i : arr) {
-            seen[i - notMe] += 1;
+            seen[i - min] += 1;
         }
 
-        int returnvals[] = new int[arr.length];
+        int[] returnvals = new int[arr.length];
         int index = 0;
         for (int i = 0; i < seen.length; i++) {
-            for (int k = 0; k < seen[i]; k++) {
-                returnvals[index] = i + notMe;
+            for (int j = 0; j < seen[i]; j++) {
+                returnvals[index] = i + min;
+                index += 1;
             }
         }
 
