@@ -29,7 +29,7 @@ public class SeamCarver {
         return picture.height();
     }
 
-    private int valueCheck(int x, int y) {
+    private void valueCheck(int x, int y) {
         if (x == 0) {
             xvalpixel =  width - 1;
         }
@@ -46,6 +46,8 @@ public class SeamCarver {
 
     // energy of pixel at column x and row y
     public double energy(int x, int y) {
+        valueCheck(x, y);
+
         Color x1color = picture.get(xvalpixel-1, yvalpixel);
         Color x2color = picture.get(xvalpixel+1, yvalpixel);
 
@@ -89,12 +91,14 @@ public class SeamCarver {
 
     // sequence of indices for horizontal seam
     public int[] findHorizontalSeam() {
-
+        int[] ints = new int[4];
+        return ints;
     }
 
     // sequence of indices for vertical seam
     public int[] findVerticalSeam() {
-
+        int[] ints = new int[4];
+        return ints;
     }
 
     // remove horizontal seam from picture
