@@ -1,12 +1,15 @@
 import java.awt.Color;
+
 import edu.princeton.cs.algs4.Picture;
 
 public class SeamCarver {
-    private Picture picture;
+    private final Picture picture;
     private int width;
     private int height;
-    private int xvalpixel;
-    private int yvalpixel;
+    private int xpixplus;
+    private int xpixminus;
+    private int ypixplus;
+    private int ypixminus;
 
     public SeamCarver(Picture picture) {
         this.picture = picture;
@@ -31,28 +34,32 @@ public class SeamCarver {
 
     private void valueCheck(int x, int y) {
         if (x == 0) {
-            xvalpixel =  width - 1;
+            xpixminus = width - 1;
         }
-        if (x == width-1) {
-            xvalpixel = 0;
+        if (x == width - 1) {
+            xpixplus = 0;
         }
         if (y == 0) {
-            yvalpixel = height - 1;
+            ypixminus = height - 1;
         }
         if (y == height - 1) {
-            yvalpixel = 0;
+            ypixplus = 0;
         }
     }
 
     // energy of pixel at column x and row y
     public double energy(int x, int y) {
+        this.xpixminus = x - 1;
+        this.xpixplus = x + 1;
+        this.ypixminus = y - 1;
+        this.ypixplus = y + 1;
         valueCheck(x, y);
 
-        Color x1color = picture.get(xvalpixel-1, yvalpixel);
-        Color x2color = picture.get(xvalpixel+1, yvalpixel);
+        Color x1color = picture.get(xpixminus, y);
+        Color x2color = picture.get(xpixplus, y);
 
-        Color y1color = picture.get(xvalpixel, yvalpixel - 1);
-        Color y2color = picture.get(xvalpixel, yvalpixel + 1);
+        Color y1color = picture.get(x, ypixminus);
+        Color y2color = picture.get(x, ypixplus);
 
         int x1blue = x1color.getBlue();
         int x1red = x1color.getRed();
