@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.HashMap;
 
 public class SeamCarver {
-    private Picture picture;
+    private final Picture picture;
     private int width;
     private int height;
     private int xpixplus;
@@ -25,8 +25,8 @@ public class SeamCarver {
 
     // current picture
     public Picture picture() {
-        this.picture = new Picture(picture);
-        return picture;
+        Picture newpic = new Picture(picture);
+        return newpic;
     }
 
     // width of current picture
@@ -61,6 +61,10 @@ public class SeamCarver {
 
     // energy of pixel at column x and row y
     public double energy(int x, int y) {
+        if (x < 0 || y < 0 || x > width - 1 || y > height - 1) {
+            throw new java.lang.IndexOutOfBoundsException();
+        }
+
         this.xpixminus = xvalueCheck(x - 1);
         this.xpixplus = xvalueCheck(x + 1);
 
@@ -111,13 +115,6 @@ public class SeamCarver {
 
     // sequence of indices for horizontal seam
     public int[] findHorizontalSeam() {
-        ArrayList returnval = new ArrayList();
-        HashSet seen = new HashSet();
-
-        int xValStart = 0;
-        for (int x = 0; x < width; x++) {
-
-        }
         int[] temp = new int[1];
 
         return temp;
@@ -151,7 +148,7 @@ public class SeamCarver {
 
     }
 
-    public int helperEdgeCases(int xValStart, int yValStart) {
+    private int helperEdgeCases(int xValStart, int yValStart) {
         if (xValStart == 0) {
 
         } else if (xValStart == width - 1) {
