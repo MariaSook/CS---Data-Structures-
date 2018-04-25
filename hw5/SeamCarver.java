@@ -33,7 +33,16 @@ public class SeamCarver {
         return picture.height();
     }
 
-    private void valueCheck(int x, int y) {
+    // energy of pixel at column x and row y
+    public double energy(int x, int y) {
+        width();
+        height();
+
+        this.xpixminus = x - 1;
+        this.xpixplus = x + 1;
+        this.ypixminus = y - 1;
+        this.ypixplus = y + 1;
+
         if (x == 0) {
             xpixminus = width - 1;
         }
@@ -46,15 +55,6 @@ public class SeamCarver {
         if (y == height - 1) {
             ypixplus = 0;
         }
-    }
-
-    // energy of pixel at column x and row y
-    public double energy(int x, int y) {
-        this.xpixminus = x - 1;
-        this.xpixplus = x + 1;
-        this.ypixminus = y - 1;
-        this.ypixplus = y + 1;
-        valueCheck(x, y);
 
         Color x1color = picture.get(xpixminus, y);
         Color x2color = picture.get(xpixplus, y);
@@ -70,6 +70,14 @@ public class SeamCarver {
         int x2red = x2color.getRed();
         int x2green = x2color.getGreen();
 
+        int xbluebreak = Math.abs(x2blue - x1blue);
+        int xredbreak = Math.abs(x2red - x1red);
+        int xgreenbreak = Math.abs(x2green - x1green);
+
+        double xdiff = Math.pow(xbluebreak, 2)
+                + Math.pow(xredbreak, 2)
+                + Math.pow(xgreenbreak, 2);
+
         int y1blue = y1color.getBlue();
         int y1red = y1color.getRed();
         int y1green = y1color.getGreen();
@@ -78,17 +86,9 @@ public class SeamCarver {
         int y2red = y2color.getRed();
         int y2green = y2color.getGreen();
 
-        int xbluebreak = x2blue - x1blue;
-        int xredbreak = x2red - x1red;
-        int xgreenbreak = x2green - x1green;
-
-        double xdiff = Math.pow(xbluebreak, 2)
-                + Math.pow(xredbreak, 2)
-                + Math.pow(xgreenbreak, 2);
-
-        int ybluebreak = y2blue - y1blue;
-        int xyredbreak = y2red - y1red;
-        int xygreenbreak = x2green - x1green;
+        int ybluebreak = Math.abs(y2blue - y1blue);
+        int xyredbreak = Math.abs(y2red - y1red);
+        int xygreenbreak = Math.abs(x2green - x1green);
 
         double ydiff = Math.pow(ybluebreak, 2)
                 + Math.pow(xyredbreak, 2)
