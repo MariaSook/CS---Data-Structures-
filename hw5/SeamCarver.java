@@ -1,10 +1,10 @@
 import java.awt.Color;
-
 import edu.princeton.cs.algs4.Picture;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+//import java.util.ArrayList;
+//import java.util.HashSet;
 import java.util.HashMap;
+
 
 public class SeamCarver {
     private final Picture picture;
@@ -15,6 +15,7 @@ public class SeamCarver {
     private int ypixplus;
     private int ypixminus;
     private HashMap energyMap;
+
 
     public SeamCarver(Picture picture) {
         this.picture = picture;
@@ -109,73 +110,28 @@ public class SeamCarver {
                 + (yredbreak * yredbreak)
                 + (ygreenbreak * ygreenbreak);
 
-        energyMap.put("" + x + "," + y + "", (xdiff + ydiff));
+        String label = "" + x + "," + y + "";
+        energyMap.put(label, (xdiff + ydiff));
         return xdiff + ydiff;
     }
 
     // sequence of indices for horizontal seam
     public int[] findHorizontalSeam() {
-        int[] temp = new int[1];
-
-        return temp;
+        int[] ints = new int[4];
+        return ints;
     }
 
     // sequence of indices for vertical seam
     public int[] findVerticalSeam() {
-        ArrayList returnVal = new ArrayList();
-
-        int yValStart = Integer.MAX_VALUE;
-        double minEnergy = Double.MAX_VALUE;
-        for (int y = 0; y < width; y++) {
-            double energyVal = energy(height - 1, y);
-            if (energyVal < minEnergy) {
-                yValStart = y;
-                minEnergy = energyVal;
-            }
-        }
-        returnVal.add(yValStart);
-
-        int startValY = yValStart;
-        int startValX = 0;
-        int tempheight = height - 2;
-        while (height != -1) {
-            height -= 1;
-
-        }
-        int[] temp = new int[1];
-
-        return temp;
-
-    }
-
-    private int helperEdgeCases(int xValStart, int yValStart) {
-        if (xValStart == 0) {
-
-        } else if (xValStart == width - 1) {
-
-        }
-
-        if (yValStart == 0) {
-
-        } else if (yValStart == width - 1) {
-
-        }
-        return 0;
-    }
-
-
-    public int helperVerticalSeam(int xValStart, int yValStart) {
-        return 0;
-
+        int[] ints = new int[4];
+        return ints;
     }
 
     // remove horizontal seam from picture
     public void removeHorizontalSeam(int[] seam) {
-
     }
 
     // remove vertical seam from picture
     public void removeVerticalSeam(int[] seam) {
-
     }
 }
