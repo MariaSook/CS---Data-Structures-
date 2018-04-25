@@ -41,20 +41,20 @@ public class SeamCarver {
     }
 
     private int xvalueCheck(int value) {
-        if (value == 0) {
+        if (value < 0) {
             return width - 1;
         }
-        if (value == width - 1) {
+        if (value > width - 1) {
             return 0;
         }
         return value;
     }
 
     private int yValueCheck(int value) {
-        if (value == 0) {
+        if (value < 0) {
             return height - 1;
         }
-        if (value == height - 1) {
+        if (value > height - 1) {
             return 0;
         }
         return value;
