@@ -17,7 +17,8 @@ public class SeamCarver {
 
     // current picture
     public Picture picture() {
-        return picture;
+        Picture newpic = new Picture(picture);
+        return newpic;
     }
 
     // width of current picture
@@ -81,17 +82,17 @@ public class SeamCarver {
         int xredbreak = x2red - x1red;
         int xgreenbreak = x2green - x1green;
 
-        double xdiff = Math.pow(xbluebreak, 2) +
-                Math.pow(xredbreak, 2) +
-                Math.pow(xgreenbreak, 2);
+        double xdiff = Math.pow(xbluebreak, 2)
+                + Math.pow(xredbreak, 2)
+                + Math.pow(xgreenbreak, 2);
 
         int ybluebreak = y2blue - y1blue;
         int xyredbreak = y2red - y1red;
         int xygreenbreak = x2green - x1green;
 
-        double ydiff = Math.pow(ybluebreak, 2) +
-                Math.pow(xyredbreak, 2) +
-                Math.pow(xgreenbreak, 2);
+        double ydiff = Math.pow(ybluebreak, 2)
+                + Math.pow(xyredbreak, 2)
+                + Math.pow(xgreenbreak, 2);
 
         return xdiff + ydiff;
     }
