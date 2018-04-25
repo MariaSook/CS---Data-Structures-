@@ -115,7 +115,7 @@ public class SeamCarver {
         HashSet seen = new HashSet();
 
         int xValStart = 0;
-        for (int x = 0; x < width; x ++) {
+        for (int x = 0; x < width; x++) {
 
         }
         int[] temp = new int[1];
@@ -129,7 +129,7 @@ public class SeamCarver {
 
         int yValStart = Integer.MAX_VALUE;
         double minEnergy = Double.MAX_VALUE;
-        for (int y = 0; y < width; y ++) {
+        for (int y = 0; y < width; y++) {
             double energyVal = energy(height - 1, y);
             if (energyVal < minEnergy) {
                 yValStart = y;
@@ -150,18 +150,17 @@ public class SeamCarver {
         return temp;
 
     }
+
     public int helperEdgeCases(int xValStart, int yValStart) {
         if (xValStart == 0) {
 
-        }
-        else if (xValStart == width - 1) {
+        } else if (xValStart == width - 1) {
 
         }
 
         if (yValStart == 0) {
 
-        }
-        else if (yValStart == width - 1) {
+        } else if (yValStart == width - 1) {
 
         }
         return 0;
