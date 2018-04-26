@@ -1,27 +1,28 @@
 import java.awt.Color;
+
 import edu.princeton.cs.algs4.Picture;
 
-//import java.util.ArrayList;
-//import java.util.HashSet;
-import java.util.HashMap;
-
+import java.util.Stack;
 
 public class SeamCarver {
-    private final Picture picture;
+    private Picture picture;
     private int width;
     private int height;
     private int xpixplus;
     private int xpixminus;
     private int ypixplus;
     private int ypixminus;
-    private HashMap energyMap;
-
+    private double[][] energyMap;
+    private double[][] minCost;
+    private Stack returnValsVert;
 
     public SeamCarver(Picture picture) {
         this.picture = picture;
         this.width = picture.width();
         this.height = picture.height();
-        this.energyMap = new HashMap();
+        this.energyMap = setEnergyMap();
+        this.minCost = setMinCost();
+        this.returnValsVert = new Stack();
     }
 
     // current picture
@@ -61,7 +62,7 @@ public class SeamCarver {
 
     // energy of pixel at column x and row y
     public double energy(int x, int y) {
-        if (x < 0 || y < 0 || x > width - 1 || y > height - 1) {
+        if (x < 0 || y < 0 || x > height - 1 || y > width - 1) {
             throw new java.lang.IndexOutOfBoundsException();
         }
 
@@ -109,9 +110,71 @@ public class SeamCarver {
                 + (yredbreak * yredbreak)
                 + (ygreenbreak * ygreenbreak);
 
-        String label = "" + x + "," + y + "";
-        energyMap.put(label, (xdiff + ydiff));
         return xdiff + ydiff;
+    }
+
+    private double[][] setEnergyMap() {
+        double[][] energymap = new double[height][width];
+        for (int x = 0; x < height; x++) {
+            for (int y = 0; y < width; y++) {
+                energymap[x][y] = energy(x, y);
+            }
+        }
+        return energymap;
+    }
+
+    private double minCostHelper(int x, int y) {
+        if (y == 0) {
+            double min2 = minCost[x][y - 1];
+            double min3 = minCost[x + 1][y - 1];
+
+            return Math.min(min2, min3);
+        } else if (y == width - 1) {
+            double min1 = minCost[x - 1][y - 1];
+            double min2 = minCost[x][y - 1];
+
+            return Math.min(min2, min1);
+        } else {
+            double min1 = minCost[x - 1][y - 1];
+            double min2 = minCost[x][y - 1];
+            double min3 = minCost[x + 1][y - 1];
+
+            double smallest = min1;
+            if (smallest > min2) {
+                smallest = min2;
+            }
+            if (smallest > min3) {
+                smallest = min3;
+            }
+            return smallest;
+        }
+    }
+
+    private double[][] setMinCost() {
+        double[][] minCost = new double[height][width];
+        for (int x = 0; x < height; x++) {
+            for (int y = 0; y < width; y++) {
+                if (x == 0) {
+                    minCost[x][y] = energyMap[x][y];
+                } else {
+                    double mincostval = minCostHelper(x, y);
+                    minCost[x][y] = energyMap[x][y] + mincostval;
+                }
+            }
+        }
+        return minCost;
+    }
+
+    private int findMinBottom() {
+        int yValStart = Integer.MAX_VALUE;
+        double minEnergy = Double.MAX_VALUE;
+        for (int y = 0; y < width; y++) {
+            if (minCost[height - 1][y] < minEnergy) {
+                yValStart = y;
+                minEnergy = minCost[height - 1][y];
+            }
+        }
+        return yValStart;
     }
 
     // sequence of indices for horizontal seam
@@ -122,8 +185,70 @@ public class SeamCarver {
 
     // sequence of indices for vertical seam
     public int[] findVerticalSeam() {
-        int[] ints = new int[4];
-        return ints;
+        int yValStart = findMinBottom();
+        this.returnValsVert.push(yValStart);
+
+        int xcurr = height - 2;
+        int ycurr = yValStart;
+
+        while (xcurr > -1) {
+            if (ycurr == 0) {
+                double min2 = minCost[xcurr][ycurr - 1];
+                double min3 = minCost[xcurr + 1][ycurr - 1];
+
+                double minVal = Math.min(min2, min3);
+
+                if (min2 > min3) {
+                    returnValsVert.push(min2);
+                    ycurr -= 1;
+                } else if (min3 > min2) {
+                    returnValsVert.push(min3);
+                    ycurr -= 1;
+                    xcurr += 1;
+                }
+            } else if (ycurr == width - 1) {
+                double min1 = minCost[xcurr - 1][ycurr - 1];
+                double min2 = minCost[xcurr][ycurr - 1];
+
+                double minVal = Math.min(min2, min2);
+
+                if (min2 > min2) {
+                    returnValsVert.push(min2);
+                    ycurr -= 1;
+                } else if (min2 > min2) {
+                    returnValsVert.push(min2);
+                    ycurr -= 1;
+                    xcurr -= 1;
+                }
+            } else {
+                double min1 = minCost[xcurr - 1][ycurr - 1];
+                double min2 = minCost[xcurr][ycurr - 1];
+                double min3 = minCost[xcurr + 1][ycurr - 1];
+
+                if (min1 < min2 && min1 < min3) {
+                    returnValsVert.push(min1);
+                    ycurr -= 1;
+                    xcurr -= 1;
+                } else if (min2 < min1 && min2 < min3) {
+                    returnValsVert.push(min2);
+                    ycurr -= 1;
+                } else if (min3 < min2 && min3 < min1) {
+                    returnValsVert.push(min3);
+                    ycurr -= 1;
+                    xcurr += 1;
+                }
+            }
+
+        }
+        int[] returnColVals = new int[returnValsVert.size()];
+
+        int index = 0;
+        while (!returnValsVert.empty()) {
+            returnColVals[index] = (int) returnValsVert.pop();
+            index += 1;
+        }
+
+        return returnColVals;
     }
 
     // remove horizontal seam from picture
