@@ -2,6 +2,7 @@ import java.awt.Color;
 
 import edu.princeton.cs.algs4.Picture;
 
+
 import java.util.Stack;
 
 public class SeamCarver {
@@ -12,7 +13,6 @@ public class SeamCarver {
     private int xpixminus;
     private int ypixplus;
     private int ypixminus;
-    private double[][] energyMap;
     private double[][] minCost;
     private Stack returnValsVert;
 
@@ -109,7 +109,6 @@ public class SeamCarver {
                 + (yredbreak * yredbreak)
                 + (ygreenbreak * ygreenbreak);
 
-
         return xdiff + ydiff;
     }
 
@@ -173,43 +172,32 @@ public class SeamCarver {
         return ints;
     }
 
-
     private void rowZeroCheck(int rowcurr, int colcurr) {
         if (colcurr == 0) {
             double min2 = minCost[rowcurr][colcurr];
             double min3 = minCost[rowcurr][colcurr + 1];
-
             if (min2 > min3) {
-                //System.out.println(colcurr + 1);
                 returnValsVert.push(colcurr + 1);
             } else if (min3 > min2) {
-                //System.out.println(colcurr);
                 returnValsVert.push(colcurr);
             }
         } else if (colcurr == width - 1) {
             double min1 = minCost[rowcurr][colcurr];
             double min2 = minCost[rowcurr][colcurr - 1];
-
             if (min2 > min1) {
-                //System.out.println(colcurr);
                 returnValsVert.push(colcurr);
             } else if (min1 > min2) {
-                //System.out.println(colcurr - 1);
                 returnValsVert.push(colcurr - 1);
             }
         } else {
             double min1 = minCost[rowcurr][colcurr - 1];
             double min2 = minCost[rowcurr][colcurr];
             double min3 = minCost[rowcurr][colcurr + 1];
-
             if (min2 > min1 && min3 > min1) {
-                //System.out.println(colcurr - 1);
                 returnValsVert.push(colcurr - 1);
             } else if (min1 > min2 && min3 > min2) {
-                //System.out.println(colcurr);
                 returnValsVert.push(colcurr);
             } else if (min2 > min3 && min1 > min3) {
-                //System.out.println(colcurr + 1);
                 returnValsVert.push(colcurr + 1);
             }
         }
@@ -219,81 +207,74 @@ public class SeamCarver {
     public int[] findVerticalSeam() {
         int yValStart = findMinBottom();
         this.returnValsVert.push(yValStart);
-
         int rowcurr = height - 2;
         int colcurr = yValStart;
+
+        int[] width1 = new int[height];
+
+        if (width == 1) {
+            for (int col = 0; col < height; col++) {
+                width1[col] = 0;
+            }
+            return width1;
+        }
 
         while (rowcurr > -1) {
             if (rowcurr == 0) {
                 rowZeroCheck(rowcurr, colcurr);
                 break;
             }
-
             if (colcurr == 0) {
                 double min2 = minCost[rowcurr - 1][colcurr];
                 double min3 = minCost[rowcurr - 1][colcurr + 1];
-
                 if (min2 > min3) {
-                    //System.out.println(colcurr + 1);
-                    returnValsVert.push(colcurr + 1);
-                    rowcurr -= 1;
-                } else if (min3 > min2) {
-                    //System.out.println(colcurr);
-                    returnValsVert.push(colcurr);
                     colcurr += 1;
-                    rowcurr += 1;
+                    rowcurr -= 1;
+                    returnValsVert.push(colcurr);
+                } else if (min3 > min2) {
+                    rowcurr -= 1;
+                    returnValsVert.push(colcurr);
                 }
             } else if (colcurr == width - 1) {
                 double min1 = minCost[rowcurr - 1][colcurr];
                 double min2 = minCost[rowcurr - 1][colcurr - 1];
-
                 if (min2 > min1) {
-                    //System.out.println(colcurr);
                     returnValsVert.push(colcurr);
                     rowcurr -= 1;
                 } else if (min1 > min2) {
-                    //System.out.println(colcurr - 1);
-                    returnValsVert.push(colcurr - 1);
                     colcurr -= 1;
                     rowcurr -= 1;
+                    returnValsVert.push(colcurr);
                 }
             } else {
                 double min1 = minCost[rowcurr - 1][colcurr - 1];
                 double min2 = minCost[rowcurr - 1][colcurr];
                 double min3 = minCost[rowcurr - 1][colcurr + 1];
-
                 if (min2 > min1 && min3 > min1) {
-                    //System.out.println(colcurr - 1);
-                    returnValsVert.push(colcurr - 1);
                     colcurr -= 1;
                     rowcurr -= 1;
+                    returnValsVert.push(colcurr);
                 } else if (min1 > min2 && min3 > min2) {
-                    //System.out.println(colcurr);
                     returnValsVert.push(colcurr);
                     rowcurr -= 1;
                 } else if (min2 > min3 && min1 > min3) {
-                    //System.out.println(colcurr + 1);
-                    returnValsVert.push(colcurr + 1);
                     colcurr += 1;
                     rowcurr -= 1;
+                    returnValsVert.push(colcurr);
                 }
             }
-
         }
-
         int[] returnColVals = new int[returnValsVert.size()];
-
         int index = 0;
         while (!returnValsVert.empty()) {
             int popval = (int) returnValsVert.pop();
-
             System.out.println(popval);
             returnColVals[index] = popval;
             index += 1;
         }
-
         return returnColVals;
     }
+
 
     // remove horizontal seam from picture
     public void removeHorizontalSeam(int[] seam) {
