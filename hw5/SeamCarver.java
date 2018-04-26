@@ -62,7 +62,7 @@ public class SeamCarver {
 
     // energy of pixel at column x and row y
     public double energy(int x, int y) {
-        if (x < 0 || y < 0 || x > height - 1 || y > width - 1) {
+        if (x < 0 || y < 0 || x > width - 1 || y > height - 1) {
             throw new java.lang.IndexOutOfBoundsException();
         }
 
@@ -110,34 +110,37 @@ public class SeamCarver {
                 + (yredbreak * yredbreak)
                 + (ygreenbreak * ygreenbreak);
 
+
         return xdiff + ydiff;
     }
 
+
     private double[][] setEnergyMap() {
         double[][] energymap = new double[height][width];
-        for (int x = 0; x < height; x++) {
-            for (int y = 0; y < width; y++) {
-                energymap[x][y] = energy(x, y);
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                energymap[row][col] = energy(col, row);
             }
         }
         return energymap;
     }
 
-    private double minCostHelper(int x, int y) {
-        if (y == 0) {
-            double min2 = minCost[x][y - 1];
-            double min3 = minCost[x + 1][y - 1];
+
+    private double minCostHelper(int row, int col) {
+        if (col == 0) {
+            double min2 = minCost[row-1][col];
+            double min3 = minCost[row-1][col+1];
 
             return Math.min(min2, min3);
-        } else if (y == width - 1) {
-            double min1 = minCost[x - 1][y - 1];
-            double min2 = minCost[x][y - 1];
+        } else if (col == width - 1) {
+            double min1 = minCost[row - 1][col - 1];
+            double min2 = minCost[row - 1][col];
 
             return Math.min(min2, min1);
         } else {
-            double min1 = minCost[x - 1][y - 1];
-            double min2 = minCost[x][y - 1];
-            double min3 = minCost[x + 1][y - 1];
+            double min1 = minCost[row - 1][col - 1];
+            double min2 = minCost[row - 1][col];
+            double min3 = minCost[row - 1][col + 1];
 
             double smallest = min1;
             if (smallest > min2) {
@@ -151,14 +154,14 @@ public class SeamCarver {
     }
 
     private double[][] setMinCost() {
-        double[][] minCost = new double[height][width];
-        for (int x = 0; x < height; x++) {
-            for (int y = 0; y < width; y++) {
-                if (x == 0) {
-                    minCost[x][y] = energyMap[x][y];
+        this.minCost = new double[height][width];
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                if (row == 0) {
+                    minCost[row][col] = energyMap[row][col];
                 } else {
-                    double mincostval = minCostHelper(x, y);
-                    minCost[x][y] = energyMap[x][y] + mincostval;
+                    double mincostval = minCostHelper(row, col);
+                    minCost[row][col] = energyMap[row][col] + mincostval;
                 }
             }
         }
@@ -166,15 +169,15 @@ public class SeamCarver {
     }
 
     private int findMinBottom() {
-        int yValStart = Integer.MAX_VALUE;
+        int colValStart = Integer.MAX_VALUE;
         double minEnergy = Double.MAX_VALUE;
-        for (int y = 0; y < width; y++) {
-            if (minCost[height - 1][y] < minEnergy) {
-                yValStart = y;
-                minEnergy = minCost[height - 1][y];
+        for (int col = 0; col < width; col++) {
+            if (minCost[height - 1][col] < minEnergy) {
+                colValStart = col;
+                minEnergy = minCost[height - 1][col];
             }
         }
-        return yValStart;
+        return colValStart;
     }
 
     // sequence of indices for horizontal seam
@@ -183,68 +186,122 @@ public class SeamCarver {
         return ints;
     }
 
+
+    private void rowZeroCheck(int rowcurr, int colcurr) {
+        if (colcurr == 0) {
+            double min2 = minCost[rowcurr][colcurr];
+            double min3 = minCost[rowcurr][colcurr + 1];
+
+            if (min2 > min3) {
+                //System.out.println(colcurr + 1);
+                returnValsVert.push(colcurr + 1);
+            } else if (min3 > min2) {
+                //System.out.println(colcurr);
+                returnValsVert.push(colcurr);
+            }
+        } else if (colcurr == width - 1) {
+            double min1 = minCost[rowcurr][colcurr];
+            double min2 = minCost[rowcurr][colcurr - 1];
+
+            if (min2 > min1) {
+                //System.out.println(colcurr);
+                returnValsVert.push(colcurr);
+            } else if (min1 > min2) {
+                //System.out.println(colcurr - 1);
+                returnValsVert.push(colcurr - 1);
+            }
+        } else {
+            double min1 = minCost[rowcurr][colcurr - 1];
+            double min2 = minCost[rowcurr][colcurr];
+            double min3 = minCost[rowcurr][colcurr + 1];
+
+            if (min2 > min1 && min3 > min1) {
+                //System.out.println(colcurr - 1);
+                returnValsVert.push(colcurr - 1);
+            } else if (min1 > min2 && min3 > min2) {
+                //System.out.println(colcurr);
+                returnValsVert.push(colcurr);
+            } else if (min2 > min3 && min1 > min3) {
+                //System.out.println(colcurr + 1);
+                returnValsVert.push(colcurr + 1);
+            }
+        }
+    }
+
     // sequence of indices for vertical seam
     public int[] findVerticalSeam() {
         int yValStart = findMinBottom();
         this.returnValsVert.push(yValStart);
 
-        int xcurr = height - 2;
-        int ycurr = yValStart;
+        int rowcurr = height - 2;
+        int colcurr = yValStart;
 
-        while (xcurr > -1) {
-            if (ycurr == 0) {
-                double min2 = minCost[xcurr][ycurr - 1];
-                double min3 = minCost[xcurr + 1][ycurr - 1];
+        while (rowcurr > -1) {
+            if (rowcurr == 0) {
+                rowZeroCheck(rowcurr, colcurr);
+                break;
+            }
 
-                double minVal = Math.min(min2, min3);
+            if (colcurr == 0) {
+                double min2 = minCost[rowcurr - 1][colcurr];
+                double min3 = minCost[rowcurr - 1][colcurr + 1];
 
                 if (min2 > min3) {
-                    returnValsVert.push(min2);
-                    ycurr -= 1;
+                    //System.out.println(colcurr + 1);
+                    returnValsVert.push(colcurr + 1);
+                    rowcurr -= 1;
                 } else if (min3 > min2) {
-                    returnValsVert.push(min3);
-                    ycurr -= 1;
-                    xcurr += 1;
+                    //System.out.println(colcurr);
+                    returnValsVert.push(colcurr);
+                    colcurr += 1;
+                    rowcurr += 1;
                 }
-            } else if (ycurr == width - 1) {
-                double min1 = minCost[xcurr - 1][ycurr - 1];
-                double min2 = minCost[xcurr][ycurr - 1];
+            } else if (colcurr == width - 1) {
+                double min1 = minCost[rowcurr - 1][colcurr];
+                double min2 = minCost[rowcurr - 1][colcurr - 1];
 
-                double minVal = Math.min(min2, min2);
-
-                if (min2 > min2) {
-                    returnValsVert.push(min2);
-                    ycurr -= 1;
-                } else if (min2 > min2) {
-                    returnValsVert.push(min2);
-                    ycurr -= 1;
-                    xcurr -= 1;
+                if (min2 > min1) {
+                    //System.out.println(colcurr);
+                    returnValsVert.push(colcurr);
+                    rowcurr -= 1;
+                } else if (min1 > min2) {
+                    //System.out.println(colcurr - 1);
+                    returnValsVert.push(colcurr - 1);
+                    colcurr -= 1;
+                    rowcurr -= 1;
                 }
             } else {
-                double min1 = minCost[xcurr - 1][ycurr - 1];
-                double min2 = minCost[xcurr][ycurr - 1];
-                double min3 = minCost[xcurr + 1][ycurr - 1];
+                double min1 = minCost[rowcurr - 1][colcurr - 1];
+                double min2 = minCost[rowcurr - 1][colcurr];
+                double min3 = minCost[rowcurr - 1][colcurr + 1];
 
-                if (min1 < min2 && min1 < min3) {
-                    returnValsVert.push(min1);
-                    ycurr -= 1;
-                    xcurr -= 1;
-                } else if (min2 < min1 && min2 < min3) {
-                    returnValsVert.push(min2);
-                    ycurr -= 1;
-                } else if (min3 < min2 && min3 < min1) {
-                    returnValsVert.push(min3);
-                    ycurr -= 1;
-                    xcurr += 1;
+                if (min2 > min1 && min3 > min1) {
+                    //System.out.println(colcurr - 1);
+                    returnValsVert.push(colcurr - 1);
+                    colcurr -= 1;
+                    rowcurr -= 1;
+                } else if (min1 > min2 && min3 > min2) {
+                    //System.out.println(colcurr);
+                    returnValsVert.push(colcurr);
+                    rowcurr -= 1;
+                } else if (min2 > min3 && min1 > min3) {
+                    //System.out.println(colcurr + 1);
+                    returnValsVert.push(colcurr + 1);
+                    colcurr += 1;
+                    rowcurr -= 1;
                 }
             }
 
         }
+
         int[] returnColVals = new int[returnValsVert.size()];
 
         int index = 0;
         while (!returnValsVert.empty()) {
-            returnColVals[index] = (int) returnValsVert.pop();
+            int popval = (int) returnValsVert.pop();
+
+            System.out.println(popval);
+            returnColVals[index] = popval;
             index += 1;
         }
 
