@@ -20,7 +20,6 @@ public class SeamCarver {
         this.picture = picture;
         this.width = picture.width();
         this.height = picture.height();
-        this.energyMap = setEnergyMap();
         this.minCost = setMinCost();
         this.returnValsVert = new Stack();
     }
@@ -114,18 +113,6 @@ public class SeamCarver {
         return xdiff + ydiff;
     }
 
-
-    private double[][] setEnergyMap() {
-        double[][] energymap = new double[height][width];
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
-                energymap[row][col] = energy(col, row);
-            }
-        }
-        return energymap;
-    }
-
-
     private double minCostHelper(int row, int col) {
         if (col == 0) {
             double min2 = minCost[row - 1][col];
@@ -158,10 +145,10 @@ public class SeamCarver {
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
                 if (row == 0) {
-                    minCost[row][col] = energyMap[row][col];
+                    minCost[row][col] = energy(col, row);
                 } else {
                     double mincostval = minCostHelper(row, col);
-                    minCost[row][col] = energyMap[row][col] + mincostval;
+                    minCost[row][col] = energy(col, row) + mincostval;
                 }
             }
         }
