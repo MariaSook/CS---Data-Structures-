@@ -128,8 +128,8 @@ public class SeamCarver {
 
     private double minCostHelper(int row, int col) {
         if (col == 0) {
-            double min2 = minCost[row-1][col];
-            double min3 = minCost[row-1][col+1];
+            double min2 = minCost[row - 1][col];
+            double min3 = minCost[row - 1][col + 1];
 
             return Math.min(min2, min3);
         } else if (col == width - 1) {
