@@ -7,20 +7,22 @@ public class SawToothGenerator implements Generator {
     private int period;
 
     public SawToothGenerator(int period) {
-        this.state = -1;
+        this.state = 0;
         this.period = period;
     }
 
-    private int normalize() {
-        return 0;
+    private double normalize(int normalized) {
+        normalized = 2 * (normalized / period) - 1;
+        return normalized;
     }
-
 
     //next method that returns the next double
     public double next() {
-//        state = (state + 1);
-//        double period = StdAudio.SAMPLE_RATE / frequency;
-//        return Math.sin(state * 2 * Math.PI / period);
-        return 0.0;
+        if (state == period) {
+            state = 0;
+            return normalize(state);
+        }
+        state += 1;
+        return normalize(state);
     }
 }
