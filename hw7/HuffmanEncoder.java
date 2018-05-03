@@ -15,18 +15,18 @@ public class HuffmanEncoder {
         char past = inputSymbols[0];
         char charcurr;
         int count = 0;
+        int i = 0;
 
-        for (char chars : inputSymbols) {
-            charcurr = chars;
-            if (charcurr != past) {
+        while (i != inputSymbols.length) {
+            charcurr = inputSymbols[i];
+            if (past == charcurr) {
+                count += 1;
+            } else {
                 table.put(past, count);
                 past = charcurr;
                 count = 1;
-            } else {
-                count += 1;
             }
         }
-
         return table;
     }
 
@@ -35,16 +35,16 @@ public class HuffmanEncoder {
     // args[0] + ".huf" that contains a huffman encoded version of
     // the original file.
     public static void main(String[] args) {
+        List<BitSequence> bitSeq = new ArrayList<>();
         char[] inputSymbols = FileUtils.readFile(args[0]);
         Map<Character, Integer> frequencyTable = buildFrequencyTable(inputSymbols);
         BinaryTrie binaryTrie = new BinaryTrie(frequencyTable);
+        Map<Character, BitSequence> table = binaryTrie.buildLookupTable();
         ObjectWriter objectwriter = new ObjectWriter(args[0] + ".huf");
         objectwriter.writeObject(binaryTrie);
         objectwriter.writeObject(inputSymbols.length);
-        Map<Character, BitSequence> lookupTable = binaryTrie.buildLookupTable();
-        List<BitSequence> bitSeq = new ArrayList<>();
         for (char c : inputSymbols) {
-            BitSequence b = lookupTable.get(c);
+            BitSequence b = table.get(c);
             bitSeq.add(b);
         }
         BitSequence encodeHuf = BitSequence.assemble(bitSeq);
