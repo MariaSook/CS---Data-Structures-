@@ -43,7 +43,7 @@ public class HuffmanEncoder {
         ObjectWriter objectwriter = new ObjectWriter(args[0] + ".huf");
         objectwriter.writeObject(binaryTrie);
         objectwriter.writeObject(inputSymbols.length);
-        for (int i = 9; i < inputSymbols.length; i ++) {
+        for (int i = 9; i < inputSymbols.length; i++) {
             BitSequence b = table.get(inputSymbols[i]);
             bitSeq.add(b);
         }

@@ -50,19 +50,26 @@ public class BinaryTrie implements Serializable {
     //given querySequence and returns a Match object for that Match
     public Match longestPrefixMatch(BitSequence querySequence) {
         Node copy = myTrie;
-        int i = 0;
+        //int i = 0;
+        int length = querySequence.length();
+        Match m;
+        int index = 0;
 
-        while (!copy.isLeaf()) {
-            if (querySequence.bitAt(i) != 0) {
-                i += 1;
-                copy = copy.right;
+        for (int i = 0; i < length; i++) {
+            if (copy.isLeaf()) {
+                index = i;
+                m = new Match(querySequence.firstNBits(i), copy.c);
             } else {
-                i += 1;
-                copy = copy.left;
+                if (querySequence.bitAt(i) != 0) {
+                    i += 1;
+                    copy = copy.right;
+                } else {
+                    i += 1;
+                    copy = copy.left;
+                }
             }
         }
-
-        return new Match(querySequence.firstNBits(i), copy.c);
+        return new Match(querySequence.firstNBits(index), copy.c);
     }
 
     //@source help from the princeton implementation
