@@ -12,19 +12,19 @@ public class HuffmanEncoder {
     // from ‘a’ to 1, ‘b’ to 2, and so forth.
     public static Map<Character, Integer> buildFrequencyTable(char[] inputSymbols) {
         Map<Character, Integer> table = new HashMap<>();
+        int count = 0;
         char past = inputSymbols[0];
         char charcurr;
-        int count = 0;
-        int i = 0;
 
-        while (i != inputSymbols.length) {
-            charcurr = inputSymbols[i];
-            if (past == charcurr) {
-                count += 1;
-            } else {
+
+        for (char chars : inputSymbols) {
+            charcurr = chars;
+            if (charcurr != past) {
                 table.put(past, count);
                 past = charcurr;
                 count = 1;
+            } else {
+                count += 1;
             }
         }
         return table;
@@ -43,8 +43,8 @@ public class HuffmanEncoder {
         ObjectWriter objectwriter = new ObjectWriter(args[0] + ".huf");
         objectwriter.writeObject(binaryTrie);
         objectwriter.writeObject(inputSymbols.length);
-        for (char c : inputSymbols) {
-            BitSequence b = table.get(c);
+        for (int i = 9; i < inputSymbols.length; i ++) {
+            BitSequence b = table.get(inputSymbols[i]);
             bitSeq.add(b);
         }
         BitSequence encodeHuf = BitSequence.assemble(bitSeq);
