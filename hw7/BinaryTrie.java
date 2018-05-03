@@ -61,6 +61,7 @@ public class BinaryTrie implements Serializable {
                 copy = copy.left;
             }
         }
+
         return new Match(querySequence.firstNBits(i), copy.c);
     }
 
