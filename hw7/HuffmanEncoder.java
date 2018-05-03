@@ -5,28 +5,28 @@ import java.util.Map;
 
 
 public class HuffmanEncoder {
+
     //The buildFrequencyTable method should map characters to their counts. For example,
     // suppose we have the character array [‘a’, ‘b’, ‘b’, ‘c’, ‘c’ , ‘c’, ‘c’, d’, ‘d’,
     // ‘d’, ‘d’, ‘d’, e’, ‘e’, ‘e’, ‘e’, ‘e’, ‘e’], then this method should return a map
     // from ‘a’ to 1, ‘b’ to 2, and so forth.
     public static Map<Character, Integer> buildFrequencyTable(char[] inputSymbols) {
         Map<Character, Integer> table = new HashMap<>();
-        char prev = inputSymbols[0];
-        char curr;
+        char past = inputSymbols[0];
+        char charcurr;
         int count = 0;
-        int i = 0;
 
-        while (i != inputSymbols.length) {
-            curr = inputSymbols[i];
-            if (prev == curr) {
-                count += 1;
-            } else {
-                table.put(prev, count);
-                prev = curr;
+        for (char chars : inputSymbols) {
+            charcurr = chars;
+            if (charcurr != past) {
+                table.put(past, count);
+                past = charcurr;
                 count = 1;
+            } else {
+                count += 1;
             }
-            i += 1;
         }
+
         return table;
     }
 
