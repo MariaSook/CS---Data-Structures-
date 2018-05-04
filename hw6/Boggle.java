@@ -12,6 +12,7 @@ public class Boggle {
     private static int width = 4;
     private static int height = 4;
 
+    // File path of dictionary file
     static String dictPath = "words.txt";
     // File path of board to be set
     static String boardPath;
@@ -106,20 +107,6 @@ public class Boggle {
 
         HashMap<Integer, Character> adjacents = adjacentChars(index);
 
-//        int indexLoop = 0;
-//        List<Integer> temp = new ArrayList<>(marked);
-
-//        while (indexLoop < adjacents.keySet().size()) {
-//            if (temp.add(indexLoop)) {
-//                continue;
-//            } else {
-//                temp.add(indexLoop);
-//                char c = adjacents.get(indexLoop);
-//            }
-//            indexLoop += 1;
-//        }
-
-
         for (int i : adjacents.keySet()) {
             List<Integer> temp = new ArrayList<>(marked);
             if (temp.contains(i)) {
@@ -138,8 +125,7 @@ public class Boggle {
 
         for (int i : adjIndices) {
             if (i < 0 || i >= width * height) {
-                throw new IllegalArgumentException();
-                //continue;
+                continue;
             }
 
             try {
@@ -185,7 +171,7 @@ public class Boggle {
         //Boggle boggle = new Boggle();
         long startTime = System.nanoTime();
 
-        //System.out.println(Boggle.solve(7, args[0]));
+        System.out.println(Boggle.solve(7, args[0]));
 
         long endTime = System.nanoTime();
         long totalTime = endTime - startTime;
