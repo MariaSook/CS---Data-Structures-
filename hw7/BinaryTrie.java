@@ -85,8 +85,8 @@ public class BinaryTrie implements Serializable {
 
     //@source ideas adapted from princeton implementation give in spec
     private Node build() {
-        for (char chars: this.frequencyTable.keySet()) {
-            this.minpq.insert(new Node(chars, this.frequencyTable.get(chars),
+        for (char c: this.frequencyTable.keySet()) {
+            this.minpq.insert(new Node(c, this.frequencyTable.get(c),
                     null, null));
         }
         while (this.minpq.size() > 1) {
