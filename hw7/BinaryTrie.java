@@ -6,7 +6,7 @@ import edu.princeton.cs.algs4.MinPQ;
 public class BinaryTrie implements Serializable {
     private Node myTrie;
     private Map<Character, Integer> frequencyTable;
-    private MinPQ<Node> minpq = new MinPQ<>();
+    //private MinPQ<Node> minpq = new MinPQ<>();
     private Map<Character, BitSequence> lookUpTable = new HashMap<>();
 
     // @source Princeton implementation given in the spec
@@ -68,34 +68,35 @@ public class BinaryTrie implements Serializable {
     }
 
     //@source help from the princeton implementation
-    private void helperLookUp(Node n, String s) {
+    private void helperLookUp(Map<Character, BitSequence> lookupTable, Node n, String s) {
         if (!n.isLeaf()) {
-            helperLookUp(n.left, s + '0');
-            helperLookUp(n.right, s + '1');
+            helperLookUp(lookupTable, n.left, s + '0');
+            helperLookUp(lookupTable, n.right, s + '1');
         } else {
-            this.lookUpTable.put(n.c, new BitSequence(s));
+            lookupTable.put(n.c, new BitSequence(s));
         }
     }
 
     //The buildLookupTable method returns the inverse of the coding trie.
     public Map<Character, BitSequence> buildLookupTable() {
-        helperLookUp(myTrie, "");
-        return this.lookUpTable;
+        helperLookUp(lookUpTable, myTrie, "");
+        return lookUpTable;
     }
 
     //@source ideas adapted from princeton implementation give in spec
     private Node build() {
+        MinPQ<Node> minpq = new MinPQ<>();
         for (char c: this.frequencyTable.keySet()) {
-            this.minpq.insert(new Node(c, this.frequencyTable.get(c),
+            minpq.insert(new Node(c, this.frequencyTable.get(c),
                     null, null));
         }
-        while (this.minpq.size() > 1) {
-            Node l = this.minpq.delMin();
-            Node r = this.minpq.delMin();
+        while (minpq.size() > 1) {
+            Node l = minpq.delMin();
+            Node r = minpq.delMin();
             Node p = new Node('\0', l.freq + r.freq, l, r);
-            this.minpq.insert(p);
+            minpq.insert(p);
         }
-        return this.minpq.delMin();
+        return minpq.delMin();
     }
 
 }
