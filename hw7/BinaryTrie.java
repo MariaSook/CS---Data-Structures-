@@ -57,10 +57,10 @@ public class BinaryTrie implements Serializable {
                 Match match = new Match(querySequence.firstNBits(i), copy.c);
                 return match;
             } else {
-                if (querySequence.bitAt(i) != 0) {
-                    copy = copy.right;
-                } else {
+                if (querySequence.bitAt(i) == 0) {
                     copy = copy.left;
+                } else {
+                    copy = copy.right;
                 }
             }
         }
