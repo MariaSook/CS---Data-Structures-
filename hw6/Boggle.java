@@ -4,6 +4,8 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Boggle {
     private static List<Character> boggleBoard;
@@ -36,12 +38,13 @@ public class Boggle {
         boggleBoard = readBoard(boardFilePath);
 
         List<String> solved = new ArrayList<>();
+        Set<String> seen = new TreeSet<>();
 
         for (int i = 0; i < boggleBoard.size(); i++) {
             ArrayList<Integer> v = new ArrayList<>();
             v.add(i);
             char character = boggleBoard.get(i);
-            solveBoard(Character.toString(character), i, solved, v);
+            solveBoard(Character.toString(character), i, solved, v, seen);
         }
 
         solved.sort((a, b) -> Integer.compare(b.length(), a.length()));
@@ -93,15 +96,17 @@ public class Boggle {
     }
 
     private static void solveBoard(String word, int index,
-                                   List<String> result, List<Integer> marked) {
+                                   List<String> result, List<Integer> marked,
+                                   Set<String> seen) {
 
         if (trie.keysWithPrefix(word).size() == 0) {
             return;
         }
 
         if (trie.keysThatMatch(word)) {
-            if (!result.contains(word)) {
+            if (!seen.contains(word)) {
                 result.add(word);
+                seen.add(word);
             }
         }
 
@@ -109,12 +114,13 @@ public class Boggle {
 
         for (int i : adjacents.keySet()) {
             List<Integer> temp = new ArrayList<>(marked);
-            if (temp.contains(i)) {
+            Integer value = temp.get(i);
+            if (seen.contains(value)) {
                 continue;
             } else {
                 temp.add(i);
                 char c = adjacents.get(i);
-                solveBoard(word + c, i, result, temp);
+                solveBoard(word + c, i, result, temp, seen);
             }
         }
     }
