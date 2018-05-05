@@ -1,75 +1,95 @@
-import java.util.ArrayList;
+
 import java.util.LinkedList;
-import java.util.List;
 
 public class Trie {
     private static final int R = 256;
     private Node root = new Node();
 
-    class Node {
+    //@source lecture slides
+    private class Node {
         boolean isEndofWord;
-        Node[] nextNodes;
+        Node[] children;
 
-        Node() {
-            isEndofWord = false;
-            nextNodes = new Node[R];
+        private Node() {
+            this.isEndofWord = false;
+            this.children = new Node[R];
         }
     }
 
+    //@source lecture slides
     public void put(String key) {
-        put(this.root, key, 0);
+        putHelper(this.root, 0, key);
     }
 
-    Node put(Node node, String key, int d) {
+    //@source lectures slides
+    Node putHelper(Node node, int index, String key) {
         if (node == null) {
             node = new Node();
         }
 
-        if (key.length() == d) {
+        if (index == key.length()) {
             node.isEndofWord = true;
             return node;
         }
 
-        char c = key.charAt(d);
-        node.nextNodes[c] = put(node.nextNodes[c], key, d + 1);
+        char c = key.charAt(index);
+        node.children[c] = putHelper(node.children[c], index + 1, key);
 
         return node;
     }
 
+
     private Node get(Node x, String key, int d) {
-        if (x == null) return null;
-        if (d == key.length()) return x;
-        char c = key.charAt(d);
-        return get(x.nextNodes[c], key, d + 1);
+        if (x == null) {
+            return null;
+        }
+
+        Node xhelper = x;
+        int dhelper = d;
+
+        while (x != null) {
+            if (d == key.length()) {
+                return xhelper;
+            }
+            char c = key.charAt(d);
+            xhelper = xhelper.children[c];
+            dhelper += 1;
+        }
+        return xhelper;
     }
 
-    public LinkedList<String> keysWithPrefix(String prefix) {
+    public LinkedList<String> keyswithpref(String prefix) {
         LinkedList<String> results = new LinkedList<>();
-        Node x = get(root, prefix, 0);
-        collect(x, new StringBuilder(prefix), results);
+        Node n = get(root, prefix, 0);
+        StringBuilder pref = new StringBuilder(prefix);
+        findkeyswithpref(n, pref, results);
         return results;
     }
 
-    private void collect(Node x, StringBuilder prefix, LinkedList<String> results) {
-        if (x == null) return;
-        if (x.isEndofWord) {
-            results.add(prefix.toString());
+    //@helen dang talked me through a logical implementation of the Trie
+    private void findkeyswithpref(Node n, StringBuilder prefix, LinkedList<String> results) {
+        if (n == null) {
+            return;
+        }
+
+        if (n.isEndofWord) {
+            String s = prefix.toString();
+            results.add(s);
         }
         for (char c = 0; c < R; c++) {
             prefix.append(c);
-            collect(x.nextNodes[c], prefix, results);
+            findkeyswithpref(n.children[c], prefix, results);
             prefix.deleteCharAt(prefix.length() - 1);
         }
     }
 
-    public boolean keysThatMatch(String key) {
+    public boolean keyBoolVal(String key) {
         Node n = root;
 
         for (int i = 0; i < key.length(); i++) {
-            char character = key.charAt(i);
-            n = n.nextNodes[character];
+            char c = key.charAt(i);
+            n = n.children[c];
         }
-
         return n.isEndofWord;
     }
 

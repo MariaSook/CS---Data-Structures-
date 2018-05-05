@@ -1,15 +1,11 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Boggle {
     private static List<Character> boggleBoard;
-    private static Trie trie;
+    private static Trie myTrie;
 
     private static int width = 4;
     private static int height = 4;
@@ -21,7 +17,6 @@ public class Boggle {
 
     /**
      * Solves a Boggle puzzle.
-     *
      * @param k             The maximum number of words to return.
      * @param boardFilePath The file path to Boggle board file.
      * @return a list of words found in given Boggle board.
@@ -29,81 +24,86 @@ public class Boggle {
      * If multiple words have the same length,
      * have them in ascending alphabetical order.
      */
+
     public static List<String> solve(int k, String boardFilePath) {
         if (k < 1) {
             throw new IllegalArgumentException();
         }
-
-        trie = readDictionary(dictPath);
+        myTrie = readDictionary(dictPath);
         boggleBoard = readBoard(boardFilePath);
 
-        List<String> solved = new ArrayList<>();
-        Set<String> seen = new TreeSet<>();
+        //List<String> solved = new ArrayList<>(Comparable)
 
-        for (int i = 0; i < boggleBoard.size(); i++) {
-            ArrayList<Integer> v = new ArrayList<>();
-            v.add(i);
-            char character = boggleBoard.get(i);
-            solveBoard(Character.toString(character), i, solved, v, seen);
-        }
+        PriorityQueue<String> returnVals = new PriorityQueue<>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                String a = o1;
+                String b = o2;
 
-        solved.sort((a, b) -> Integer.compare(b.length(), a.length()));
+                int returnVal = Integer.compare(a.length(), b.length());
 
-        ArrayList<String> returned = new ArrayList();
-
-        for (int i = 0; i < k; i++) {
-            try {
-                returned.add(solved.get(i));
-            } catch (RuntimeException e) {
-                System.out.println(e);
+                if (returnVal == 0) {
+                    int achar = Character.toLowerCase(a.charAt(0));
+                    int bchar = Character.toLowerCase(b.charAt(0));
+                    return Integer.compare(achar, bchar);
+                }
+                return returnVal;
             }
+        });
+
+        Set<String> seen = new HashSet<>();
+
+        for (int index = 0; index < boggleBoard.size(); index++) {
+            char c = boggleBoard.get(index);
+            String string = Character.toString(c);
+            solveBoard(string, index, returnVals, seen);
         }
 
+        ArrayList returned = new ArrayList();
+        String[] arrayString = (String[]) returnVals.toArray();
+
+        for (int i = 0; i < arrayString.length; i++) {
+            returned.add(arrayString[i]);
+        }
         return returned;
     }
 
+    //@source TA in office hours, can't remember his name
     private static Trie readDictionary(String dictionaryFile) {
-        Trie dictionary = new Trie();
-
+        Trie dict = new Trie();
         try {
-            List<String> words = Files.readAllLines(Paths.get(dictionaryFile));
-
-            for (String word : words) {
-                dictionary.put(word);
+            List<String> dictFile = Files.readAllLines(Paths.get(dictionaryFile));
+            for (String word : dictFile) {
+                dict.put(word);
             }
-
         } catch (IOException e) {
-            System.out.println("Invalid file name!");
+            System.out.println(e);
         }
-
-        return dictionary;
+        return dict;
     }
 
+    //@source TA in office hours, can't remember his name
     private static ArrayList<Character> readBoard(String boardName) {
         ArrayList<Character> board = new ArrayList<>();
-
         In path = new In(boardName);
-
         while (path.hasNextLine()) {
             String letters = path.readLine();
-
             for (int i = 0; i < letters.length(); i++) {
                 board.add(letters.charAt(i));
             }
         }
-
         return board;
     }
 
+
     private static void solveBoard(String word, int index,
-                                   List<String> result, List<Integer> marked,
+                                   PriorityQueue<String> result,
                                    Set<String> seen) {
 
-        if (trie.keysWithPrefix(word).size() == 0) {
+        if (myTrie.keyswithpref(word).size() == 0) {
             return;
         }
-
-        if (trie.keysThatMatch(word)) {
+        if (myTrie.keyBoolVal(word)) {
             if (!seen.contains(word)) {
                 result.add(word);
                 seen.add(word);
@@ -113,14 +113,14 @@ public class Boggle {
         HashMap<Integer, Character> adjacents = adjacentChars(index);
 
         for (int i : adjacents.keySet()) {
-            List<Integer> temp = new ArrayList<>(marked);
-            Integer value = temp.get(i);
-            if (seen.contains(value)) {
+            //List<Integer> temp = new ArrayList<>(marked);
+            //Integer value = seen.get(i);
+            char c = adjacents.get(i);
+            if (seen.contains(c)) {
                 continue;
             } else {
-                temp.add(i);
-                char c = adjacents.get(i);
-                solveBoard(word + c, i, result, temp, seen);
+                //seen.add(c);
+                solveBoard(word + c, i, result, seen);
             }
         }
     }
@@ -133,7 +133,6 @@ public class Boggle {
             if (i < 0 || i >= width * height) {
                 continue;
             }
-
             try {
                 adjacentChars.put(i, boggleBoard.get(i));
             } catch (RuntimeException e) {
@@ -162,13 +161,11 @@ public class Boggle {
             adjIndices[4] = -1;
             adjIndices[6] = -1;
         }
-
         if (index % width == width - 1) {
             adjIndices[1] = -1;
             adjIndices[5] = -1;
             adjIndices[7] = -1;
         }
-
         return adjIndices;
     }
 
