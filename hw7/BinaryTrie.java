@@ -7,7 +7,7 @@ public class BinaryTrie implements Serializable {
     private Node myTrie;
     private Map<Character, Integer> frequencyTable;
     //private MinPQ<Node> minpq = new MinPQ<>();
-    private Map<Character, BitSequence> lookUpTable = new HashMap<>();
+    private Map<Character, BitSequence> lookUpTable;
 
     // @source Princeton implementation given in the spec
     private class Node implements Comparable<Node> {
@@ -36,6 +36,7 @@ public class BinaryTrie implements Serializable {
     // trie according to the procedure discussed in class
     public BinaryTrie(Map<Character, Integer> frequencyTable) {
         this.frequencyTable = frequencyTable;
+        this.lookUpTable = new HashMap<>();
         this.myTrie = build();
     }
 
@@ -57,13 +58,14 @@ public class BinaryTrie implements Serializable {
                 Match match = new Match(querySequence.firstNBits(i), copy.c);
                 return match;
             } else {
-                if (querySequence.bitAt(i) == 0) {
-                    copy = copy.left;
-                } else {
+                if (querySequence.bitAt(i) != 0) {
                     copy = copy.right;
+                } else {
+                    copy = copy.left;
                 }
             }
         }
+
         return new Match(querySequence, copy.c);
     }
 
@@ -80,10 +82,11 @@ public class BinaryTrie implements Serializable {
     //The buildLookupTable method returns the inverse of the coding trie.
     public Map<Character, BitSequence> buildLookupTable() {
         helperLookUp(lookUpTable, myTrie, "");
+        //System.out.println(lookUpTable);
         return lookUpTable;
     }
 
-    //@source ideas adapted from princeton implementation give in spec
+    //@source ideas adapted from princeton implementation given in spec
     private Node build() {
         MinPQ<Node> minpq = new MinPQ<>();
         for (char c: this.frequencyTable.keySet()) {
@@ -98,5 +101,7 @@ public class BinaryTrie implements Serializable {
         }
         return minpq.delMin();
     }
+
+
 
 }

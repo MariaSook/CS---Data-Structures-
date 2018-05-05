@@ -17,10 +17,11 @@ public class TestBinaryTrie {
         frequencyTable.put('d', 5);
         frequencyTable.put('e', 6);
         BinaryTrie trie = new BinaryTrie(frequencyTable);
+        System.out.println(trie.buildLookupTable());
 
         BitSequence shouldBeA = new BitSequence("000");
         Match m = trie.longestPrefixMatch(shouldBeA);
-        assertEquals((char) 'a', (char) m.getSymbol()); 
+        assertEquals((char) 'a', (char) m.getSymbol());
         assertEquals(shouldBeA, m.getSequence());
 
         BitSequence shouldBeE = new BitSequence("11");
