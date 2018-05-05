@@ -6,28 +6,29 @@ import edu.princeton.cs.algs4.MinPQ;
 public class BinaryTrie implements Serializable {
     private Node myTrie;
     private Map<Character, Integer> frequencyTable;
-    //private MinPQ<Node> minpq = new MinPQ<>();
     private Map<Character, BitSequence> lookUpTable;
 
     // @source Princeton implementation given in the spec
-    private class Node implements Comparable<Node> {
+    private class Node implements Serializable, Comparable<Node> {
         private final char c;
         private final int freq;
-        private final Node left, right;
+        private final Node l;
+        private final Node r;
 
-        private Node(char c, int freq, Node left, Node right) {
+        private Node(char c, int freq, Node l, Node r) {
             this.c = c;
             this.freq = freq;
-            this.left = left;
-            this.right = right;
+            this.l = l;
+            this.r = r;
         }
 
         private boolean isLeaf() {
-            return (left == null) && (right == null);
+            assert ((l == null) && (r == null)) || ((l != null) && (r != null));
+            return (l == null) && (r == null);
         }
 
-        public int compareTo(Node that) {
-            return this.freq - that.freq;
+        public int compareTo(Node you) {
+            return this.freq - you.freq;
         }
     }
 
@@ -55,25 +56,23 @@ public class BinaryTrie implements Serializable {
 
         for (int i = 0; i < length; i++) {
             if (copy.isLeaf()) {
-                Match match = new Match(querySequence.firstNBits(i), copy.c);
-                return match;
+                return new Match(querySequence.firstNBits(i), copy.c);
             } else {
                 if (querySequence.bitAt(i) != 0) {
-                    copy = copy.right;
+                    copy = copy.r;
                 } else {
-                    copy = copy.left;
+                    copy = copy.l;
                 }
             }
         }
-
         return new Match(querySequence, copy.c);
     }
 
     //@source help from the princeton implementation
     private void helperLookUp(Map<Character, BitSequence> lookupTable, Node n, String s) {
         if (!n.isLeaf()) {
-            helperLookUp(lookupTable, n.left, s + '0');
-            helperLookUp(lookupTable, n.right, s + '1');
+            helperLookUp(lookupTable, n.l, s + '0');
+            helperLookUp(lookupTable, n.r, s + '1');
         } else {
             lookupTable.put(n.c, new BitSequence(s));
         }

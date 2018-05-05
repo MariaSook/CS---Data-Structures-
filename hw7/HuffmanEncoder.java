@@ -16,7 +16,6 @@ public class HuffmanEncoder {
         char past = inputSymbols[0];
         char charcurr;
 
-
         for (char chars : inputSymbols) {
             charcurr = chars;
             if (charcurr != past) {
@@ -35,16 +34,16 @@ public class HuffmanEncoder {
     // args[0] + ".huf" that contains a huffman encoded version of
     // the original file.
     public static void main(String[] args) {
-        List<BitSequence> bitSeq = new ArrayList<>();
-        char[] inputSymbols = FileUtils.readFile(args[0]);
-        Map<Character, Integer> frequencyTable = buildFrequencyTable(inputSymbols);
+        char[] input = FileUtils.readFile(args[0]);
+        Map<Character, Integer> frequencyTable = buildFrequencyTable(input);
         BinaryTrie binaryTrie = new BinaryTrie(frequencyTable);
-        Map<Character, BitSequence> table = binaryTrie.buildLookupTable();
+        List<BitSequence> bitSeq = new ArrayList<>();
         ObjectWriter objectwriter = new ObjectWriter(args[0] + ".huf");
         objectwriter.writeObject(binaryTrie);
-        objectwriter.writeObject(inputSymbols.length);
-        for (int i = 9; i < inputSymbols.length; i++) {
-            BitSequence b = table.get(inputSymbols[i]);
+        objectwriter.writeObject(input.length);
+        Map<Character, BitSequence> looktable = binaryTrie.buildLookupTable();
+        for (char car: input) {
+            BitSequence b = looktable.get(car);
             bitSeq.add(b);
         }
         BitSequence encodeHuf = BitSequence.assemble(bitSeq);
