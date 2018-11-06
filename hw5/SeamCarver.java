@@ -144,7 +144,7 @@ public class SeamCarver {
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
                 if (row == 0) {
-                    minCost[row][col] = energy(col, row);
+                    minCost[0][col] = energy(col, 0);
                 } else {
                     double mincostval = minCostHelper(row, col);
                     minCost[row][col] = energy(col, row) + mincostval;
@@ -264,6 +264,7 @@ public class SeamCarver {
                 }
             }
         }
+
         int[] returnColVals = new int[returnValsVert.size()];
         int index = 0;
         while (!returnValsVert.empty()) {
@@ -274,7 +275,6 @@ public class SeamCarver {
         }
         return returnColVals;
     }
-
 
     // remove horizontal seam from picture
     public void removeHorizontalSeam(int[] seam) {

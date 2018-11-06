@@ -1,9 +1,0 @@
-I had more trouble understanding GraphDB than I expected. Once i understood it it was
-relatively easy to fill in and figure out how to structure my graph.
-
-Overall, this was  a challenging project. The math for Rasterer was difficult to
-understand, but once I got it, it was not too hard to implement.
-
-I am proud of this project and how relatively quickly I completed it when
-I expected it to take far longer.
-

@@ -117,7 +117,6 @@ public class GraphDB {
     void clean() {
         ArrayList removeVals = new ArrayList();
 
-        //takes 1 minute 12 seconds to run
         for (Node n : nodes.values()) {
             if (n.neighbors.isEmpty()) {
                 removeVals.add(n.id);

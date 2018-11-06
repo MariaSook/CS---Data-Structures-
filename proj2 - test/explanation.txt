@@ -1,0 +1,5 @@
+My project partner and I were struggling with the player being static after reloading our world.
+
+We both coded all weekend, but neither of us were available on Monday to go to office hours.
+
+Overall, this was a cool project and I enjoyed the implementation.
